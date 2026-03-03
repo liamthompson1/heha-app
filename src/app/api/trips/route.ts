@@ -5,35 +5,41 @@ import { syncTripToTravellerApi } from "@/lib/traveller/client";
 import { getSession, getSessionCookieName, hashEmail } from "@/lib/auth/session";
 
 export async function GET(request: NextRequest) {
-  const cookieValue = request.cookies.get(getSessionCookieName())?.value;
-  const session = await getSession(cookieValue);
+  try {
+    const cookieValue = request.cookies.get(getSessionCookieName())?.value;
+    const session = await getSession(cookieValue);
 
-  if (!session?.isAuthenticated) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session?.isAuthenticated) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Derive userId from email if missing (old sessions before userId was added)
+    const userId = session.userId || (session.email ? await hashEmail(session.email) : null);
+    if (!userId) {
+      return NextResponse.json({ error: "No user identifier in session" }, { status: 401 });
+    }
+
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase
+      .from("trips")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Supabase query error:", error);
+      return NextResponse.json(
+        { error: `Supabase error: ${error.message}` },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ trips: data });
+  } catch (err) {
+    console.error("GET /api/trips crashed:", err);
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  // Derive userId from email if missing (old sessions before userId was added)
-  const userId = session.userId || (session.email ? await hashEmail(session.email) : null);
-  if (!userId) {
-    return NextResponse.json({ error: "No user identifier in session" }, { status: 401 });
-  }
-
-  const supabase = getSupabaseClient();
-  const { data, error } = await supabase
-    .from("trips")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Supabase query error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch trips" },
-      { status: 500 }
-    );
-  }
-
-  return NextResponse.json({ trips: data });
 }
 
 export async function POST(request: NextRequest) {

@@ -27,7 +27,13 @@ export default function TripsPage() {
 
     fetch("/api/trips")
       .then(async (res) => {
-        const data = await res.json();
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error(`Server returned non-JSON (${res.status}): ${text.slice(0, 200)}`);
+        }
         if (!res.ok) {
           throw new Error(data.error || `API error ${res.status}`);
         }
