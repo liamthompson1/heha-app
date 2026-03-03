@@ -114,7 +114,7 @@ export default function AuthEntryPage() {
             disabled={!email || loading}
             onClick={handleLogin}
           >
-            {loading ? "Sending\u2026" : "Login"}
+            {loading ? "Sending\u2026" : "Login with Holiday Extras"}
           </GlassButton>
           <GlassButton
             variant="teal"

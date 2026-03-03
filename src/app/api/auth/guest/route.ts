@@ -33,11 +33,12 @@ export async function POST(request: Request) {
   const hashArray = Array.from(new Uint8Array(hashBuffer))
   const userHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 
-  // Create guest session
+  // Create guest session (authenticated so they can save trips)
   const sessionData: SessionData = {
     email: normalized,
+    userId: userHash,
     userHash,
-    isAuthenticated: false,
+    isAuthenticated: true,
   }
   const token = await createSession(sessionData)
   const cookieOpts = sessionCookieOptions(token)

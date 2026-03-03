@@ -1,8 +1,10 @@
 "use client";
 
-import { useReducer, useCallback } from "react";
+import { useReducer, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/auth/use-session";
 import type { TripData } from "@/types/trip";
+import type { CreateTripRequest } from "@/types/trip";
 import { emptyTripData } from "@/types/trip";
 import { WIZARD_STEPS } from "@/lib/wizard-steps";
 import type { WizardMode } from "./ModeSelector";
@@ -65,8 +67,51 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
   }
 }
 
+function mapTripDataToRequest(data: TripData, userId: string): CreateTripRequest {
+  const activePrefs: string[] = [];
+  if (data.preferences.travel_insurance) activePrefs.push("Travel Insurance");
+  if (data.preferences.airport_parking) activePrefs.push("Airport Parking");
+  if (data.preferences.airport_lounge) activePrefs.push("Airport Lounge");
+  if (data.preferences.car_hire) activePrefs.push("Car Hire");
+  if (data.preferences.airport_transfers) activePrefs.push("Airport Transfers");
+  if (data.preferences.extra_luggage) activePrefs.push("Extra Luggage");
+
+  return {
+    user_id: userId,
+    trip: {
+      destination: data.journey_locations.travelling_to,
+      start_date: data.dates.start_date,
+      end_date: data.dates.end_date,
+      trip_type: data.reason || undefined,
+    },
+    people_travelling: data.people_travelling.map((p) => ({
+      name: [p.first_name, p.last_name].filter(Boolean).join(" "),
+      age: p.dob ? Math.floor((Date.now() - new Date(p.dob).getTime()) / 31557600000) : undefined,
+    })),
+    preferences: {
+      activities: activePrefs.length > 0 ? activePrefs : undefined,
+      budget: data.preferences.notes || undefined,
+    },
+    flights_if_known: data.flights_if_known.map((f) => ({
+      airline: f.airline || undefined,
+      flight_number: f.flight_number || undefined,
+      departure_airport: f.from_airport,
+      arrival_airport: f.to_airport,
+      departure_time: [f.departure_date, f.departure_time].filter(Boolean).join(" ") || undefined,
+      arrival_time: [f.arrival_date, f.arrival_time].filter(Boolean).join(" ") || undefined,
+    })),
+    journey_locations: {
+      origin: data.journey_locations.travelling_from || undefined,
+      stops: data.journey_locations.travelling_to ? [data.journey_locations.travelling_to] : undefined,
+    },
+    anything_else_we_should_know: data.anything_else_we_should_know || undefined,
+  };
+}
+
 export default function WizardShell() {
   const router = useRouter();
+  const session = useSession();
+  const [submitting, setSubmitting] = useState(false);
   const [state, dispatch] = useReducer(reducer, {
     mode: "guided",
     currentStep: 0,
@@ -87,10 +132,39 @@ export default function WizardShell() {
     []
   );
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
+    if (submitting) return;
+
+    // Always save to sessionStorage as fallback
     sessionStorage.setItem("heha-trip-data", JSON.stringify(tripData));
+
+    if (!session.userId) {
+      router.push("/trip/generated");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = mapTripDataToRequest(tripData, session.userId);
+      const res = await fetch("/api/trips", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const { trip } = await res.json();
+        router.push(`/trip/${trip.id}`);
+        return;
+      }
+    } catch {
+      // fall through to generated page
+    } finally {
+      setSubmitting(false);
+    }
+
     router.push("/trip/generated");
-  }, [tripData, router]);
+  }, [tripData, router, session.userId, submitting]);
 
   const handleSkip = useCallback(() => dispatch({ type: "NEXT_STEP" }), []);
 
