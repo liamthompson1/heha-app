@@ -205,8 +205,8 @@ export default function Home() {
                     alt="Holiday Extras"
                     width={240}
                     height={48}
-                    className="inline-block h-[1em] w-auto"
-                    style={{ verticalAlign: "baseline" }}
+                    className="inline-block h-[1.6em] w-auto"
+                    style={{ verticalAlign: "middle", marginTop: "-0.1em" }}
                   />
                 </h3>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
