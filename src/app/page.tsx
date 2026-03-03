@@ -203,9 +203,10 @@ export default function Home() {
                   <Image
                     src="/holiday-extras-logo.png"
                     alt="Holiday Extras"
-                    width={180}
-                    height={36}
-                    className="inline-block h-[1.4em] w-auto"
+                    width={240}
+                    height={48}
+                    className="inline-block h-[1em] w-auto"
+                    style={{ verticalAlign: "baseline" }}
                   />
                 </h3>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
