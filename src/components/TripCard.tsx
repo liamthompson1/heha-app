@@ -25,9 +25,8 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
   const tripType = trip.trip.trip_type;
   const travelerCount = trip.people_travelling.length;
 
-  const imgParams = new URLSearchParams({ place: destination });
-  if (tripType) imgParams.set("type", tripType);
-  const imgSrc = `/api/images/destination?${imgParams.toString()}`;
+  // Use persisted image if available, otherwise generate via trip-specific endpoint
+  const imgSrc = trip.image_url || `/api/trips/${trip.id}/image`;
 
   const isLarge = size === "hero" || size === "large" || size === "featured";
 

@@ -28,7 +28,7 @@ export default function MissingInfoCard({
 
   return (
     <Link
-      href={`/trip/new?tripId=${tripId}&collect=${field}`}
+      href={`/trip/${tripId}/edit?collect=${field}`}
       className="missing-info-card"
       style={{ "--missing-accent": color } as React.CSSProperties}
     >

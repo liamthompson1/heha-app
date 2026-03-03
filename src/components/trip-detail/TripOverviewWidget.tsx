@@ -17,7 +17,7 @@ function OverviewItem({ label, value, tripId, field }: { label: string; value?: 
           {label}
         </span>
         <Link
-          href={`/trip/new?tripId=${tripId}&collect=${field}`}
+          href={`/trip/${tripId}/edit?collect=${field}`}
           className="text-sm font-medium"
           style={{ color: "var(--blue)" }}
         >

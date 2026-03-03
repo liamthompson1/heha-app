@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import PageShell from "@/components/PageShell";
 import GlassButton from "@/components/GlassButton";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -18,11 +18,14 @@ import ContentLoadingSkeleton from "@/components/trip-detail/ContentLoadingSkele
 
 export default function TripDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [trip, setTrip] = useState<TripRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [content, setContent] = useState<TripContent | null>(null);
   const [contentLoading, setContentLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Fetch trip data
   useEffect(() => {
@@ -78,6 +81,21 @@ export default function TripDetailPage() {
     if (trip) fetchContent(trip);
   }, [trip, fetchContent]);
 
+  const handleDelete = useCallback(async () => {
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/trips/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        router.push("/");
+      }
+    } catch {
+      // Silent fail
+    } finally {
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  }, [id, router]);
+
   if (loading) {
     return (
       <PageShell>
@@ -124,6 +142,8 @@ export default function TripDetailPage() {
         destination={trip.trip.destination}
         dateRange={dateRange}
         tripType={trip.trip.trip_type}
+        tripId={trip.id}
+        imageUrl={trip.image_url}
       />
 
       {/* Main content */}
@@ -207,6 +227,39 @@ export default function TripDetailPage() {
             <GlassButton href="/trip/new" variant="purple" size="lg">
               Plan Another
             </GlassButton>
+          </div>
+
+          {/* Delete trip */}
+          <div className="flex justify-center pt-8">
+            {showDeleteConfirm ? (
+              <div className="glass-panel delete-confirm-bar">
+                <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                  Delete this trip permanently?
+                </p>
+                <div className="flex gap-3 mt-3">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="delete-confirm-btn"
+                  >
+                    {deleting ? "Deleting…" : "Yes, delete"}
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="delete-cancel-btn"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="delete-trip-btn"
+              >
+                Delete trip
+              </button>
+            )}
           </div>
         </ScrollReveal>
       </div>

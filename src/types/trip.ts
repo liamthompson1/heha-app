@@ -137,6 +137,7 @@ export interface TripRow extends CreateTripRequest {
   traveller_api_synced: boolean;
   traveller_trip_id: string | null;
   trip_content?: import("./trip-content").TripContent | null;
+  image_url?: string | null;
 }
 
 export interface CreateTripResponse {

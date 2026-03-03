@@ -6,14 +6,15 @@ interface TripHeroProps {
   destination: string;
   dateRange: string;
   tripType?: string;
+  tripId: string;
+  imageUrl?: string | null;
 }
 
-export default function TripHero({ destination, dateRange, tripType }: TripHeroProps) {
+export default function TripHero({ destination, dateRange, tripType, tripId, imageUrl }: TripHeroProps) {
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">("loading");
 
-  const imgParams = new URLSearchParams({ place: destination });
-  if (tripType) imgParams.set("type", tripType);
-  const imgSrc = `/api/images/destination?${imgParams.toString()}`;
+  // Use persisted image if available, otherwise generate via trip-specific endpoint
+  const imgSrc = imageUrl || `/api/trips/${tripId}/image`;
 
   return (
     <div className="trip-hero">

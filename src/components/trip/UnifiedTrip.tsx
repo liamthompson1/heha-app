@@ -13,6 +13,9 @@ interface UnifiedTripProps {
   onComplete: () => void;
   userId: string | null;
   initialMessage?: string;
+  editMode?: boolean;
+  editTripId?: string;
+  collectField?: string;
 }
 
 type VoiceState = "idle" | "listening" | "processing" | "speaking";
@@ -25,6 +28,9 @@ interface ChipOption {
 
 const GREETING =
   "Hey! I'm your HEHA travel assistant. Where are you off to? You can type, tap an option, or use the mic!";
+
+const EDIT_GREETING =
+  "Hey! I'm here to help you update your trip. What would you like to change?";
 
 const REASON_CHIPS: ChipOption[] = [
   { icon: "🏖", label: "Holiday", value: "Holiday" },
@@ -92,10 +98,13 @@ export default function UnifiedTrip({
   onComplete,
   userId,
   initialMessage,
+  editMode,
+  editTripId,
+  collectField,
 }: UnifiedTripProps) {
   // --- Render state ---
   const [history, setHistory] = useState<ChatMessage[]>([
-    { role: "assistant", content: GREETING },
+    { role: "assistant", content: editMode ? EDIT_GREETING : GREETING },
   ]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
@@ -116,6 +125,10 @@ export default function UnifiedTrip({
   onTripDataChangeRef.current = onTripDataChange;
   const userIdRef = useRef(userId);
   userIdRef.current = userId;
+  const editModeRef = useRef(editMode);
+  editModeRef.current = editMode;
+  const collectFieldRef = useRef(collectField);
+  collectFieldRef.current = collectField;
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -187,7 +200,8 @@ export default function UnifiedTrip({
     abortRef.current = controller;
 
     try {
-      const res = await fetch("/api/agent/chat", {
+      const chatEndpoint = editModeRef.current ? "/api/agent/edit-chat" : "/api/agent/chat";
+      const res = await fetch(chatEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -195,6 +209,7 @@ export default function UnifiedTrip({
           tripData: tripDataRef.current,
           sessionId: "unified",
           userId: userIdRef.current,
+          ...(editModeRef.current && { collectField: collectFieldRef.current }),
         }),
         signal: controller.signal,
       });
@@ -449,7 +464,7 @@ export default function UnifiedTrip({
       {formComplete ? (
         <div className="unified-input-floating">
           <GlassButton variant="coral" className="w-full" onClick={onComplete}>
-            Plan My Trip
+            {editMode ? "Save Changes" : "Plan My Trip"}
           </GlassButton>
         </div>
       ) : (

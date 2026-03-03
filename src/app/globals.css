@@ -2101,3 +2101,67 @@ body {
   padding: 20px;
   border-radius: var(--glass-radius);
 }
+
+/* ——————————————————————————————————————
+   Delete Trip
+   —————————————————————————————————————— */
+
+.delete-trip-btn {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s var(--ease-standard);
+}
+
+.delete-trip-btn:hover {
+  color: #FF6359;
+  background: rgba(255, 99, 89, 0.08);
+}
+
+.delete-confirm-bar {
+  padding: 20px 24px;
+  border-radius: var(--glass-radius);
+  text-align: center;
+}
+
+.delete-confirm-btn {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 99, 89, 0.8);
+  border: none;
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 12px;
+  transition: all 0.2s var(--ease-standard);
+}
+
+.delete-confirm-btn:hover {
+  background: rgba(255, 99, 89, 1);
+}
+
+.delete-confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delete-cancel-btn {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 12px;
+  transition: all 0.2s var(--ease-standard);
+}
+
+.delete-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
