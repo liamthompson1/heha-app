@@ -3,8 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { TripData } from "@/types/trip";
 import type { ChatMessage, AgentChatResponse, SavedMemory } from "@/types/agent";
-import { getMissingRequiredFields } from "@/lib/agent/trip-data-schema";
-import { WIZARD_STEPS } from "@/lib/wizard-steps";
 import AgentMessage from "@/components/agent/AgentMessage";
 import AgentThinking from "@/components/agent/AgentThinking";
 import GlassButton from "@/components/GlassButton";
@@ -18,16 +16,72 @@ interface UnifiedTripProps {
 
 type VoiceState = "idle" | "listening" | "processing" | "speaking";
 
-const GREETING =
-  "Hey! I'm your HEHA travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? You can type, tap the options below, or use the mic!";
+interface ChipOption {
+  icon: string;
+  label: string;
+  value: string;
+}
 
-/** Map the first missing required field to a visual prompt type */
-function getNextVisual(tripData: TripData): string | null {
-  const missing = getMissingRequiredFields(tripData);
-  if (missing.length === 0) return null;
-  const first = missing[0];
-  if (first === "reason") return "reason";
-  if (first === "how_we_are_travelling") return "travel-mode";
+const GREETING =
+  "Hey! I'm your HEHA travel assistant. Where are you off to? You can type, tap an option, or use the mic!";
+
+const REASON_CHIPS: ChipOption[] = [
+  { icon: "🏖", label: "Holiday", value: "Holiday" },
+  { icon: "💼", label: "Business", value: "Business" },
+  { icon: "💍", label: "Honeymoon", value: "Honeymoon" },
+  { icon: "👨‍👩‍👧‍👦", label: "Family", value: "Family trip" },
+  { icon: "🏔", label: "Adventure", value: "Adventure" },
+  { icon: "✨", label: "Other", value: "Other" },
+];
+
+const DESTINATION_CHIPS: ChipOption[] = [
+  { icon: "🇪🇸", label: "Spain", value: "Spain" },
+  { icon: "🇵🇹", label: "Portugal", value: "Portugal" },
+  { icon: "🇫🇷", label: "France", value: "France" },
+  { icon: "🇮🇹", label: "Italy", value: "Italy" },
+  { icon: "🇬🇷", label: "Greece", value: "Greece" },
+  { icon: "🇹🇷", label: "Turkey", value: "Turkey" },
+];
+
+const PEOPLE_CHIPS: ChipOption[] = [
+  { icon: "🧑", label: "Just me", value: "Just me" },
+  { icon: "👫", label: "Couple", value: "2 of us, a couple" },
+  { icon: "👨‍👩‍👧", label: "Family", value: "Family trip" },
+  { icon: "👥", label: "Group", value: "A group of friends" },
+];
+
+const UK_ORIGIN_CHIPS: ChipOption[] = [
+  { icon: "🏙", label: "London", value: "London" },
+  { icon: "🏙", label: "Manchester", value: "Manchester" },
+  { icon: "🏙", label: "Birmingham", value: "Birmingham" },
+  { icon: "🏙", label: "Edinburgh", value: "Edinburgh" },
+  { icon: "🏙", label: "Bristol", value: "Bristol" },
+  { icon: "🏙", label: "Glasgow", value: "Glasgow" },
+];
+
+function getDateChips(): ChipOption[] {
+  const now = new Date();
+  const chips: ChipOption[] = [];
+  for (let i = 1; i <= 4; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const monthName = d.toLocaleString("en-GB", { month: "long" });
+    const year = d.getFullYear();
+    chips.push({
+      icon: "📅",
+      label: monthName,
+      value: `${monthName} ${year}`,
+    });
+  }
+  return chips;
+}
+
+/** Get suggestion chips based on which field is next needed */
+function getNextChips(tripData: TripData): ChipOption[] | null {
+  if (!tripData.reason) return REASON_CHIPS;
+  if (!tripData.journey_locations?.travelling_to) return DESTINATION_CHIPS;
+  if (!tripData.dates?.start_date) return getDateChips();
+  if (!tripData.people_travelling?.length) return PEOPLE_CHIPS;
+  if (!tripData.journey_locations?.travelling_from) return UK_ORIGIN_CHIPS;
   return null;
 }
 
@@ -315,9 +369,9 @@ export default function UnifiedTrip({
   }, []);
 
   // ————————————————————————————————————————
-  // Determine which visual prompt to show
+  // Determine which suggestion chips to show
   // ————————————————————————————————————————
-  const nextVisual = !thinking ? getNextVisual(tripData) : null;
+  const chips = !thinking ? getNextChips(tripData) : null;
 
   // Get voice status text for the mic tooltip
   const micLabel =
@@ -351,9 +405,21 @@ export default function UnifiedTrip({
 
         {thinking && <AgentThinking />}
 
-        {/* Inline visual prompt chips */}
-        {!thinking && nextVisual && (
-          <PromptChips type={nextVisual} onSelect={handleVisualSelect} />
+        {/* Suggestion chips */}
+        {!thinking && chips && (
+          <div className="prompt-chips-row">
+            {chips.map((chip) => (
+              <button
+                key={chip.value}
+                type="button"
+                className="prompt-chip"
+                onClick={() => handleVisualSelect(chip.value)}
+              >
+                <span>{chip.icon}</span>
+                <span>{chip.label}</span>
+              </button>
+            ))}
+          </div>
         )}
 
         <div ref={bottomRef} />
@@ -422,32 +488,6 @@ export default function UnifiedTrip({
 // ————————————————————————————————————————
 // Sub-components
 // ————————————————————————————————————————
-
-function PromptChips({
-  type,
-  onSelect,
-}: {
-  type: string;
-  onSelect: (value: string) => void;
-}) {
-  const step = type === "reason" ? WIZARD_STEPS[0] : WIZARD_STEPS[2];
-
-  return (
-    <div className="prompt-chips-row">
-      {step.options!.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          className="prompt-chip"
-          onClick={() => onSelect(opt.value)}
-        >
-          <span>{opt.icon}</span>
-          <span>{opt.label}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function MicIconSmall() {
   return (

@@ -70,7 +70,7 @@ export default function WizardShell() {
   const [submitting, setSubmitting] = useState(false);
   const [, setSubmitError] = useState("");
   const [state, dispatch] = useReducer(reducer, {
-    tripData: emptyTripData,
+    tripData: { ...emptyTripData, how_we_are_travelling: "Flying" },
   });
 
   const { tripData } = state;
