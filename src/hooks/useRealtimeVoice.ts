@@ -81,7 +81,7 @@ export function useRealtimeVoice({
   // Lazy-init AudioContext on first user gesture (Safari requirement)
   const getAudioCtx = useCallback((): AudioContext => {
     if (!audioCtxRef.current) {
-      audioCtxRef.current = new AudioContext({ sampleRate: 24000 });
+      audioCtxRef.current = new AudioContext();
     }
     if (audioCtxRef.current.state === "suspended") {
       audioCtxRef.current.resume();
