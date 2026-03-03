@@ -1412,21 +1412,22 @@ body {
 .floating-search {
   position: fixed;
   bottom: calc(24px + env(safe-area-inset-bottom));
-  left: 24px;
-  right: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
   max-width: 520px;
   z-index: 40;
-  animation: float-up-left 0.5s var(--ease-spring) both;
+  animation: float-up-center 0.5s var(--ease-spring) both;
 }
 
-@keyframes float-up-left {
+@keyframes float-up-center {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateX(-50%) translateY(40px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -1452,11 +1453,14 @@ body {
   background: rgba(28, 28, 30, 0.75);
   border-color: rgba(255, 255, 255, 0.18);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  transform: translateY(-2px);
 }
 
 .floating-search-pill:active {
   transform: scale(0.98);
+}
+
+.floating-search:hover {
+  transform: translateX(-50%) translateY(-2px);
 }
 
 .search-bar-icon {
@@ -1559,8 +1563,9 @@ body {
 
 @media (max-width: 640px) {
   .floating-search {
-    left: 16px;
-    right: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
     bottom: calc(80px + env(safe-area-inset-bottom));
     max-width: none;
   }

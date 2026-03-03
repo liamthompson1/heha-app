@@ -23,7 +23,7 @@ export default function SearchBar() {
           <path d="m21 21-4.35-4.35" strokeLinecap="round" />
         </svg>
         <span className="search-bar-placeholder">
-          Where do you want to go?
+          Where to next...?
         </span>
       </button>
     </div>

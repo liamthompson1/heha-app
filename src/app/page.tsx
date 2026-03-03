@@ -66,16 +66,40 @@ function Dashboard() {
 
         {/* Loading state */}
         {loading && (
-          <div className="bento-trip-grid">
-            <div className="trip-card trip-card-hero">
-              <div className="trip-card-skeleton" />
-            </div>
-            <div className="trip-card trip-card-standard">
-              <div className="trip-card-skeleton" />
-            </div>
-            <div className="trip-card trip-card-standard">
-              <div className="trip-card-skeleton" />
-            </div>
+          <div className="animate-pulse">
+            {/* First section skeleton */}
+            <section className="mb-12">
+              <div className="flex items-baseline justify-between mb-5 px-1">
+                <div className="glass-panel rounded-lg h-6 w-28" />
+                <div className="glass-panel rounded-lg h-4 w-12" />
+              </div>
+              <div className="trip-scroll-row">
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+              </div>
+            </section>
+            {/* Second section skeleton */}
+            <section className="mb-12">
+              <div className="flex items-baseline justify-between mb-5 px-1">
+                <div className="glass-panel rounded-lg h-6 w-36" />
+                <div className="glass-panel rounded-lg h-4 w-14" />
+              </div>
+              <div className="trip-scroll-row">
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+              </div>
+            </section>
           </div>
         )}
 
@@ -131,16 +155,37 @@ export default function Home() {
         <div className="relative z-10 w-full max-w-7xl mx-auto animate-pulse">
           <div className="glass-panel rounded-2xl h-12 w-56 mb-12" />
           <div className="prismatic-line w-full mb-12" style={{ opacity: 0.3 }} />
-          <div className="bento-trip-grid">
-            <div className="trip-card trip-card-hero">
-              <div className="trip-card-skeleton" />
-            </div>
-            <div className="trip-card trip-card-standard">
-              <div className="trip-card-skeleton" />
-            </div>
-            <div className="trip-card trip-card-standard">
-              <div className="trip-card-skeleton" />
-            </div>
+          <div>
+            {/* First section skeleton */}
+            <section className="mb-12">
+              <div className="flex items-baseline justify-between mb-5 px-1">
+                <div className="glass-panel rounded-lg h-6 w-28" />
+                <div className="glass-panel rounded-lg h-4 w-12" />
+              </div>
+              <div className="trip-scroll-row">
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+              </div>
+            </section>
+            {/* Second section skeleton */}
+            <section className="mb-12">
+              <div className="flex items-baseline justify-between mb-5 px-1">
+                <div className="glass-panel rounded-lg h-6 w-36" />
+                <div className="glass-panel rounded-lg h-4 w-14" />
+              </div>
+              <div className="trip-scroll-row">
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+                <div className="trip-scroll-card trip-card trip-card-standard">
+                  <div className="trip-card-skeleton" />
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
