@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
-    "@ricky0123/vad-react": "^0.0.36",
     "@supabase/supabase-js": "^2.98.0",
     "clsx": "^2.1.1",
     "graphql": "^16.13.0",

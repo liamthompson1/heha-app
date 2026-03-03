@@ -1,18 +1,10 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { useMicVAD } from "@ricky0123/vad-react";
-import { encodeWav } from "@/lib/voice/wav-encoder";
-import { AudioStreamer } from "@/lib/voice/audio-streamer";
 import type { TripData } from "@/types/trip";
 import type { ChatMessage, AgentChatResponse, SavedMemory } from "@/types/agent";
 
-export type VoiceState =
-  | "inactive"
-  | "active-idle"
-  | "listening"
-  | "processing"
-  | "speaking";
+export type VoiceState = "idle" | "listening" | "processing" | "speaking";
 
 interface UseRealtimeVoiceOptions {
   tripData: TripData;
@@ -28,23 +20,16 @@ interface UseRealtimeVoiceReturn {
   toggleVoice: () => void;
 }
 
-/** Detect if browser has native Web Speech API (Chrome/Edge) */
-function hasWebSpeechAPI(): boolean {
-  return typeof window !== "undefined" &&
-    !!(window.SpeechRecognition || window.webkitSpeechRecognition);
-}
-
 export function useRealtimeVoice({
   tripData,
   onTripDataChange,
   userId,
 }: UseRealtimeVoiceOptions): UseRealtimeVoiceReturn {
-  const [voiceState, setVoiceState] = useState<VoiceState>("inactive");
+  const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [formComplete, setFormComplete] = useState(false);
   const [lastMemories, setLastMemories] = useState<SavedMemory[]>([]);
   const [lastTranscript, setLastTranscript] = useState("");
 
-  // Refs to avoid stale closures
   const voiceStateRef = useRef(voiceState);
   voiceStateRef.current = voiceState;
 
@@ -59,12 +44,9 @@ export function useRealtimeVoice({
 
   const mountedRef = useRef(true);
   const memoryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const streamerRef = useRef<AudioStreamer | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const webSpeechTranscriptRef = useRef<string>("");
-  const activeRef = useRef(false); // whether voice agent is active (user toggled on)
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const historyRef = useRef<ChatMessage[]>([
     {
@@ -74,99 +56,98 @@ export function useRealtimeVoice({
     },
   ]);
 
-  // Ref-stable callbacks
   const sendToAgentRef = useRef<(transcript: string) => Promise<void>>(null!);
   const speakResponseRef = useRef<(text: string) => Promise<void>>(null!);
 
-  // Lazy-init AudioContext on first user gesture (Safari requirement)
-  const getAudioCtx = useCallback((): AudioContext => {
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new AudioContext();
-    }
-    if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume();
-    }
-    return audioCtxRef.current;
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      recognitionRef.current?.abort();
+      abortRef.current?.abort();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (memoryTimerRef.current) clearTimeout(memoryTimerRef.current);
+    };
   }, []);
 
-  // --- Barge-in: abort in-flight requests + stop audio ---
-  const bargeIn = useCallback(() => {
-    // Cancel any in-flight fetch (chat or TTS)
-    abortRef.current?.abort();
-    abortRef.current = null;
-
-    // Stop audio playback
-    streamerRef.current?.stop();
-    streamerRef.current = null;
-
-    // Stop Web Speech recognition if running
-    recognitionRef.current?.abort();
-    recognitionRef.current = null;
-    webSpeechTranscriptRef.current = "";
+  const stopAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
+      audioRef.current = null;
+    }
   }, []);
 
-  // --- Web Speech API for Chrome fast-path ---
-  const startWebSpeech = useCallback(() => {
-    if (!hasWebSpeechAPI()) return;
-
-    recognitionRef.current?.abort();
-    webSpeechTranscriptRef.current = "";
-
+  // --- Start listening via Web Speech API ---
+  const startListening = useCallback(() => {
     const SpeechRecognitionCtor =
       window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognitionCtor) {
+      console.error("Speech recognition not supported");
+      return;
+    }
+
+    recognitionRef.current?.abort();
+
     const recognition = new SpeechRecognitionCtor();
     recognitionRef.current = recognition;
-
     recognition.lang = "en-GB";
     recognition.interimResults = false;
-    recognition.continuous = false;
+    recognition.continuous = true;
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[0]?.[0]?.transcript;
-      if (transcript) {
-        webSpeechTranscriptRef.current = transcript;
-      }
+    let transcript = "";
+
+    recognition.onstart = () => {
+      if (mountedRef.current) setVoiceState("listening");
     };
 
-    recognition.onerror = () => {
-      // Silently handle — VAD fallback will kick in
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      // Accumulate all results
+      let full = "";
+      for (let i = 0; i < event.results.length; i++) {
+        full += event.results[i][0].transcript;
+      }
+      transcript = full;
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      if (!mountedRef.current) return;
+      if (event.error !== "aborted" && event.error !== "no-speech") {
+        console.warn("Speech error:", event.error);
+      }
+      if (voiceStateRef.current === "listening") {
+        setVoiceState("idle");
+      }
     };
 
     recognition.onend = () => {
       recognitionRef.current = null;
+      if (!mountedRef.current) return;
+
+      // If we have a transcript, send it
+      if (transcript && voiceStateRef.current === "listening") {
+        sendToAgentRef.current?.(transcript);
+      } else if (voiceStateRef.current === "listening") {
+        setVoiceState("idle");
+      }
     };
 
     recognition.start();
   }, []);
 
-  const stopWebSpeech = useCallback(() => {
+  // --- Stop listening and process ---
+  const stopListening = useCallback(() => {
     recognitionRef.current?.stop();
-    recognitionRef.current = null;
   }, []);
-
-  // --- Server-side STT fallback (Safari/Firefox) ---
-  const transcribeOnServer = useCallback(
-    async (audioData: Float32Array, signal: AbortSignal): Promise<string> => {
-      const wavBlob = encodeWav(audioData, 16000);
-      const formData = new FormData();
-      formData.append("audio", wavBlob, "audio.wav");
-
-      const res = await fetch("/api/voice/transcribe", {
-        method: "POST",
-        body: formData,
-        signal,
-      });
-
-      if (!res.ok) throw new Error(`Transcribe failed: ${res.status}`);
-      const data = await res.json();
-      return data.text ?? "";
-    },
-    []
-  );
 
   // --- Send transcript to agent ---
   sendToAgentRef.current = async (transcript: string) => {
-    if (!mountedRef.current || !activeRef.current) return;
+    if (!mountedRef.current) return;
 
     setVoiceState("processing");
     setLastTranscript(transcript);
@@ -195,7 +176,7 @@ export function useRealtimeVoice({
 
       const data: AgentChatResponse = await res.json();
 
-      if (!mountedRef.current || !activeRef.current) return;
+      if (!mountedRef.current) return;
 
       onTripDataChangeRef.current(data.updatedTripData);
 
@@ -219,32 +200,20 @@ export function useRealtimeVoice({
 
       await speakResponseRef.current?.(data.message);
     } catch (err) {
-      if ((err as Error).name === "AbortError") return; // barge-in
+      if ((err as Error).name === "AbortError") return;
       console.error("Agent chat error:", err);
-      if (mountedRef.current && activeRef.current) {
-        setVoiceState("active-idle");
-      }
+      if (mountedRef.current) setVoiceState("idle");
     }
   };
 
-  // --- Speak response via streaming TTS ---
+  // --- Speak response via TTS (mp3 via <audio>) ---
   speakResponseRef.current = async (text: string) => {
-    if (!mountedRef.current || !activeRef.current) return;
+    if (!mountedRef.current) return;
 
     setVoiceState("speaking");
 
-    const ctx = getAudioCtx();
-    const streamer = new AudioStreamer(ctx);
-    streamerRef.current = streamer;
-
     const controller = new AbortController();
     abortRef.current = controller;
-
-    streamer.onComplete(() => {
-      if (!mountedRef.current || !activeRef.current) return;
-      streamerRef.current = null;
-      setVoiceState("active-idle");
-    });
 
     try {
       const res = await fetch("/api/agent/speak", {
@@ -256,128 +225,55 @@ export function useRealtimeVoice({
 
       if (!res.ok) throw new Error(`TTS failed: ${res.status}`);
 
-      await streamer.stream(res);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        audioRef.current = null;
+        if (mountedRef.current) setVoiceState("idle");
+      };
+
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        audioRef.current = null;
+        if (mountedRef.current) setVoiceState("idle");
+      };
+
+      await audio.play();
     } catch (err) {
-      if ((err as Error).name === "AbortError") return; // barge-in
-      console.error("TTS playback error:", err);
-      if (mountedRef.current && activeRef.current) {
-        streamerRef.current = null;
-        setVoiceState("active-idle");
-      }
+      if ((err as Error).name === "AbortError") return;
+      console.error("TTS error:", err);
+      if (mountedRef.current) setVoiceState("idle");
     }
   };
 
-  // --- VAD ---
-  const vad = useMicVAD({
-    startOnLoad: false,
-    positiveSpeechThreshold: 0.6,
-    baseAssetPath: "/",
-    onnxWASMBasePath: "/",
-    onSpeechStart: () => {
-      if (!mountedRef.current || !activeRef.current) return;
-
-      // Barge-in if currently speaking or processing
-      if (
-        voiceStateRef.current === "speaking" ||
-        voiceStateRef.current === "processing"
-      ) {
-        bargeIn();
-      }
-
-      setVoiceState("listening");
-
-      // Start Web Speech for Chrome fast-path
-      if (hasWebSpeechAPI()) {
-        startWebSpeech();
-      }
-    },
-    onSpeechEnd: (audio: Float32Array) => {
-      if (!mountedRef.current || !activeRef.current) return;
-
-      stopWebSpeech();
-
-      // Chrome fast-path: use Web Speech transcript if available
-      const webTranscript = webSpeechTranscriptRef.current;
-      webSpeechTranscriptRef.current = "";
-
-      if (webTranscript) {
-        sendToAgentRef.current?.(webTranscript);
-        return;
-      }
-
-      // Safari/Firefox fallback: send audio to server for STT
-      const controller = new AbortController();
-      abortRef.current = controller;
-
-      transcribeOnServer(audio, controller.signal)
-        .then((text) => {
-          if (text && mountedRef.current && activeRef.current) {
-            sendToAgentRef.current?.(text);
-          } else if (mountedRef.current && activeRef.current) {
-            // Empty transcript — back to idle
-            setVoiceState("active-idle");
-          }
-        })
-        .catch((err) => {
-          if ((err as Error).name === "AbortError") return;
-          console.error("Server STT error:", err);
-          if (mountedRef.current && activeRef.current) {
-            setVoiceState("active-idle");
-          }
-        });
-    },
-  });
-
-  // Log VAD errors
-  useEffect(() => {
-    if (vad.errored) {
-      console.error("VAD error:", vad.errored);
-    }
-  }, [vad.errored]);
-
-  // --- Toggle voice on/off ---
+  // --- Toggle: tap to start/stop listening, or interrupt speaking ---
   const toggleVoice = useCallback(() => {
     const state = voiceStateRef.current;
 
-    if (state === "inactive") {
-      // Activate
-      activeRef.current = true;
-      getAudioCtx(); // Init audio context on user gesture
-      vad.start();
-      setVoiceState("active-idle");
+    if (state === "idle") {
+      startListening();
+      return;
+    }
+
+    if (state === "listening") {
+      stopListening();
       return;
     }
 
     if (state === "speaking") {
-      // Barge-in: stop audio, VAD will pick up new speech
-      bargeIn();
-      setVoiceState("active-idle");
+      // Stop audio, go back to idle
+      abortRef.current?.abort();
+      stopAudio();
+      setVoiceState("idle");
       return;
     }
 
-    // Any other active state → deactivate
-    bargeIn();
-    activeRef.current = false;
-    vad.pause();
-    setVoiceState("inactive");
-  }, [bargeIn, getAudioCtx, vad]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-      activeRef.current = false;
-      abortRef.current?.abort();
-      streamerRef.current?.stop();
-      recognitionRef.current?.abort();
-      if (memoryTimerRef.current) clearTimeout(memoryTimerRef.current);
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close();
-        audioCtxRef.current = null;
-      }
-    };
-  }, []);
+    // processing — ignore taps
+  }, [startListening, stopListening, stopAudio]);
 
   return {
     voiceState,

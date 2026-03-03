@@ -19,12 +19,13 @@ export async function POST(req: NextRequest) {
     const voiceId = "Bj9UqZbhQsanLzgalpEG"; // Austin — male
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?output_format=pcm_24000`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`,
       {
         method: "POST",
         headers: {
           "xi-api-key": apiKey,
           "Content-Type": "application/json",
+          Accept: "audio/mpeg",
         },
         body: JSON.stringify({
           text,
@@ -47,11 +48,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Stream the PCM response body directly
-    return new NextResponse(response.body as ReadableStream, {
+    const audioBuffer = await response.arrayBuffer();
+
+    return new NextResponse(audioBuffer, {
       status: 200,
       headers: {
-        "Content-Type": "application/octet-stream",
+        "Content-Type": "audio/mpeg",
+        "Content-Length": audioBuffer.byteLength.toString(),
       },
     });
   } catch (error) {

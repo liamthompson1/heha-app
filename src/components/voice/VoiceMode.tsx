@@ -13,9 +13,8 @@ interface VoiceModeProps {
 }
 
 const STATUS_TEXT: Record<string, string> = {
-  inactive: "Tap to start",
-  "active-idle": "Listening for speech...",
-  listening: "Listening...",
+  idle: "Tap to start",
+  listening: "Tap to stop",
   processing: "Thinking...",
   speaking: "Tap to interrupt",
 };

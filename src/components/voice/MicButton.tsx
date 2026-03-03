@@ -39,18 +39,12 @@ export default function MicButton({ voiceState, onClick }: MicButtonProps) {
       data-state={voiceState}
       onClick={onClick}
       aria-label={
-        voiceState === "inactive" ? "Start voice agent" :
-        voiceState === "active-idle" ? "Voice agent active" :
-        voiceState === "listening" ? "Listening..." :
+        voiceState === "idle" ? "Start listening" :
+        voiceState === "listening" ? "Stop listening" :
         voiceState === "processing" ? "Processing..." :
         "Tap to interrupt"
       }
     >
-      {/* Active-idle: subtle pulse ring */}
-      {voiceState === "active-idle" && (
-        <span className="mic-idle-pulse-ring" />
-      )}
-
       {/* Listening: coral pulse rings */}
       {voiceState === "listening" && (
         <>
