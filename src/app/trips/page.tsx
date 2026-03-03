@@ -26,15 +26,19 @@ export default function TripsPage() {
     if (!session.authenticated) return;
 
     fetch("/api/trips")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch trips");
-        return res.json();
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || `API error ${res.status}`);
+        }
+        return data;
       })
       .then((data) => {
         setTrips(data.trips ?? []);
       })
-      .catch(() => {
-        setError("Failed to load trips.");
+      .catch((err) => {
+        console.error("Trips fetch error:", err);
+        setError(err.message || "Failed to load trips.");
       })
       .finally(() => {
         setLoading(false);
