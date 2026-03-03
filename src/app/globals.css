@@ -1773,3 +1773,331 @@ body {
     transform: none;
   }
 }
+
+/* ——————————————————————————————————————
+   Trip Hero
+   —————————————————————————————————————— */
+
+.trip-hero {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .trip-hero {
+    height: 45vh;
+    min-height: 300px;
+  }
+}
+
+.trip-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trip-hero-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 100%);
+  animation: shimmer 2s infinite;
+}
+
+.trip-hero-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.trip-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+}
+
+.trip-hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .trip-hero-content {
+    padding: 24px;
+  }
+}
+
+/* ——————————————————————————————————————
+   Widget Section Headers
+   —————————————————————————————————————— */
+
+.widget-section {
+  margin-bottom: 48px;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.widget-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+/* ——————————————————————————————————————
+   Missing Info Card
+   —————————————————————————————————————— */
+
+.missing-info-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: var(--glass-radius);
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-standard);
+  text-decoration: none;
+}
+
+.missing-info-card:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.missing-info-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.missing-info-arrow {
+  font-size: 1.25rem;
+  transition: transform 0.3s var(--ease-standard);
+  flex-shrink: 0;
+}
+
+.missing-info-card:hover .missing-info-arrow {
+  transform: translateX(4px);
+}
+
+/* ——————————————————————————————————————
+   Flight Detail Card (boarding pass)
+   —————————————————————————————————————— */
+
+.flight-detail-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 24px 28px;
+}
+
+.flight-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.flight-route-endpoint {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.flight-airport-code {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1;
+}
+
+.flight-route-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-width: 60px;
+}
+
+.flight-route-track {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+}
+
+.flight-route-plane {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* ——————————————————————————————————————
+   Weather Widget
+   —————————————————————————————————————— */
+
+.weather-widget {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 28px;
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.weather-day-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+}
+
+.weather-day-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.weather-day-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 56px;
+  padding: 8px 6px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
+  scroll-snap-align: start;
+}
+
+.weather-day-pill:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.weather-day-pill-active {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+}
+
+/* ——————————————————————————————————————
+   Things to Do Cards
+   —————————————————————————————————————— */
+
+.things-card {
+  padding: 20px;
+  border-radius: var(--glass-radius);
+}
+
+.things-insider-tip {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(240, 180, 41, 0.06);
+  border: 1px solid rgba(240, 180, 41, 0.12);
+}
+
+/* ——————————————————————————————————————
+   Local Knowledge & Food
+   —————————————————————————————————————— */
+
+.local-tip-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--glass-radius);
+}
+
+.local-tip-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.food-spot-card {
+  padding: 20px;
+  border-radius: var(--glass-radius);
+}
+
+/* ——————————————————————————————————————
+   Travelers
+   —————————————————————————————————————— */
+
+.traveler-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--glass-radius);
+}
+
+.traveler-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ——————————————————————————————————————
+   Overview Card
+   —————————————————————————————————————— */
+
+.overview-card {
+  padding: 24px;
+  border-radius: var(--glass-radius);
+}
+
+.overview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.overview-item:last-child {
+  border-bottom: none;
+}
+
+/* ——————————————————————————————————————
+   Best Area Card
+   —————————————————————————————————————— */
+
+.best-area-card {
+  padding: 20px;
+  border-radius: var(--glass-radius);
+}

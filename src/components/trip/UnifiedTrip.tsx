@@ -12,6 +12,7 @@ interface UnifiedTripProps {
   onTripDataChange: (data: TripData) => void;
   onComplete: () => void;
   userId: string | null;
+  initialMessage?: string;
 }
 
 type VoiceState = "idle" | "listening" | "processing" | "speaking";
@@ -90,6 +91,7 @@ export default function UnifiedTrip({
   onTripDataChange,
   onComplete,
   userId,
+  initialMessage,
 }: UnifiedTripProps) {
   // --- Render state ---
   const [history, setHistory] = useState<ChatMessage[]>([
@@ -140,6 +142,17 @@ export default function UnifiedTrip({
       }
     };
   }, []);
+
+  // Auto-send initial message (for "collect" flow from trip detail)
+  const initialSentRef = useRef(false);
+  useEffect(() => {
+    if (initialMessage && !initialSentRef.current && sendMessageRef.current) {
+      initialSentRef.current = true;
+      // Delay slightly to allow form data to settle
+      const t = setTimeout(() => sendMessageRef.current?.(initialMessage, false), 500);
+      return () => clearTimeout(t);
+    }
+  }, [initialMessage]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

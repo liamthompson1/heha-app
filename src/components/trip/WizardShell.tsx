@@ -1,9 +1,9 @@
 "use client";
 
-import { useReducer, useCallback, useState } from "react";
+import { useReducer, useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth/use-session";
-import type { TripData } from "@/types/trip";
+import type { TripData, TripRow } from "@/types/trip";
 import type { CreateTripRequest } from "@/types/trip";
 import { emptyTripData } from "@/types/trip";
 import UnifiedTrip from "./UnifiedTrip";
@@ -64,7 +64,51 @@ function mapTripDataToRequest(data: TripData, userId: string): CreateTripRequest
   };
 }
 
-export default function WizardShell() {
+/** Convert a TripRow from the API back into the form-friendly TripData shape */
+function mapTripRowToData(row: TripRow): TripData {
+  return {
+    ...emptyTripData,
+    reason: row.trip.trip_type || "",
+    how_we_are_travelling: "Flying",
+    dates: {
+      start_date: row.trip.start_date || "",
+      end_date: row.trip.end_date || "",
+      flexible_dates_notes: "",
+    },
+    journey_locations: {
+      ...emptyTripData.journey_locations,
+      travelling_to: row.trip.destination || "",
+      travelling_from: row.journey_locations?.origin || "",
+    },
+    people_travelling: (row.people_travelling || []).map((p) => ({
+      first_name: p.name.split(" ")[0] || "",
+      last_name: p.name.split(" ").slice(1).join(" ") || "",
+      dob: "",
+      gender: "",
+      email: "",
+      phone: "",
+    })),
+    flights_if_known: (row.flights_if_known || []).map((f) => ({
+      airline: f.airline || "",
+      flight_number: f.flight_number || "",
+      departure_date: f.departure_time?.split(" ")[0] || "",
+      departure_time: f.departure_time?.split(" ")[1] || "",
+      arrival_date: f.arrival_time?.split(" ")[0] || "",
+      arrival_time: f.arrival_time?.split(" ")[1] || "",
+      from_airport: f.departure_airport || "",
+      to_airport: f.arrival_airport || "",
+      direction: "outbound" as const,
+    })),
+    anything_else_we_should_know: row.anything_else_we_should_know || "",
+  };
+}
+
+interface WizardShellProps {
+  editTripId?: string;
+  collectField?: string;
+}
+
+export default function WizardShell({ editTripId, collectField }: WizardShellProps) {
   const router = useRouter();
   const session = useSession();
   const [submitting, setSubmitting] = useState(false);
@@ -74,6 +118,20 @@ export default function WizardShell() {
   });
 
   const { tripData } = state;
+
+  // Load existing trip data when editing
+  useEffect(() => {
+    if (!editTripId) return;
+
+    fetch(`/api/trips/${editTripId}`)
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        if (data?.trip) {
+          dispatch({ type: "UPDATE_DATA", data: mapTripRowToData(data.trip) });
+        }
+      })
+      .catch(() => {});
+  }, [editTripId]);
 
   const onUpdate = useCallback(
     (data: TripData) => dispatch({ type: "UPDATE_DATA", data }),
@@ -118,6 +176,11 @@ export default function WizardShell() {
     }
   }, [tripData, router, session.userId, submitting]);
 
+  // Build an initial system-style message to focus collection if editing
+  const collectMessage = editTripId && collectField
+    ? `I'd like to update my ${collectField.replace(/_/g, " ")} for this trip.`
+    : undefined;
+
   return (
     <div className="mx-auto w-full max-w-2xl px-4 flex-1 flex flex-col">
       <UnifiedTrip
@@ -125,6 +188,7 @@ export default function WizardShell() {
         onTripDataChange={onUpdate}
         onComplete={handleSubmit}
         userId={session.userId}
+        initialMessage={collectMessage}
       />
     </div>
   );
