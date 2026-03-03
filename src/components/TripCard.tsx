@@ -48,7 +48,14 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
         src={imgSrc}
         alt=""
         className="trip-card-img"
-        onLoad={() => setImgState("loaded")}
+        onLoad={(e) => {
+          const img = e.target as HTMLImageElement;
+          if (img.naturalWidth === 0) {
+            setImgState("error");
+          } else {
+            setImgState("loaded");
+          }
+        }}
         onError={() => setImgState("error")}
         style={{ display: imgState === "error" ? "none" : "block" }}
       />

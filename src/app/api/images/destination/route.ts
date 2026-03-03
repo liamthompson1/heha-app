@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 404 });
   }
 
   try {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     if (!res.ok) {
       console.error("Gemini API error:", res.status, await res.text());
-      return new NextResponse(null, { status: 204 });
+      return new NextResponse(null, { status: 404 });
     }
 
     const data = await res.json();
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     // Extract base64 image from response
     const parts = data?.candidates?.[0]?.content?.parts;
     if (!parts) {
-      return new NextResponse(null, { status: 204 });
+      return new NextResponse(null, { status: 404 });
     }
 
     const imagePart = parts.find(
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     );
 
     if (!imagePart?.inlineData?.data) {
-      return new NextResponse(null, { status: 204 });
+      return new NextResponse(null, { status: 404 });
     }
 
     const buffer = Buffer.from(imagePart.inlineData.data, "base64");
@@ -73,6 +73,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (err) {
     console.error("Gemini image generation failed:", err);
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 404 });
   }
 }
