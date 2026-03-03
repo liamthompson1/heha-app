@@ -1698,6 +1698,31 @@ body {
 }
 
 /* ——————————————————————————————————————
+   Scroll Reveal — Apple-style entrance
+   —————————————————————————————————————— */
+
+.sr {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition:
+    opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Variants — starting positions */
+.sr-up { transform: translateY(40px); }
+.sr-left { transform: translateX(-40px); }
+.sr-right { transform: translateX(40px); }
+.sr-scale { transform: scale(0.92); }
+.sr-fade { transform: none; }
+
+/* Revealed state */
+.sr-visible {
+  opacity: 1;
+  transform: translateY(0) translateX(0) scale(1);
+}
+
+/* ——————————————————————————————————————
    Reduced Motion
    —————————————————————————————————————— */
 
@@ -1708,5 +1733,10 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .sr {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useSession } from "@/lib/auth/use-session";
 import OrbField, { LANDING_ORBS, SUBTLE_ORBS } from "@/components/OrbField";
 import AuthStatus from "@/components/AuthStatus";
+import ScrollReveal from "@/components/ScrollReveal";
 import SearchBar from "@/components/SearchBar";
 import NewTripPill from "@/components/NewTripPill";
 import LogoHeader from "@/components/LogoHeader";
@@ -176,48 +177,52 @@ export default function Home() {
 
       {/* ── Get Started Section ── */}
       <section className="relative z-10 w-full max-w-5xl mx-auto px-6 py-24 sm:py-32">
-        <div className="text-center mb-16">
-          <h2 className="page-enter text-3xl sm:text-5xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
+        <ScrollReveal className="text-center mb-16">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
             Get started in seconds.
           </h2>
           <p className="mt-4 text-base sm:text-lg max-w-lg mx-auto" style={{ color: "var(--text-secondary)" }}>
             Sign in to save your trips, access personalised recommendations, and plan with friends.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 max-w-3xl mx-auto">
-          <Link
-            href="/auth/entry"
-            className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12"
-            style={{ textDecoration: "none", color: "var(--foreground)" }}
-          >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(90, 200, 250, 0.12)" }}>
-              <svg width="28" height="28" fill="none" stroke="var(--blue)" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold mb-2">Log in with Holiday Extras</h3>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Already a Holiday Extras customer? Sign in to sync your bookings and preferences.
-            </p>
-          </Link>
+          <ScrollReveal delay={100}>
+            <Link
+              href="/auth/entry"
+              className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12"
+              style={{ textDecoration: "none", color: "var(--foreground)" }}
+            >
+              <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(90, 200, 250, 0.12)" }}>
+                <svg width="28" height="28" fill="none" stroke="var(--blue)" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold mb-2">Log in with Holiday Extras</h3>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                Already a Holiday Extras customer? Sign in to sync your bookings and preferences.
+              </p>
+            </Link>
+          </ScrollReveal>
 
-          <Link
-            href="/auth/entry"
-            className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12"
-            style={{ textDecoration: "none", color: "var(--foreground)" }}
-          >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(46, 205, 193, 0.12)" }}>
-              <svg width="28" height="28" fill="none" stroke="var(--teal)" strokeWidth="2" viewBox="0 0 24 24">
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <path d="M22 7l-10 7L2 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold mb-2">Continue with Email</h3>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              New here? Enter your email and we&rsquo;ll send you a magic link. No passwords needed.
-            </p>
-          </Link>
+          <ScrollReveal delay={200}>
+            <Link
+              href="/auth/entry"
+              className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12"
+              style={{ textDecoration: "none", color: "var(--foreground)" }}
+            >
+              <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(46, 205, 193, 0.12)" }}>
+                <svg width="28" height="28" fill="none" stroke="var(--teal)" strokeWidth="2" viewBox="0 0 24 24">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="M22 7l-10 7L2 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold mb-2">Continue with Email</h3>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                New here? Enter your email and we&rsquo;ll send you a magic link. No passwords needed.
+              </p>
+            </Link>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -225,38 +230,46 @@ export default function Home() {
 
       {/* ── How It Works Section ── */}
       <section className="relative z-10 w-full max-w-5xl mx-auto px-6 py-24 sm:py-32">
-        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-center mb-6" style={{ color: "var(--foreground)" }}>
-          Trip planning,{" "}
-          <span className="gradient-text">supercharged.</span>
-        </h2>
-        <p className="text-base sm:text-lg text-center max-w-xl mx-auto mb-20" style={{ color: "var(--text-secondary)" }}>
-          From a quick weekend away to a month-long adventure — tell our AI what you want and watch your perfect trip come together.
-        </p>
+        <ScrollReveal className="mb-20">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-center mb-6" style={{ color: "var(--foreground)" }}>
+            Trip planning,{" "}
+            <span className="gradient-text">supercharged.</span>
+          </h2>
+          <p className="text-base sm:text-lg text-center max-w-xl mx-auto" style={{ color: "var(--text-secondary)" }}>
+            From a quick weekend away to a month-long adventure — tell our AI what you want and watch your perfect trip come together.
+          </p>
+        </ScrollReveal>
 
         <div className="grid gap-8 sm:grid-cols-3">
-          <div className="glass-panel p-8 sm:p-10 text-center">
-            <div className="text-4xl mb-5">&#128172;</div>
-            <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>Tell us your dream</h3>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Speak or type — describe your ideal trip, budget, dates and who&rsquo;s coming. Our AI listens and understands.
-            </p>
-          </div>
+          <ScrollReveal delay={0} variant="up">
+            <div className="glass-panel p-8 sm:p-10 text-center h-full">
+              <div className="text-4xl mb-5">&#128172;</div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>Tell us your dream</h3>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                Speak or type — describe your ideal trip, budget, dates and who&rsquo;s coming. Our AI listens and understands.
+              </p>
+            </div>
+          </ScrollReveal>
 
-          <div className="glass-panel p-8 sm:p-10 text-center">
-            <div className="text-4xl mb-5">&#9992;&#65039;</div>
-            <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>We build your trip</h3>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Flights, hotels, activities, transfers — everything assembled into a complete itinerary, ready to review.
-            </p>
-          </div>
+          <ScrollReveal delay={120} variant="up">
+            <div className="glass-panel p-8 sm:p-10 text-center h-full">
+              <div className="text-4xl mb-5">&#9992;&#65039;</div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>We build your trip</h3>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                Flights, hotels, activities, transfers — everything assembled into a complete itinerary, ready to review.
+              </p>
+            </div>
+          </ScrollReveal>
 
-          <div className="glass-panel p-8 sm:p-10 text-center">
-            <div className="text-4xl mb-5">&#127881;</div>
-            <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>Book and go</h3>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              Refine the details, share with fellow travellers, and book — all in one place. Your trip, your way.
-            </p>
-          </div>
+          <ScrollReveal delay={240} variant="up">
+            <div className="glass-panel p-8 sm:p-10 text-center h-full">
+              <div className="text-4xl mb-5">&#127881;</div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>Book and go</h3>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                Refine the details, share with fellow travellers, and book — all in one place. Your trip, your way.
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -265,7 +278,7 @@ export default function Home() {
       {/* ── Agents Section ── */}
       <section className="relative z-10 w-full max-w-5xl mx-auto px-6 py-24 sm:py-32">
         <div className="grid gap-10 sm:grid-cols-2 items-center">
-          <div>
+          <ScrollReveal variant="left">
             <p className="text-sm font-medium uppercase tracking-widest mb-4" style={{ color: "var(--purple)" }}>
               For developers
             </p>
@@ -281,11 +294,12 @@ export default function Home() {
             >
               Explore Agent Skills &rarr;
             </Link>
-          </div>
+          </ScrollReveal>
 
-          <div className="glass-panel p-8">
-            <pre className="text-sm overflow-x-auto" style={{ color: "var(--text-secondary)" }}>
-              <code>{`const trip = await agent.plan({
+          <ScrollReveal variant="right" delay={150}>
+            <div className="glass-panel p-8">
+              <pre className="text-sm overflow-x-auto" style={{ color: "var(--text-secondary)" }}>
+                <code>{`const trip = await agent.plan({
   destination: "Tokyo",
   duration: "7 days",
   interests: ["food", "temples"],
@@ -294,18 +308,19 @@ export default function Home() {
 
 // Returns full itinerary with
 // flights, hotels & activities`}</code>
-            </pre>
-          </div>
+              </pre>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="relative z-10 w-full max-w-5xl mx-auto px-6 py-12 text-center">
+      <ScrollReveal as="footer" variant="fade" className="relative z-10 w-full max-w-5xl mx-auto px-6 py-12 text-center">
         <div className="prismatic-line w-full mb-8" />
         <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
           Built by Holiday Extras &middot; Powered by AI
         </p>
-      </footer>
+      </ScrollReveal>
     </div>
   );
 }
