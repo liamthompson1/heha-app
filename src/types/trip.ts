@@ -85,6 +85,70 @@ export const emptyTripData: TripData = {
   anything_else_we_should_know: "",
 };
 
+// --- API types (POST /api/trips) ---
+
+export interface ApiTripDetails {
+  destination: string;
+  start_date: string;
+  end_date: string;
+  trip_type?: string;
+}
+
+export interface ApiPerson {
+  name: string;
+  age?: number;
+  dietary_requirements?: string[];
+}
+
+export interface ApiPreferences {
+  budget?: string;
+  accommodation_type?: string;
+  activities?: string[];
+  pace?: string;
+}
+
+export interface ApiFlight {
+  airline?: string;
+  flight_number?: string;
+  departure_airport: string;
+  arrival_airport: string;
+  departure_time?: string;
+  arrival_time?: string;
+}
+
+export interface ApiJourneyLocations {
+  origin?: string;
+  stops?: string[];
+}
+
+export interface CreateTripRequest {
+  user_id: string;
+  trip: ApiTripDetails;
+  people_travelling: ApiPerson[];
+  preferences: ApiPreferences;
+  flights_if_known?: ApiFlight[];
+  journey_locations?: ApiJourneyLocations;
+  anything_else_we_should_know?: string;
+}
+
+export interface TripRow extends CreateTripRequest {
+  id: string;
+  created_at: string;
+  traveller_api_synced: boolean;
+  traveller_trip_id: string | null;
+}
+
+export interface CreateTripResponse {
+  trip: TripRow;
+  traveller_api: {
+    synced: boolean;
+    trip_id: string | null;
+    error: string | null;
+  };
+}
+
+// --- Dummy data ---
+
 export const dummyTripData: TripData = {
   name: "Summer in Barcelona",
   reason: "Holiday",
