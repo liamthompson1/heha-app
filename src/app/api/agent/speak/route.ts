@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
 
-    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const apiKey = process.env.ELEVEN_LABS_KEY ?? process.env.ELEVENLABS_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: "ElevenLabs API key not configured" },
