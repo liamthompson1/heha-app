@@ -32,10 +32,10 @@ function mergeTripData(
   if (partial.dates && typeof partial.dates === "object") {
     const d = partial.dates as Record<string, string>;
     merged.dates = {
-      start_date: d.start_date ?? existing.dates.start_date,
-      end_date: d.end_date ?? existing.dates.end_date,
+      start_date: d.start_date ?? existing.dates?.start_date ?? "",
+      end_date: d.end_date ?? existing.dates?.end_date ?? "",
       flexible_dates_notes:
-        d.flexible_dates_notes ?? existing.dates.flexible_dates_notes,
+        d.flexible_dates_notes ?? existing.dates?.flexible_dates_notes ?? "",
     };
   }
 
@@ -63,14 +63,14 @@ function mergeTripData(
     const j = partial.journey_locations as Record<string, string>;
     merged.journey_locations = {
       travelling_from:
-        j.travelling_from ?? existing.journey_locations.travelling_from,
+        j.travelling_from ?? existing.journey_locations?.travelling_from ?? "",
       postcode_from:
-        j.postcode_from ?? existing.journey_locations.postcode_from,
+        j.postcode_from ?? existing.journey_locations?.postcode_from ?? "",
       travelling_to:
-        j.travelling_to ?? existing.journey_locations.travelling_to,
-      postcode_to: j.postcode_to ?? existing.journey_locations.postcode_to,
+        j.travelling_to ?? existing.journey_locations?.travelling_to ?? "",
+      postcode_to: j.postcode_to ?? existing.journey_locations?.postcode_to ?? "",
       nearest_airport:
-        j.nearest_airport ?? existing.journey_locations.nearest_airport,
+        j.nearest_airport ?? existing.journey_locations?.nearest_airport ?? "",
     };
   }
 
@@ -100,28 +100,28 @@ function mergeTripData(
       travel_insurance:
         typeof p.travel_insurance === "boolean"
           ? p.travel_insurance
-          : existing.preferences.travel_insurance,
+          : existing.preferences?.travel_insurance ?? false,
       airport_parking:
         typeof p.airport_parking === "boolean"
           ? p.airport_parking
-          : existing.preferences.airport_parking,
+          : existing.preferences?.airport_parking ?? false,
       airport_lounge:
         typeof p.airport_lounge === "boolean"
           ? p.airport_lounge
-          : existing.preferences.airport_lounge,
+          : existing.preferences?.airport_lounge ?? false,
       car_hire:
         typeof p.car_hire === "boolean"
           ? p.car_hire
-          : existing.preferences.car_hire,
+          : existing.preferences?.car_hire ?? false,
       airport_transfers:
         typeof p.airport_transfers === "boolean"
           ? p.airport_transfers
-          : existing.preferences.airport_transfers,
+          : existing.preferences?.airport_transfers ?? false,
       extra_luggage:
         typeof p.extra_luggage === "boolean"
           ? p.extra_luggage
-          : existing.preferences.extra_luggage,
-      notes: typeof p.notes === "string" ? p.notes : existing.preferences.notes,
+          : existing.preferences?.extra_luggage ?? false,
+      notes: typeof p.notes === "string" ? p.notes : existing.preferences?.notes ?? "",
     };
   }
 

@@ -52,7 +52,6 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "application/octet-stream",
-        "Transfer-Encoding": "chunked",
       },
     });
   } catch (error) {
