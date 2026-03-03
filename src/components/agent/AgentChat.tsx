@@ -15,7 +15,7 @@ interface AgentChatProps {
 }
 
 const GREETING =
-  "Hey! I'm your Heeha travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? The more you share, the faster we'll get you sorted!";
+  "Hey! I'm your HEHA travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? The more you share, the faster we'll get you sorted!";
 
 export default function AgentChat({
   tripData,

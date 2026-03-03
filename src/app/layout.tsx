@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Heeha — Experience Travel Differently",
+  title: "HEHA — Experience Travel Differently",
   description:
     "AI-powered trip planning with intelligent agents. Plan, discover, and experience extraordinary travel.",
 };

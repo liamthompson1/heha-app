@@ -19,7 +19,7 @@ interface UnifiedTripProps {
 type VoiceState = "idle" | "listening" | "processing" | "speaking";
 
 const GREETING =
-  "Hey! I'm your Heeha travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? You can type, tap the options below, or use the mic!";
+  "Hey! I'm your HEHA travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? You can type, tap the options below, or use the mic!";
 
 /** Map the first missing required field to a visual prompt type */
 function getNextVisual(tripData: TripData): string | null {

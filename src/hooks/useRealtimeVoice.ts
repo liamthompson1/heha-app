@@ -52,7 +52,7 @@ export function useRealtimeVoice({
     {
       role: "assistant",
       content:
-        "Hey! I'm your Heeha travel assistant. Tap the mic and tell me about the trip you're planning!",
+        "Hey! I'm your HEHA travel assistant. Tap the mic and tell me about the trip you're planning!",
     },
   ]);
 
