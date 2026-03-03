@@ -384,11 +384,10 @@ export default function UnifiedTrip({
           : "Processing...";
 
   return (
-    <div className="flex flex-col pb-28" style={{ minHeight: "70vh" }}>
+    <div className="flex flex-col flex-1 pb-28">
       {/* ——— Chat thread ——— */}
       <div
         className="flex-1 space-y-3 mb-4 overflow-y-auto px-1"
-        style={{ maxHeight: "calc(100dvh - 200px)" }}
       >
         {history.map((msg, i) => (
           <AgentMessage

@@ -54,12 +54,12 @@ function Dashboard() {
   const hasMore = trips.length > 5;
 
   return (
-    <div className="page-shell relative flex min-h-[100dvh] flex-col items-center overflow-hidden bg-[var(--background)] px-6 pt-24 pb-28">
+    <div className="page-shell relative flex min-h-[100dvh] flex-col items-center overflow-hidden bg-[var(--background)] px-6 pt-20 pb-28">
       <OrbField orbs={SUBTLE_ORBS} />
       <LogoHeader />
       <AuthStatus />
 
-      <main className="relative z-10 w-full max-w-2xl">
+      <main className="relative z-10 w-full max-w-2xl flex-1 flex flex-col">
         {/* Greeting */}
         <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold sm:text-4xl">
           {getGreeting()} &#9992;&#65039;

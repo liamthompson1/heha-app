@@ -22,8 +22,8 @@ export default function PageShell({
   return (
     <div
       className={clsx(
-        "page-shell relative flex min-h-[100dvh] overflow-hidden bg-[var(--background)]",
-        centered ? "items-center justify-center" : "items-start justify-center pt-24 pb-16"
+        "page-shell relative flex flex-col min-h-[100dvh] overflow-hidden bg-[var(--background)]",
+        centered ? "items-center justify-center" : "items-center pt-20 pb-16"
       )}
     >
       <OrbField orbs={orbs} />
@@ -32,8 +32,8 @@ export default function PageShell({
       <AuthStatus />
       <main
         className={clsx(
-          "page-enter relative z-10 mx-4 w-full",
-          variant === "full" ? "" : "max-w-2xl"
+          "page-enter relative z-10 mx-4 w-full flex-1 flex flex-col",
+          variant === "full" ? "" : "max-w-2xl self-center"
         )}
         style={{
           paddingLeft: 'env(safe-area-inset-left)',
