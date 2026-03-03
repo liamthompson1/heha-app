@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { signInWithEmailHash } from '@/lib/auth/hx-rest-client'
 import { createSession, sessionCookieOptions, hashEmail } from '@/lib/auth/session'
+import { getSupabaseClient } from '@/lib/supabase/client'
 import type { SessionData } from '@/lib/auth/types'
 
 interface SignInBody {
@@ -37,8 +38,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create a heha session
+    // Upsert user in Supabase
     const userHash = await hashEmail(email)
+    const supabase = getSupabaseClient()
+    await supabase
+      .from('users')
+      .upsert(
+        { id: userHash, email: email.toLowerCase().trim(), auth_type: 'holiday_extras', last_seen_at: new Date().toISOString() },
+        { onConflict: 'id' }
+      )
+
+    // Create a heha session
     const sessionData: SessionData = {
       email,
       userId: userHash,

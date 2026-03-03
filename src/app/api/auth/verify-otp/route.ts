@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { verifyOtp } from '@/lib/auth/hx-client'
 import { createSession, sessionCookieOptions, hashEmail } from '@/lib/auth/session'
+import { getSupabaseClient } from '@/lib/supabase/client'
 import type { SessionData } from '@/lib/auth/types'
 
 export async function POST(request: Request) {
@@ -28,8 +29,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Invalid OTP' }, { status: 401 })
     }
 
-    // Create heha session
+    // Upsert user in Supabase
     const userHash = await hashEmail(email)
+    const supabase = getSupabaseClient()
+    await supabase
+      .from('users')
+      .upsert(
+        { id: userHash, email: email.toLowerCase().trim(), auth_type: 'holiday_extras', last_seen_at: new Date().toISOString() },
+        { onConflict: 'id' }
+      )
+
+    // Create heha session
     const sessionData: SessionData = {
       email,
       userId: userHash,
