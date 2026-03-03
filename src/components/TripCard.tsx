@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import type { TripRow } from "@/types/trip";
+import { formatDateRange } from "@/lib/format-date";
 
 export type TripCardSize = "hero" | "large" | "standard" | "compact" | "featured";
 
@@ -19,9 +20,7 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
   );
 
   const destination = trip.trip.destination;
-  const dateRange = [trip.trip.start_date, trip.trip.end_date]
-    .filter(Boolean)
-    .join(" – ");
+  const dateRange = formatDateRange(trip.trip.start_date, trip.trip.end_date);
   const tripType = trip.trip.trip_type;
   const travelerCount = trip.people_travelling.length;
 

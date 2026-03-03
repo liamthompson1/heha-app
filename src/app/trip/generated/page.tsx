@@ -6,6 +6,7 @@ import GlassCard from "@/components/GlassCard";
 import GlassButton from "@/components/GlassButton";
 import type { TripData } from "@/types/trip";
 import { dummyTripData } from "@/types/trip";
+import { formatDateRange } from "@/lib/format-date";
 
 function InfoItem({ label, value }: { label: string; value: string }) {
   if (!value) return null;
@@ -53,7 +54,7 @@ export default function TripGeneratedPage() {
           {trip.name || "Your Trip"}
         </h1>
         <p className="mt-6 text-lg sm:text-xl" style={{ color: 'var(--text-secondary)' }}>
-          {[trip.dates.start_date, trip.dates.end_date].filter(Boolean).join(" – ")}
+          {formatDateRange(trip.dates.start_date, trip.dates.end_date)}
         </p>
       </section>
 
