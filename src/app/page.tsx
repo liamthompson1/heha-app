@@ -12,7 +12,6 @@ import LogoHeader from "@/components/LogoHeader";
 import BentoTripGrid from "@/components/BentoTripGrid";
 import GlassButton from "@/components/GlassButton";
 import GlassCard from "@/components/GlassCard";
-import NewTripPill from "@/components/NewTripPill";
 import type { TripRow } from "@/types/trip";
 
 function getGreeting(): string {
@@ -131,7 +130,6 @@ function Dashboard() {
         )}
       </main>
 
-      <NewTripPill />
       <SearchBar />
     </div>
   );
