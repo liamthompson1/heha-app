@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createSession, sessionCookieOptions, hashEmail } from '@/lib/auth/session'
 import type { SessionData } from '@/lib/auth/types'
+import { getSupabaseClient } from '@/lib/supabase/client'
 
 interface GuestBody {
   email: string
@@ -27,6 +28,15 @@ export async function POST(request: Request) {
 
   // Generate SHA-256 hash of normalized email
   const userHash = await hashEmail(email)
+
+  // Upsert guest user into Supabase
+  const supabase = getSupabaseClient()
+  await supabase
+    .from('users')
+    .upsert(
+      { id: userHash, email: normalized, auth_type: 'guest', last_seen_at: new Date().toISOString() },
+      { onConflict: 'id' }
+    )
 
   // Create guest session (authenticated so they can save trips)
   const sessionData: SessionData = {
