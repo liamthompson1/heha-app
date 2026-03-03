@@ -1124,6 +1124,84 @@ body {
   pointer-events: none;
 }
 
+/* Inactive state: dim default */
+.mic-button[data-state="inactive"] {
+  opacity: 0.5;
+  border-color: rgba(255, 255, 255, 0.15);
+  border-top-color: rgba(255, 255, 255, 0.25);
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 70%);
+  color: var(--text-secondary);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mic-button[data-state="inactive"]:hover {
+  opacity: 0.7;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 70%);
+}
+
+/* Active-idle state: teal breathing glow */
+.mic-button[data-state="active-idle"] {
+  border-color: rgba(35, 166, 169, 0.35);
+  border-top-color: rgba(35, 166, 169, 0.50);
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(35, 166, 169, 0.15) 0%, rgba(35, 166, 169, 0.04) 70%);
+  color: var(--teal);
+  box-shadow:
+    inset 0 1px 0 rgba(200, 255, 255, 0.20),
+    0 0 30px rgba(35, 166, 169, 0.12);
+  animation: mic-idle-breathe 3s ease-in-out infinite;
+}
+
+.mic-button[data-state="active-idle"]:hover {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(35, 166, 169, 0.22) 0%, rgba(35, 166, 169, 0.08) 70%);
+  box-shadow:
+    inset 0 1px 0 rgba(200, 255, 255, 0.25),
+    0 0 40px rgba(35, 166, 169, 0.20);
+}
+
+@keyframes mic-idle-breathe {
+  0%, 100% {
+    box-shadow:
+      inset 0 1px 0 rgba(200, 255, 255, 0.20),
+      0 0 20px rgba(35, 166, 169, 0.10);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(200, 255, 255, 0.25),
+      0 0 40px rgba(35, 166, 169, 0.22);
+  }
+}
+
+/* Active-idle: subtle pulse ring */
+@keyframes mic-idle-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.15;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}
+
+.mic-idle-pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(35, 166, 169, 0.25);
+  animation: mic-idle-pulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
 /* Memory chip fade-in-out */
 @keyframes memory-flash {
   0% { opacity: 0; transform: translateY(4px); }

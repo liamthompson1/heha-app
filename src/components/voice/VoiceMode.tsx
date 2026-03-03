@@ -1,7 +1,7 @@
 "use client";
 
 import type { TripData } from "@/types/trip";
-import { useVoiceConversation } from "@/hooks/useVoiceConversation";
+import { useRealtimeVoice } from "@/hooks/useRealtimeVoice";
 import MicButton from "./MicButton";
 import GlassButton from "@/components/GlassButton";
 
@@ -12,14 +12,22 @@ interface VoiceModeProps {
   userId: string | null;
 }
 
+const STATUS_TEXT: Record<string, string> = {
+  inactive: "Tap to start",
+  "active-idle": "Listening for speech...",
+  listening: "Listening...",
+  processing: "Thinking...",
+  speaking: "Tap to interrupt",
+};
+
 export default function VoiceMode({
   tripData,
   onTripDataChange,
   onComplete,
   userId,
 }: VoiceModeProps) {
-  const { voiceState, formComplete, lastMemories, handleMicClick } =
-    useVoiceConversation({
+  const { voiceState, formComplete, lastMemories, lastTranscript, toggleVoice } =
+    useRealtimeVoice({
       tripData,
       onTripDataChange,
       userId,
@@ -27,7 +35,20 @@ export default function VoiceMode({
 
   return (
     <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
-      <MicButton voiceState={voiceState} onClick={handleMicClick} />
+      <MicButton voiceState={voiceState} onClick={toggleVoice} />
+
+      <p className="mt-4 text-sm" style={{ color: "var(--text-secondary)" }}>
+        {STATUS_TEXT[voiceState]}
+      </p>
+
+      {voiceState === "processing" && lastTranscript && (
+        <p
+          className="mt-2 max-w-xs text-center text-xs"
+          style={{ color: "var(--text-tertiary)" }}
+        >
+          &ldquo;{lastTranscript}&rdquo;
+        </p>
+      )}
 
       {lastMemories.length > 0 && (
         <div className="mt-6 flex flex-wrap justify-center gap-1.5">
