@@ -241,6 +241,7 @@ export default function WizardShell() {
             tripData={tripData}
             onTripDataChange={onUpdate}
             onComplete={handleSubmit}
+            userId={session.userId}
           />
         </div>
       )}
