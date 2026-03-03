@@ -1406,67 +1406,57 @@ body {
 }
 
 /* ——————————————————————————————————————
-   Floating Bottom Bar — unified glass container
+   Floating Search Pill
    —————————————————————————————————————— */
 
-.floating-bottom-bar {
+.floating-search {
   position: fixed;
-  bottom: calc(20px + env(safe-area-inset-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  max-width: 720px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  left: 24px;
+  right: 200px;
+  max-width: 520px;
   z-index: 40;
-  animation: float-bar-entrance 0.5s var(--ease-spring) both;
+  animation: float-up-left 0.5s var(--ease-spring) both;
 }
 
-@keyframes float-bar-entrance {
+@keyframes float-up-left {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(40px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 
-.floating-bottom-bar-inner {
+.floating-search-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 22px;
   border-radius: 999px;
   background: rgba(28, 28, 30, 0.65);
   backdrop-filter: blur(60px) saturate(180%);
   -webkit-backdrop-filter: blur(60px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-standard);
   box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.45),
+    0 8px 32px rgba(0, 0, 0, 0.4),
     inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Search button — fills remaining space */
-.floating-bar-search {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-  padding: 12px 18px;
-  border-radius: 999px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s var(--ease-standard);
+.floating-search-pill:hover {
+  background: rgba(28, 28, 30, 0.75);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
 }
 
-.floating-bar-search:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.floating-bar-search:active {
-  background: rgba(255, 255, 255, 0.04);
+.floating-search-pill:active {
+  transform: scale(0.98);
 }
 
 .search-bar-icon {
@@ -1485,34 +1475,62 @@ body {
   text-overflow: ellipsis;
 }
 
-/* New Trip pill — right side */
-.floating-bar-new-trip {
+/* ——————————————————————————————————————
+   Floating New Trip Pill
+   —————————————————————————————————————— */
+
+.floating-new-trip {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  right: 24px;
+  z-index: 40;
+  animation: float-up-right 0.5s var(--ease-spring) 0.1s both;
+}
+
+@keyframes float-up-right {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.floating-new-trip-pill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 4px 4px 18px;
+  padding: 6px 6px 6px 20px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(28, 28, 30, 0.65);
+  backdrop-filter: blur(60px) saturate(180%);
+  -webkit-backdrop-filter: blur(60px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.25s var(--ease-standard);
-  flex-shrink: 0;
+  transition: all 0.3s var(--ease-standard);
 }
 
-.floating-bar-new-trip:hover {
-  background: rgba(255, 255, 255, 0.10);
-  border-color: rgba(255, 255, 255, 0.14);
+.floating-new-trip-pill:hover {
+  background: rgba(28, 28, 30, 0.75);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  transform: translateY(-2px);
 }
 
-.floating-bar-new-trip:active {
+.floating-new-trip-pill:active {
   transform: scale(0.97);
 }
 
 .new-trip-pill-label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   white-space: nowrap;
   letter-spacing: -0.01em;
 }
@@ -1521,42 +1539,74 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 999px;
   background: var(--blue);
   color: #fff;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
   white-space: nowrap;
   transition: background 0.2s var(--ease-standard);
 }
 
-.floating-bar-new-trip:hover .new-trip-pill-action {
+.floating-new-trip-pill:hover .new-trip-pill-action {
   background: #4dbcff;
 }
 
-/* Mobile: stack if needed */
-@media (max-width: 480px) {
-  .floating-bottom-bar-inner {
-    flex-direction: column;
-    border-radius: var(--glass-radius);
-    padding: 6px;
+/* ——————————————————————————————————————
+   Mobile: stack vertically, no overlap
+   —————————————————————————————————————— */
+
+@media (max-width: 640px) {
+  .floating-search {
+    left: 16px;
+    right: 16px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    max-width: none;
   }
 
-  .floating-bar-search {
-    width: 100%;
+  .floating-new-trip {
+    right: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
   }
+}
 
-  .floating-bar-new-trip {
-    width: 100%;
-    justify-content: center;
-    padding: 4px;
+/* ——————————————————————————————————————
+   Trip Horizontal Scroll Rows
+   —————————————————————————————————————— */
+
+.trip-scroll-row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.trip-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+.trip-scroll-row .trip-scroll-card {
+  flex: 0 0 auto;
+  width: 300px;
+  min-height: 220px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+  .trip-scroll-row .trip-scroll-card {
+    width: 360px;
+    min-height: 260px;
   }
+}
 
-  .new-trip-pill-label {
-    flex: 1;
-    text-align: center;
-    padding-left: 14px;
+@media (min-width: 1024px) {
+  .trip-scroll-row .trip-scroll-card {
+    width: 400px;
+    min-height: 280px;
   }
 }
 

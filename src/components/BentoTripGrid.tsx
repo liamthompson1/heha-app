@@ -1,55 +1,97 @@
 "use client";
 
 import type { TripRow } from "@/types/trip";
-import TripCard, { type TripCardSize } from "./TripCard";
+import TripCard from "./TripCard";
 
 interface BentoTripGridProps {
   trips: TripRow[];
 }
 
-/** Sort trips by start_date ascending (soonest first), undated last. */
-function sortByProximity(trips: TripRow[]): TripRow[] {
-  const now = Date.now();
-  return [...trips].sort((a, b) => {
-    const da = a.trip.start_date ? new Date(a.trip.start_date).getTime() : Infinity;
-    const db = b.trip.start_date ? new Date(b.trip.start_date).getTime() : Infinity;
-    // Past trips sort after future trips
-    const fa = da < now ? da + 1e15 : da;
-    const fb = db < now ? db + 1e15 : db;
-    return fa - fb;
-  });
+interface TripGroup {
+  label: string;
+  trips: TripRow[];
 }
 
-/** Assign card size based on index and days until trip. */
-function getCardSize(trip: TripRow, index: number): TripCardSize {
-  if (index === 0) return "large";
+function groupTripsByTimeframe(trips: TripRow[]): TripGroup[] {
+  const now = new Date();
+  const inOneMonth = new Date(now);
+  inOneMonth.setMonth(inOneMonth.getMonth() + 1);
+  const inSixMonths = new Date(now);
+  inSixMonths.setMonth(inSixMonths.getMonth() + 6);
 
-  const startDate = trip.trip.start_date;
-  if (!startDate) return "compact";
+  const nextMonth: TripRow[] = [];
+  const nextSixMonths: TripRow[] = [];
+  const later: TripRow[] = [];
 
-  const daysUntil = Math.max(
-    0,
-    (new Date(startDate).getTime() - Date.now()) / 86400000
+  // Sort all trips by start_date ascending first
+  const sorted = [...trips].sort((a, b) => {
+    const da = a.trip.start_date ? new Date(a.trip.start_date).getTime() : Infinity;
+    const db = b.trip.start_date ? new Date(b.trip.start_date).getTime() : Infinity;
+    return da - db;
+  });
+
+  for (const trip of sorted) {
+    const startDate = trip.trip.start_date
+      ? new Date(trip.trip.start_date)
+      : null;
+
+    if (!startDate) {
+      later.push(trip);
+    } else if (startDate <= inOneMonth) {
+      nextMonth.push(trip);
+    } else if (startDate <= inSixMonths) {
+      nextSixMonths.push(trip);
+    } else {
+      later.push(trip);
+    }
+  }
+
+  const groups: TripGroup[] = [];
+  if (nextMonth.length > 0) groups.push({ label: "Coming Up", trips: nextMonth });
+  if (nextSixMonths.length > 0) groups.push({ label: "Next 6 Months", trips: nextSixMonths });
+  if (later.length > 0) groups.push({ label: "Later", trips: later });
+
+  return groups;
+}
+
+function TripScrollRow({ group, staggerOffset }: { group: TripGroup; staggerOffset: number }) {
+  return (
+    <section className="mb-12">
+      <div className="flex items-baseline justify-between mb-5 px-1">
+        <h3 className="text-xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
+          {group.label}
+        </h3>
+        <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+          {group.trips.length} trip{group.trips.length !== 1 ? "s" : ""}
+        </span>
+      </div>
+      <div className="trip-scroll-row">
+        {group.trips.map((trip, i) => (
+          <TripCard
+            key={trip.id}
+            trip={trip}
+            size="standard"
+            className={`page-enter stagger-${Math.min(i + staggerOffset, 6)} trip-scroll-card`}
+          />
+        ))}
+      </div>
+    </section>
   );
-
-  if (daysUntil < 30) return "large";
-  if (daysUntil < 90) return "standard";
-  return "compact";
 }
 
 export default function BentoTripGrid({ trips }: BentoTripGridProps) {
-  const sorted = sortByProximity(trips);
+  const groups = groupTripsByTimeframe(trips);
 
+  let staggerOffset = 1;
   return (
-    <div className="bento-trip-grid">
-      {sorted.map((trip, i) => (
-        <TripCard
-          key={trip.id}
-          trip={trip}
-          size={getCardSize(trip, i)}
-          className={`page-enter stagger-${Math.min(i + 1, 6)}`}
-        />
-      ))}
+    <div>
+      {groups.map((group) => {
+        const offset = staggerOffset;
+        staggerOffset += Math.min(group.trips.length, 3);
+        return (
+          <TripScrollRow key={group.label} group={group} staggerOffset={offset} />
+        );
+      })}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import HeroSection from "@/components/HeroSection";
 import PathCard from "@/components/PathCard";
 import AuthStatus from "@/components/AuthStatus";
 import SearchBar from "@/components/SearchBar";
+import NewTripPill from "@/components/NewTripPill";
 import LogoHeader from "@/components/LogoHeader";
 import BentoTripGrid from "@/components/BentoTripGrid";
 import GlassButton from "@/components/GlassButton";
@@ -61,24 +62,7 @@ function Dashboard() {
           {getGreeting()}
         </h1>
 
-        {/* Section header */}
-        <div className="page-enter stagger-2 mt-16 flex items-end justify-between">
-          <h2
-            className="text-lg font-semibold tracking-tight"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Your Trips
-          </h2>
-          {trips.length > 0 && (
-            <span
-              className="text-sm"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              {trips.length} trip{trips.length !== 1 ? "s" : ""}
-            </span>
-          )}
-        </div>
-        <div className="page-enter stagger-3 prismatic-line w-full mt-4 mb-12" />
+        <div className="page-enter stagger-2 prismatic-line w-full mt-12 mb-12" />
 
         {/* Loading state */}
         {loading && (
@@ -131,6 +115,7 @@ function Dashboard() {
       </main>
 
       <SearchBar />
+      <NewTripPill />
     </div>
   );
 }
