@@ -122,6 +122,33 @@ export const agentTools: Anthropic.Tool[] = [
     },
   },
   {
+    name: "search_flights",
+    description:
+      "Search for real available flights between two airports on a given date. Use this when the user is flying and you have departure airport IATA code, arrival airport IATA code, and a departure date. Returns a list of available flights. Present the top options to the user so they can choose. After they choose, use update_trip_data to save the selected flight(s).",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        origin: {
+          type: "string",
+          description: "Departure airport IATA code (e.g. LGW, MAN, STN)",
+        },
+        destination: {
+          type: "string",
+          description: "Arrival airport IATA code (e.g. BCN, FAO, PMI)",
+        },
+        departure_date: {
+          type: "string",
+          description: "Departure date in YYYY-MM-DD format",
+        },
+        return_date: {
+          type: "string",
+          description: "Return date in YYYY-MM-DD format (optional — for return flights)",
+        },
+      },
+      required: ["origin", "destination", "departure_date"],
+    },
+  },
+  {
     name: "mark_form_complete",
     description:
       "Signal that enough trip information has been collected and the user can proceed to plan their trip. Call this only when all required fields are filled: reason, name, travel mode, start date, end date, at least one traveler, travelling from, and travelling to.",

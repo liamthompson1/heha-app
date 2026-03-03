@@ -1,11 +1,14 @@
 import type { TripData, Traveler, Flight } from "@/types/trip";
 import type { SavedMemory } from "@/types/agent";
 import { saveMemory } from "@/lib/supabase/memories";
+import { searchFlights } from "@/lib/flights/hapi-client";
 
 interface ToolResult {
   updatedTripData: TripData;
   memories: SavedMemory[];
   formComplete: boolean;
+  /** Per-tool result content to feed back to Claude (keyed by tool_use_id) */
+  toolResults: Record<string, string>;
 }
 
 /** Deep-merge partial trip data updates into existing tripData */
@@ -129,18 +132,20 @@ function mergeTripData(
 }
 
 export async function handleToolCalls(
-  toolUseBlocks: Array<{ name: string; input: Record<string, unknown> }>,
+  toolUseBlocks: Array<{ id: string; name: string; input: Record<string, unknown> }>,
   tripData: TripData,
   userId: string | null
 ): Promise<ToolResult> {
   let updatedTripData = { ...tripData };
   const memories: SavedMemory[] = [];
   let formComplete = false;
+  const toolResults: Record<string, string> = {};
 
   for (const block of toolUseBlocks) {
     switch (block.name) {
       case "update_trip_data": {
         updatedTripData = mergeTripData(updatedTripData, block.input);
+        toolResults[block.id] = JSON.stringify({ success: true });
         break;
       }
       case "save_memory": {
@@ -158,7 +163,6 @@ export async function handleToolCalls(
           );
           if (saved) memories.push(saved);
         } else {
-          // No user — still report it to the client for display
           memories.push({
             id: crypto.randomUUID(),
             category,
@@ -166,14 +170,58 @@ export async function handleToolCalls(
             person_name: (person_name as string) ?? null,
           });
         }
+        toolResults[block.id] = JSON.stringify({ success: true });
+        break;
+      }
+      case "search_flights": {
+        const { origin, destination, departure_date, return_date } =
+          block.input as {
+            origin: string;
+            destination: string;
+            departure_date: string;
+            return_date?: string;
+          };
+        try {
+          const allFlights = await searchFlights({
+            origin,
+            destination,
+            departureDate: departure_date,
+            ...(return_date && { returnDate: return_date }),
+          });
+
+          // Return top 8 flights so Claude can present options
+          const top = allFlights.slice(0, 8).map((f) => ({
+            airline: f.flight.carrier.name,
+            flight_number: f.flight.code,
+            from: `${f.departure.airport_iata} (${f.departure.city})`,
+            to: `${f.arrival.airport_iata} (${f.arrival.city})`,
+            departure: `${f.departure.date} ${f.departure.time}`,
+            arrival: `${f.arrival.date} ${f.arrival.time}`,
+            duration: f.flight.elapsed_time,
+          }));
+
+          toolResults[block.id] = JSON.stringify({
+            total_found: allFlights.length,
+            flights: top,
+          });
+        } catch (err) {
+          console.error("Flight search error:", err);
+          toolResults[block.id] = JSON.stringify({
+            error: "Flight search failed. Try different airports or dates.",
+          });
+        }
         break;
       }
       case "mark_form_complete": {
         formComplete = true;
+        toolResults[block.id] = JSON.stringify({ success: true });
         break;
+      }
+      default: {
+        toolResults[block.id] = JSON.stringify({ success: true });
       }
     }
   }
 
-  return { updatedTripData, memories, formComplete };
+  return { updatedTripData, memories, formComplete, toolResults };
 }

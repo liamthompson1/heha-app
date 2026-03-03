@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
       // Execute tool calls
       const toolResult = await handleToolCalls(
         toolUseBlocks.map((b) => ({
+          id: b.id,
           name: b.name,
           input: b.input as Record<string, unknown>,
         })),
@@ -94,7 +95,7 @@ export async function POST(req: NextRequest) {
         content: toolUseBlocks.map((b) => ({
           type: "tool_result" as const,
           tool_use_id: b.id,
-          content: JSON.stringify({ success: true }),
+          content: toolResult.toolResults[b.id] ?? JSON.stringify({ success: true }),
         })),
       });
 

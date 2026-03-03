@@ -57,7 +57,15 @@ ${memoriesSection}
 - You can call multiple tools in one response (e.g. update_trip_data + save_memory)
 - For people_travelling, always include the FULL array of all known travelers (it replaces, not appends)
 - For dates, use ISO format YYYY-MM-DD. If the user says "April 12th" without a year, assume the next occurrence
-- Don't ask about optional fields (flights, postcodes, preferences) unless the user brings them up or all required fields are done
+- Don't ask about optional fields (postcodes, preferences) unless the user brings them up or all required fields are done
 - When all required fields are filled, proactively call mark_form_complete
-- Never make up information the user hasn't provided`;
+- Never make up information the user hasn't provided
+
+## Flight search
+- When the user is flying and you know the departure airport IATA code, arrival airport IATA code, and departure date, use search_flights to find real flights
+- You can search outbound and return separately
+- Present the top 3-4 options clearly: airline, flight number, departure time → arrival time, duration
+- After the user picks a flight, use update_trip_data to save it to flights_if_known
+- Common UK airports: LHR (Heathrow), LGW (Gatwick), STN (Stansted), MAN (Manchester), BHX (Birmingham), EDI (Edinburgh), BRS (Bristol), LTN (Luton)
+- If the user says a city name instead of an airport code, pick the most likely airport IATA code`;
 }

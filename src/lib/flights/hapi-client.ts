@@ -27,7 +27,17 @@ export async function searchFlights(
     );
   }
 
-  const data = await response.json();
+  // 204 No Content = no flights found for this route/date
+  if (response.status === 204) {
+    return [];
+  }
+
+  const text = await response.text();
+  if (!text) {
+    return [];
+  }
+
+  const data = JSON.parse(text);
 
   if (!Array.isArray(data)) {
     return [];
