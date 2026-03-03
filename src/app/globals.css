@@ -1605,35 +1605,47 @@ body {
 }
 
 /* ——————————————————————————————————————
-   Logo Header
+   Logo Header — Apple-style fade + blur
    —————————————————————————————————————— */
 
 .logo-header {
   position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* Black gradient: fully opaque at top → transparent at bottom */
+  background: linear-gradient(
+    to bottom,
+    var(--background) 0%,
+    rgba(10, 10, 15, 0.85) 40%,
+    rgba(10, 10, 15, 0.4) 70%,
+    transparent 100%
+  );
+  /* Mask the backdrop-filter so blur fades from full → none */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  padding-top: env(safe-area-inset-top);
+}
+
+.logo-header-link {
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 14px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: background 0.25s var(--ease-standard), border-color 0.25s var(--ease-standard);
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: opacity 0.2s var(--ease-standard);
 }
 
-.logo-header:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.14);
-}
-
-@media (min-width: 640px) {
-  .logo-header {
-    top: 24px;
-  }
+.logo-header-link:hover {
+  opacity: 0.8;
 }
 
 /* ——————————————————————————————————————
