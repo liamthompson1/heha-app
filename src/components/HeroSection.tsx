@@ -27,12 +27,12 @@ export default function HeroSection() {
       </div>
 
       {/* Headline */}
-      <h1 className="page-enter stagger-3 apple-headline mt-12" style={{ color: "var(--foreground)" }}>
+      <h1 className="page-enter stagger-3 apple-headline mt-16" style={{ color: "var(--foreground)" }}>
         Experience HEHA!
       </h1>
 
       {/* Subheadline */}
-      <p className="page-enter stagger-4 apple-subheadline mt-6 max-w-md">
+      <p className="page-enter stagger-4 apple-subheadline mt-8 max-w-lg">
         AI-powered travel, your way.
       </p>
     </section>

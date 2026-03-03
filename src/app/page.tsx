@@ -57,14 +57,14 @@ function Dashboard() {
 
       <main className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col">
         {/* Greeting */}
-        <h1 className="page-enter stagger-1 text-3xl font-semibold sm:text-4xl tracking-tight" style={{ color: "var(--foreground)" }}>
+        <h1 className="page-enter stagger-1 text-4xl font-bold sm:text-5xl lg:text-6xl tracking-tight" style={{ color: "var(--foreground)" }}>
           {getGreeting()}
         </h1>
 
         {/* Section header */}
-        <div className="page-enter stagger-2 mt-10 flex items-center justify-between">
+        <div className="page-enter stagger-2 mt-16 flex items-end justify-between">
           <h2
-            className="text-base font-medium tracking-tight"
+            className="text-lg font-semibold tracking-tight"
             style={{ color: "var(--text-secondary)" }}
           >
             Your Trips
@@ -79,7 +79,7 @@ function Dashboard() {
             </Link>
           )}
         </div>
-        <div className="page-enter stagger-3 prismatic-line w-full mt-3 mb-8" />
+        <div className="page-enter stagger-3 prismatic-line w-full mt-4 mb-12" />
 
         {/* Loading state */}
         {loading && (
@@ -161,11 +161,11 @@ export default function Home() {
     <div className="page-shell relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-[var(--background)] px-6 py-20">
       <OrbField orbs={LANDING_ORBS} />
 
-      <main className="relative z-10 flex w-full max-w-4xl flex-col items-center">
+      <main className="relative z-10 flex w-full max-w-5xl flex-col items-center px-6">
         <HeroSection />
 
         {/* Path cards */}
-        <div className="page-enter stagger-6 mt-20 grid w-full gap-6 sm:grid-cols-2">
+        <div className="page-enter stagger-6 mt-28 sm:mt-36 grid w-full gap-8 sm:grid-cols-2">
           <PathCard
             href="/auth/entry"
             title="I'm Human"

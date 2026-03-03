@@ -76,23 +76,23 @@ export default function TripsPage() {
 
       <main className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col">
         {/* Header */}
-        <div className="page-enter stagger-1 mb-2 flex items-center justify-between gap-4">
+        <div className="page-enter stagger-1 mb-4 flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold sm:text-4xl tracking-tight" style={{ color: "var(--foreground)" }}>
-              Your Trips
-            </h1>
-            <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-sm font-medium uppercase tracking-widest mb-3" style={{ color: "var(--text-tertiary)" }}>
               {!loading && trips.length > 0
                 ? `${trips.length} trip${trips.length !== 1 ? "s" : ""} planned`
                 : "Your saved trip plans"}
             </p>
+            <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl tracking-tight" style={{ color: "var(--foreground)" }}>
+              Your Trips
+            </h1>
           </div>
-          <GlassButton href="/trip/new" variant="teal" size="sm">
+          <GlassButton href="/trip/new" variant="teal">
             + New Trip
           </GlassButton>
         </div>
 
-        <div className="page-enter stagger-2 prismatic-line w-full mt-3 mb-8" />
+        <div className="page-enter stagger-2 prismatic-line w-full mt-4 mb-12" />
 
         {/* Loading skeletons */}
         {loading && (

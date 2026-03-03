@@ -10,6 +10,7 @@ interface PageShellProps {
   backHref?: string;
   centered?: boolean;
   variant?: "default" | "full";
+  maxWidth?: "md" | "lg" | "xl" | "5xl" | "7xl";
 }
 
 export default function PageShell({
@@ -18,12 +19,21 @@ export default function PageShell({
   backHref,
   centered,
   variant = "default",
+  maxWidth = "5xl",
 }: PageShellProps) {
+  const maxWidthClass = {
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    "5xl": "max-w-5xl",
+    "7xl": "max-w-7xl",
+  }[maxWidth];
+
   return (
     <div
       className={clsx(
         "page-shell relative flex flex-col min-h-[100dvh] overflow-hidden bg-[var(--background)]",
-        centered ? "items-center justify-center" : "items-center pt-20 pb-16"
+        centered ? "items-center justify-center" : "items-center pt-24 pb-20"
       )}
     >
       <OrbField orbs={orbs} />
@@ -32,13 +42,13 @@ export default function PageShell({
       <AuthStatus />
       <main
         className={clsx(
-          "page-enter relative z-10 mx-4 w-full",
+          "page-enter relative z-10 w-full px-6 sm:px-10",
           !centered && "flex-1 flex flex-col",
-          variant === "full" ? "" : "max-w-2xl self-center"
+          variant === "full" ? "" : `${maxWidthClass} self-center`
         )}
         style={{
-          paddingLeft: 'env(safe-area-inset-left)',
-          paddingRight: 'env(safe-area-inset-right)',
+          paddingLeft: `max(1.5rem, env(safe-area-inset-left))`,
+          paddingRight: `max(1.5rem, env(safe-area-inset-right))`,
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
       >

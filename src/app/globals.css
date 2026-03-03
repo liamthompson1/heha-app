@@ -16,7 +16,7 @@
   --glass-saturate: 150%;
   --glass-border: rgba(255, 255, 255, 0.10);
   --glass-border-hover: rgba(255, 255, 255, 0.16);
-  --glass-radius: 24px;
+  --glass-radius: 28px;
   --glass-radius-sm: 20px;
   --glass-radius-xs: 16px;
   /* Text opacity hierarchy */
@@ -605,11 +605,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 36px;
+  padding: 40px 44px;
   border-radius: var(--glass-radius);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  min-height: 280px;
+  min-height: 340px;
   cursor: pointer;
   backdrop-filter: blur(20px) saturate(150%);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
@@ -1276,44 +1276,44 @@ body {
 
 /* Size tiers — proximity-based */
 .trip-card-hero {
-  min-height: 280px;
+  min-height: 320px;
   grid-column: 1 / -1;
 }
 
 .trip-card-large {
-  min-height: 220px;
+  min-height: 260px;
   grid-column: span 2;
 }
 
 .trip-card-standard {
-  min-height: 180px;
+  min-height: 220px;
 }
 
 .trip-card-compact {
-  min-height: 140px;
+  min-height: 180px;
 }
 
 /* Legacy alias */
 .trip-card-featured {
-  min-height: 280px;
+  min-height: 320px;
   grid-column: 1 / -1;
 }
 
 @media (min-width: 640px) {
   .trip-card-hero {
-    min-height: 360px;
+    min-height: 420px;
   }
   .trip-card-large {
-    min-height: 280px;
+    min-height: 320px;
   }
   .trip-card-standard {
-    min-height: 220px;
+    min-height: 260px;
   }
   .trip-card-compact {
-    min-height: 160px;
+    min-height: 200px;
   }
   .trip-card-featured {
-    min-height: 360px;
+    min-height: 420px;
   }
 }
 
@@ -1324,21 +1324,21 @@ body {
 .bento-trip-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 16px;
   width: 100%;
 }
 
 @media (min-width: 640px) {
   .bento-trip-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 20px;
   }
 }
 
 @media (min-width: 1024px) {
   .bento-trip-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
   }
 
   .trip-card-large {
@@ -1367,7 +1367,7 @@ body {
 .trip-card-content {
   position: relative;
   z-index: 2;
-  padding: 20px;
+  padding: 24px 28px;
 }
 
 .trip-card-skeleton {
