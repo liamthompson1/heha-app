@@ -13,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     if (session.authenticated) {
-      router.replace("/trip/new");
+      router.replace("/trips");
     }
   }, [session.authenticated, router]);
 

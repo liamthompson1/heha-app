@@ -2,6 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { createTripSchema } from "@/lib/validation/trip-schema";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { syncTripToTravellerApi } from "@/lib/traveller/client";
+import { getSession, getSessionCookieName } from "@/lib/auth/session";
+
+export async function GET(request: NextRequest) {
+  const cookieValue = request.cookies.get(getSessionCookieName())?.value;
+  const session = await getSession(cookieValue);
+
+  if (!session?.isAuthenticated || !session.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase
+    .from("trips")
+    .select("*")
+    .eq("user_id", session.userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase query error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch trips" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ trips: data });
+}
 
 export async function POST(request: NextRequest) {
   // 1. Parse JSON body
