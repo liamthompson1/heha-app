@@ -5,9 +5,11 @@ import Link from "next/link";
 import clsx from "clsx";
 import type { TripRow } from "@/types/trip";
 
+export type TripCardSize = "hero" | "large" | "standard" | "compact" | "featured";
+
 interface TripCardProps {
   trip: TripRow;
-  size: "featured" | "standard";
+  size: TripCardSize;
   className?: string;
 }
 
@@ -23,12 +25,18 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
   const tripType = trip.trip.trip_type;
   const travelerCount = trip.people_travelling.length;
 
+  const imgParams = new URLSearchParams({ place: destination });
+  if (tripType) imgParams.set("type", tripType);
+  const imgSrc = `/api/images/destination?${imgParams.toString()}`;
+
+  const isLarge = size === "hero" || size === "large" || size === "featured";
+
   return (
     <Link
       href={`/trip/${trip.id}`}
       className={clsx(
         "trip-card",
-        size === "featured" ? "trip-card-featured" : "trip-card-standard",
+        `trip-card-${size}`,
         className
       )}
     >
@@ -37,7 +45,7 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
       {imgState === "error" && <div className="trip-card-gradient-fallback" />}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`/api/images/destination?place=${encodeURIComponent(destination)}`}
+        src={imgSrc}
         alt=""
         className="trip-card-img"
         onLoad={() => setImgState("loaded")}
@@ -53,7 +61,7 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
         <h3
           className={clsx(
             "font-semibold truncate",
-            size === "featured" ? "text-xl sm:text-2xl" : "text-lg"
+            isLarge ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
           )}
           style={{ color: "var(--foreground)" }}
         >
@@ -62,7 +70,7 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
 
         {dateRange && (
           <p
-            className="text-sm mt-1"
+            className={clsx("mt-1", isLarge ? "text-sm" : "text-xs")}
             style={{ color: "rgba(255, 255, 255, 0.7)" }}
           >
             {dateRange}

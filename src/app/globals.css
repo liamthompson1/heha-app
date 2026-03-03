@@ -1402,20 +1402,75 @@ body {
   transform: scale(1.05);
 }
 
-.trip-card-featured {
+/* Size tiers — proximity-based */
+.trip-card-hero {
+  min-height: 280px;
+  grid-column: 1 / -1;
+}
+
+.trip-card-large {
   min-height: 220px;
+  grid-column: span 2;
 }
 
 .trip-card-standard {
-  min-height: 160px;
+  min-height: 180px;
+}
+
+.trip-card-compact {
+  min-height: 140px;
+}
+
+/* Legacy alias */
+.trip-card-featured {
+  min-height: 280px;
+  grid-column: 1 / -1;
 }
 
 @media (min-width: 640px) {
-  .trip-card-featured {
+  .trip-card-hero {
+    min-height: 360px;
+  }
+  .trip-card-large {
     min-height: 280px;
   }
   .trip-card-standard {
-    min-height: 200px;
+    min-height: 220px;
+  }
+  .trip-card-compact {
+    min-height: 160px;
+  }
+  .trip-card-featured {
+    min-height: 360px;
+  }
+}
+
+/* ——————————————————————————————————————
+   Bento Trip Grid
+   —————————————————————————————————————— */
+
+.bento-trip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .bento-trip-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-trip-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .trip-card-large {
+    grid-column: span 2;
   }
 }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const place = request.nextUrl.searchParams.get("place");
+  const tripType = request.nextUrl.searchParams.get("type");
 
   if (!place) {
     return new NextResponse(null, { status: 400 });
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
             {
               parts: [
                 {
-                  text: `Generate a cinematic travel photograph of ${place}. Golden hour lighting, wide angle lens, vibrant colors, no text or watermarks.`,
+                  text: `Generate a cinematic travel photograph of ${place}${tripType ? ` for a ${tripType.toLowerCase()} trip` : ""}. Golden hour lighting, wide angle lens, vibrant colors, no text or watermarks.`,
                 },
               ],
             },

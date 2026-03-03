@@ -9,7 +9,7 @@ import PathCard from "@/components/PathCard";
 import AuthStatus from "@/components/AuthStatus";
 import SearchBar from "@/components/SearchBar";
 import LogoHeader from "@/components/LogoHeader";
-import TripCard from "@/components/TripCard";
+import BentoTripGrid from "@/components/BentoTripGrid";
 import GlassButton from "@/components/GlassButton";
 import GlassCard from "@/components/GlassCard";
 import type { TripRow } from "@/types/trip";
@@ -49,17 +49,13 @@ function Dashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  const featured = trips[0];
-  const standard = trips.slice(1, 5);
-  const hasMore = trips.length > 5;
-
   return (
-    <div className="page-shell relative flex min-h-[100dvh] flex-col items-center overflow-hidden bg-[var(--background)] px-6 pt-20 pb-28">
+    <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20 pb-28">
       <OrbField orbs={SUBTLE_ORBS} />
       <LogoHeader />
       <AuthStatus />
 
-      <main className="relative z-10 w-full max-w-2xl flex-1 flex flex-col">
+      <main className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col">
         {/* Greeting */}
         <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold sm:text-4xl">
           {getGreeting()} &#9992;&#65039;
@@ -73,7 +69,7 @@ function Dashboard() {
           >
             Your Trips
           </h2>
-          {hasMore && (
+          {trips.length > 0 && (
             <Link
               href="/trips"
               className="text-sm font-medium"
@@ -87,17 +83,15 @@ function Dashboard() {
 
         {/* Loading state */}
         {loading && (
-          <div className="space-y-4">
-            <div className="trip-card trip-card-featured">
+          <div className="bento-trip-grid">
+            <div className="trip-card trip-card-hero">
               <div className="trip-card-skeleton" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="trip-card trip-card-standard">
-                <div className="trip-card-skeleton" />
-              </div>
-              <div className="trip-card trip-card-standard">
-                <div className="trip-card-skeleton" />
-              </div>
+            <div className="trip-card trip-card-standard">
+              <div className="trip-card-skeleton" />
+            </div>
+            <div className="trip-card trip-card-standard">
+              <div className="trip-card-skeleton" />
             </div>
           </div>
         )}
@@ -109,47 +103,31 @@ function Dashboard() {
 
         {/* Empty state */}
         {!loading && !error && trips.length === 0 && (
-          <GlassCard className="page-enter stagger-4 text-center" elevated>
-            <div className="text-5xl mb-4">&#9992;&#65039;</div>
-            <p
-              className="text-lg font-semibold mb-2"
-              style={{ color: "var(--text-primary)" }}
-            >
-              No trips yet
-            </p>
-            <p
-              className="mb-8"
-              style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}
-            >
-              Start planning your next adventure — it only takes a minute.
-            </p>
-            <GlassButton href="/trip/new" variant="teal" size="lg">
-              Plan Your First Trip
-            </GlassButton>
-          </GlassCard>
+          <div className="max-w-lg mx-auto">
+            <GlassCard className="page-enter stagger-4 text-center" elevated>
+              <div className="text-5xl mb-4">&#9992;&#65039;</div>
+              <p
+                className="text-lg font-semibold mb-2"
+                style={{ color: "var(--text-primary)" }}
+              >
+                No trips yet
+              </p>
+              <p
+                className="mb-8"
+                style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}
+              >
+                Start planning your next adventure — it only takes a minute.
+              </p>
+              <GlassButton href="/trip/new" variant="teal" size="lg">
+                Plan Your First Trip
+              </GlassButton>
+            </GlassCard>
+          </div>
         )}
 
         {/* Bento grid */}
         {!loading && !error && trips.length > 0 && (
-          <>
-            <div className="page-enter stagger-4">
-              <TripCard trip={featured} size="featured" />
-            </div>
-
-            {standard.length > 0 && (
-              <div className="page-enter stagger-5 grid grid-cols-2 gap-4 mt-4">
-                {standard.map((t) => (
-                  <TripCard key={t.id} trip={t} size="standard" />
-                ))}
-              </div>
-            )}
-
-            <div className="page-enter stagger-6 mt-8">
-              <GlassButton href="/trip/new" variant="teal" className="w-full">
-                Plan a New Trip
-              </GlassButton>
-            </div>
-          </>
+          <BentoTripGrid trips={trips} />
         )}
       </main>
 
