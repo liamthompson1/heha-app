@@ -57,15 +57,15 @@ function Dashboard() {
 
       <main className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col">
         {/* Greeting */}
-        <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold sm:text-4xl">
-          {getGreeting()} &#9992;&#65039;
+        <h1 className="page-enter stagger-1 text-3xl font-semibold sm:text-4xl tracking-tight" style={{ color: "var(--foreground)" }}>
+          {getGreeting()}
         </h1>
 
         {/* Section header */}
-        <div className="page-enter stagger-2 mt-8 flex items-center justify-between">
+        <div className="page-enter stagger-2 mt-10 flex items-center justify-between">
           <h2
-            className="text-lg font-semibold"
-            style={{ color: "var(--text-primary)" }}
+            className="text-base font-medium tracking-tight"
+            style={{ color: "var(--text-secondary)" }}
           >
             Your Trips
           </h2>
@@ -79,7 +79,7 @@ function Dashboard() {
             </Link>
           )}
         </div>
-        <div className="page-enter stagger-3 prismatic-line w-full mt-2 mb-6" />
+        <div className="page-enter stagger-3 prismatic-line w-full mt-3 mb-8" />
 
         {/* Loading state */}
         {loading && (

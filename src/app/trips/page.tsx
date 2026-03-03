@@ -78,10 +78,10 @@ export default function TripsPage() {
         {/* Header */}
         <div className="page-enter stagger-1 mb-2 flex items-center justify-between gap-4">
           <div>
-            <h1 className="gradient-text text-3xl font-bold sm:text-4xl">
+            <h1 className="text-3xl font-semibold sm:text-4xl tracking-tight" style={{ color: "var(--foreground)" }}>
               Your Trips
             </h1>
-            <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+            <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
               {!loading && trips.length > 0
                 ? `${trips.length} trip${trips.length !== 1 ? "s" : ""} planned`
                 : "Your saved trip plans"}
@@ -92,7 +92,7 @@ export default function TripsPage() {
           </GlassButton>
         </div>
 
-        <div className="page-enter stagger-2 prismatic-line w-full mt-2 mb-6" />
+        <div className="page-enter stagger-2 prismatic-line w-full mt-3 mb-8" />
 
         {/* Loading skeletons */}
         {loading && (
