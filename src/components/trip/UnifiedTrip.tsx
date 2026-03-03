@@ -384,11 +384,11 @@ export default function UnifiedTrip({
           : "Processing...";
 
   return (
-    <div className="flex flex-col" style={{ minHeight: "70vh" }}>
+    <div className="flex flex-col pb-28" style={{ minHeight: "70vh" }}>
       {/* ——— Chat thread ——— */}
       <div
         className="flex-1 space-y-3 mb-4 overflow-y-auto px-1"
-        style={{ maxHeight: "60vh" }}
+        style={{ maxHeight: "calc(100dvh - 200px)" }}
       >
         {history.map((msg, i) => (
           <AgentMessage
@@ -425,60 +425,64 @@ export default function UnifiedTrip({
         <div ref={bottomRef} />
       </div>
 
-      {/* ——— Input bar ——— */}
+      {/* ——— Input bar (fixed to bottom with morph animation) ——— */}
       {formComplete ? (
-        <GlassButton variant="coral" className="w-full" onClick={onComplete}>
-          Plan My Trip
-        </GlassButton>
+        <div className="unified-input-floating">
+          <GlassButton variant="coral" className="w-full" onClick={onComplete}>
+            Plan My Trip
+          </GlassButton>
+        </div>
       ) : (
-        <div className="unified-input-bar">
-          {/* Voice state indicator */}
-          {voiceState === "listening" && (
-            <span className="voice-listening-dot" />
-          )}
-
-          <input
-            ref={inputRef}
-            type="text"
-            className="glass-input flex-1"
-            placeholder={
-              voiceState === "listening"
-                ? "Listening..."
-                : voiceState === "processing"
-                  ? "Thinking..."
-                  : voiceState === "speaking"
-                    ? "Speaking..."
-                    : "Tell me about your trip..."
-            }
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            disabled={voiceState !== "idle"}
-          />
-
-          <button
-            type="button"
-            className="voice-icon-btn"
-            data-state={voiceState}
-            onClick={handleMicClick}
-            aria-label={micLabel}
-            title={micLabel}
-          >
+        <div className="unified-input-floating">
+          <div className="unified-input-bar">
+            {/* Voice state indicator */}
             {voiceState === "listening" && (
-              <span className="voice-btn-pulse" />
+              <span className="voice-listening-dot" />
             )}
-            {voiceState === "speaking" ? <WaveIconSmall /> : <MicIconSmall />}
-          </button>
 
-          <button
-            type="button"
-            className="send-icon-btn"
-            onClick={handleSend}
-            disabled={!input.trim() || thinking}
-            aria-label="Send"
-          >
-            <SendIcon />
-          </button>
+            <input
+              ref={inputRef}
+              type="text"
+              className="glass-input flex-1"
+              placeholder={
+                voiceState === "listening"
+                  ? "Listening..."
+                  : voiceState === "processing"
+                    ? "Thinking..."
+                    : voiceState === "speaking"
+                      ? "Speaking..."
+                      : "Tell me about your trip..."
+              }
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              disabled={voiceState !== "idle"}
+            />
+
+            <button
+              type="button"
+              className="voice-icon-btn morph-btn-enter"
+              data-state={voiceState}
+              onClick={handleMicClick}
+              aria-label={micLabel}
+              title={micLabel}
+            >
+              {voiceState === "listening" && (
+                <span className="voice-btn-pulse" />
+              )}
+              {voiceState === "speaking" ? <WaveIconSmall /> : <MicIconSmall />}
+            </button>
+
+            <button
+              type="button"
+              className="send-icon-btn morph-btn-enter"
+              onClick={handleSend}
+              disabled={!input.trim() || thinking}
+              aria-label="Send"
+            >
+              <SendIcon />
+            </button>
+          </div>
         </div>
       )}
     </div>

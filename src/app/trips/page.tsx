@@ -64,6 +64,7 @@ export default function TripsPage() {
   const rest = trips.slice(1);
 
   return (
+    <>
     <PageShell backHref="/">
       {/* Header */}
       <div className="page-enter stagger-1 mb-2 flex items-start justify-between gap-4">
@@ -83,11 +84,6 @@ export default function TripsPage() {
       </div>
 
       <div className="page-enter stagger-2 prismatic-line w-full mb-6" />
-
-      {/* Search Bar */}
-      <div className="page-enter stagger-2 mb-8">
-        <SearchBar />
-      </div>
 
       {/* Loading skeletons */}
       {loading && (
@@ -142,7 +138,7 @@ export default function TripsPage() {
             </div>
           )}
 
-          <div className="page-enter stagger-5 mt-8">
+          <div className="page-enter stagger-5 mt-8 pb-28">
             <GlassButton href="/trip/new" variant="teal" className="w-full">
               Plan a New Trip
             </GlassButton>
@@ -150,5 +146,7 @@ export default function TripsPage() {
         </>
       )}
     </PageShell>
+    <SearchBar />
+    </>
   );
 }

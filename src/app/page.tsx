@@ -8,6 +8,7 @@ import HeroSection from "@/components/HeroSection";
 import PathCard from "@/components/PathCard";
 import AuthStatus from "@/components/AuthStatus";
 import SearchBar from "@/components/SearchBar";
+import LogoHeader from "@/components/LogoHeader";
 import TripCard from "@/components/TripCard";
 import GlassButton from "@/components/GlassButton";
 import GlassCard from "@/components/GlassCard";
@@ -53,8 +54,9 @@ function Dashboard() {
   const hasMore = trips.length > 5;
 
   return (
-    <div className="page-shell relative flex min-h-screen flex-col items-center overflow-hidden bg-[var(--background)] px-6 pt-24 pb-16">
+    <div className="page-shell relative flex min-h-[100dvh] flex-col items-center overflow-hidden bg-[var(--background)] px-6 pt-24 pb-28">
       <OrbField orbs={SUBTLE_ORBS} />
+      <LogoHeader />
       <AuthStatus />
 
       <main className="relative z-10 w-full max-w-2xl">
@@ -63,13 +65,8 @@ function Dashboard() {
           {getGreeting()} &#9992;&#65039;
         </h1>
 
-        {/* Search Bar */}
-        <div className="page-enter stagger-2 mt-6">
-          <SearchBar />
-        </div>
-
         {/* Section header */}
-        <div className="page-enter stagger-3 mt-10 flex items-center justify-between">
+        <div className="page-enter stagger-2 mt-8 flex items-center justify-between">
           <h2
             className="text-lg font-semibold"
             style={{ color: "var(--text-primary)" }}
@@ -155,6 +152,8 @@ function Dashboard() {
           </>
         )}
       </main>
+
+      <SearchBar />
     </div>
   );
 }
@@ -164,7 +163,7 @@ export default function Home() {
 
   if (session.loading) {
     return (
-      <div className="page-shell relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--background)] px-6 py-20">
+      <div className="page-shell relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-[var(--background)] px-6 py-20">
         <OrbField orbs={LANDING_ORBS} />
         <div
           className="relative z-10 text-sm"
@@ -181,7 +180,7 @@ export default function Home() {
   }
 
   return (
-    <div className="page-shell relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--background)] px-6 py-20">
+    <div className="page-shell relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-[var(--background)] px-6 py-20">
       <OrbField orbs={LANDING_ORBS} />
 
       <main className="relative z-10 flex w-full max-w-4xl flex-col items-center">

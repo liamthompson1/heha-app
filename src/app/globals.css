@@ -1533,6 +1533,110 @@ body {
 }
 
 /* ——————————————————————————————————————
+   Floating Search Bar
+   —————————————————————————————————————— */
+
+.search-bar-floating {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 640px;
+  z-index: 40;
+  animation: float-up-entrance 0.5s var(--ease-spring) both;
+}
+
+@keyframes float-up-entrance {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ——————————————————————————————————————
+   Morph Animation (trip/new input)
+   —————————————————————————————————————— */
+
+.unified-input-floating {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 640px;
+  z-index: 40;
+  animation: morph-pill-to-input 0.5s var(--ease-spring) both;
+}
+
+@keyframes morph-pill-to-input {
+  from {
+    border-radius: 999px;
+    max-width: 480px;
+    transform: translateX(-50%) scale(0.95);
+    opacity: 0.8;
+  }
+  to {
+    border-radius: 20px;
+    max-width: 640px;
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Button pop-in for mic + send */
+.morph-btn-enter {
+  animation: btn-pop-in 0.3s var(--ease-spring) 0.25s both;
+}
+
+@keyframes btn-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ——————————————————————————————————————
+   Logo Header
+   —————————————————————————————————————— */
+
+.logo-header {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 14px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: background 0.25s var(--ease-standard), border-color 0.25s var(--ease-standard);
+}
+
+.logo-header:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+@media (min-width: 640px) {
+  .logo-header {
+    top: 24px;
+    left: 24px;
+  }
+}
+
+/* ——————————————————————————————————————
    Reduced Motion
    —————————————————————————————————————— */
 

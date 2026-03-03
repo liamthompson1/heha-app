@@ -2,6 +2,7 @@ import clsx from "clsx";
 import OrbField, { type Orb, SUBTLE_ORBS } from "./OrbField";
 import BackLink from "./BackLink";
 import AuthStatus from "./AuthStatus";
+import LogoHeader from "./LogoHeader";
 
 interface PageShellProps {
   children: React.ReactNode;
@@ -21,11 +22,12 @@ export default function PageShell({
   return (
     <div
       className={clsx(
-        "page-shell relative flex min-h-screen overflow-hidden bg-[var(--background)]",
+        "page-shell relative flex min-h-[100dvh] overflow-hidden bg-[var(--background)]",
         centered ? "items-center justify-center" : "items-start justify-center pt-24 pb-16"
       )}
     >
       <OrbField orbs={orbs} />
+      <LogoHeader />
       {backHref && <BackLink href={backHref} />}
       <AuthStatus />
       <main
