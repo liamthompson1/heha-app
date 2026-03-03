@@ -32,7 +32,8 @@ export default function PageShell({
       <AuthStatus />
       <main
         className={clsx(
-          "page-enter relative z-10 mx-4 w-full flex-1 flex flex-col",
+          "page-enter relative z-10 mx-4 w-full",
+          !centered && "flex-1 flex flex-col",
           variant === "full" ? "" : "max-w-2xl self-center"
         )}
         style={{
