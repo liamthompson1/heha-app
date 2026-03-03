@@ -22,7 +22,7 @@ function sortByProximity(trips: TripRow[]): TripRow[] {
 
 /** Assign card size based on index and days until trip. */
 function getCardSize(trip: TripRow, index: number): TripCardSize {
-  if (index === 0) return "hero";
+  if (index === 0) return "large";
 
   const startDate = trip.trip.start_date;
   if (!startDate) return "compact";
