@@ -1698,6 +1698,39 @@ body {
 }
 
 /* ——————————————————————————————————————
+   Landing Page Scroll Snap
+   —————————————————————————————————————— */
+
+.landing-scroll-container {
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.landing-snap-section {
+  min-height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+/* Disable snap on very small screens where sections overflow viewport */
+@media (max-height: 500px) {
+  .landing-scroll-container {
+    scroll-snap-type: none;
+    height: auto;
+  }
+
+  .landing-snap-section {
+    min-height: auto;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* ——————————————————————————————————————
    Scroll Reveal — Apple-style entrance
    —————————————————————————————————————— */
 
