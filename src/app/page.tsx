@@ -198,14 +198,14 @@ export default function Home() {
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center gap-3 justify-center whitespace-nowrap">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap" style={{ gap: "0.15em" }}>
                   Log in with
                   <Image
                     src="/holiday-extras-logo.png"
                     alt="Holiday Extras"
                     width={240}
                     height={48}
-                    className="inline-block h-[1.1em] w-auto"
+                    className="inline-block h-[2em] w-auto"
                   />
                 </h3>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
