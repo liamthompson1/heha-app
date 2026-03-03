@@ -16,7 +16,7 @@ export default function SelectionCard({ icon, label, selected, onClick }: Select
       onClick={onClick}
     >
       <span className="text-3xl">{icon}</span>
-      <span className="text-sm font-medium text-white/70">{label}</span>
+      <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{label}</span>
     </button>
   );
 }

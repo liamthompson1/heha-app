@@ -64,10 +64,12 @@ export default function TripsPage() {
       <div className="page-enter stagger-1 mb-2 flex items-start justify-between gap-4">
         <div>
           <h1 className="gradient-text text-4xl font-bold sm:text-5xl">
-            My Trips
+            Your Trips
           </h1>
-          <p className="mt-2 text-sm text-white/50">
-            Your saved trip plans
+          <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+            {!loading && trips.length > 0
+              ? `${trips.length} trip${trips.length !== 1 ? "s" : ""} planned`
+              : "Your saved trip plans"}
           </p>
         </div>
         <GlassButton href="/trip/new" variant="teal" size="sm">
@@ -88,11 +90,15 @@ export default function TripsPage() {
       )}
 
       {!loading && !error && trips.length === 0 && (
-        <GlassCard className="page-enter stagger-3 text-center">
-          <p className="text-white/50 mb-6">
-            You haven&rsquo;t planned any trips yet.
+        <GlassCard className="page-enter stagger-3 text-center" elevated>
+          <div className="text-5xl mb-4">&#9992;&#65039;</div>
+          <p className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+            No trips yet
           </p>
-          <GlassButton href="/trip/new" variant="teal">
+          <p className="mb-8" style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+            Start planning your next adventure — it only takes a minute.
+          </p>
+          <GlassButton href="/trip/new" variant="teal" size="lg">
             Plan Your First Trip
           </GlassButton>
         </GlassCard>
@@ -104,22 +110,23 @@ export default function TripsPage() {
             {trips.map((trip, i) => (
               <Link key={trip.id} href={`/trip/${trip.id}`}>
                 <GlassCard
-                  className={`page-enter stagger-${Math.min(i + 3, 6)} cursor-pointer transition-all hover:scale-[1.01]`}
+                  className={`page-enter stagger-${Math.min(i + 3, 6)} cursor-pointer`}
                   size="sm"
+                  hoverable
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <h2 className="text-lg font-semibold text-white/90 truncate">
+                      <h2 className="text-lg font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
                         {trip.trip.destination}
                       </h2>
-                      <p className="text-sm text-white/50 mt-1">
+                      <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
                         {[trip.trip.start_date, trip.trip.end_date]
                           .filter(Boolean)
                           .join(" – ")}
                         {trip.trip.trip_type && ` · ${trip.trip.trip_type}`}
                       </p>
                       {trip.people_travelling.length > 0 && (
-                        <p className="text-xs text-white/30 mt-1">
+                        <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
                           {trip.people_travelling.length}{" "}
                           {trip.people_travelling.length === 1
                             ? "traveler"
@@ -127,7 +134,7 @@ export default function TripsPage() {
                         </p>
                       )}
                     </div>
-                    <span className="text-white/20 text-sm shrink-0">→</span>
+                    <span className="text-sm shrink-0" style={{ color: 'var(--text-disabled)' }}>→</span>
                   </div>
                 </GlassCard>
               </Link>

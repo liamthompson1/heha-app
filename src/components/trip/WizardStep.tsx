@@ -30,11 +30,11 @@ export default function WizardStep({
   return (
     <div className="flex min-h-[60vh] flex-col">
       <div className="flex-1">
-        <h1 className="wizard-question mb-2">{question}</h1>
-        {hint && <p className="wizard-hint mb-10">{hint}</p>}
-        <div className="mt-8">{children}</div>
+        <h1 className="wizard-question mb-3">{question}</h1>
+        {hint && <p className="wizard-hint mb-12">{hint}</p>}
+        <div className="mt-10">{children}</div>
       </div>
-      <div className="mt-12 flex items-center gap-3">
+      <div className="mt-14 flex items-center gap-3">
         {!isFirst && onBack && (
           <GlassButton variant="ghost" onClick={onBack}>
             Back

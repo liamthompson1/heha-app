@@ -85,47 +85,57 @@ export default function AuthEntryPage() {
 
   return (
     <PageShell backHref="/" centered>
-      <GlassCard shimmer className="max-w-md mx-auto">
-        <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold text-center mb-2">
-          Welcome
-        </h1>
-        <p className="page-enter stagger-2 text-center text-sm text-white/50 mb-8">
-          Sign in to start planning your next adventure.
-        </p>
+      <div className="relative max-w-md mx-auto">
+        {/* Brand glow behind card */}
+        <div
+          className="absolute -inset-16 -z-10 opacity-30 blur-3xl"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(47,149,243,0.3) 0%, rgba(105,30,225,0.15) 50%, transparent 80%)',
+          }}
+        />
+        <GlassCard shimmer elevated>
+          <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold text-center mb-2">
+            Welcome
+          </h1>
+          <p className="page-enter stagger-2 text-center text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+            Sign in to start planning your next adventure.
+          </p>
 
-        <div className="page-enter stagger-3 mb-6">
-          <GlassInput
-            label="Email address"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+          <div className="page-enter stagger-3 mb-6">
+            <GlassInput
+              label="Email address"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              size="lg"
+            />
+          </div>
 
-        {error && (
-          <p className="text-red-400 text-sm text-center mb-4">{error}</p>
-        )}
+          {error && (
+            <p className="text-red-400 text-sm text-center mb-4">{error}</p>
+          )}
 
-        <div className="page-enter stagger-4 flex flex-col gap-3">
-          <GlassButton
-            variant="blue"
-            className="w-full"
-            disabled={!email || loading}
-            onClick={handleLogin}
-          >
-            {loading ? "Sending\u2026" : "Login with Holiday Extras"}
-          </GlassButton>
-          <GlassButton
-            variant="teal"
-            className="w-full"
-            disabled={!email || loading}
-            onClick={handleGuest}
-          >
-            Continue as Guest
-          </GlassButton>
-        </div>
-      </GlassCard>
+          <div className="page-enter stagger-4 flex flex-col gap-3">
+            <GlassButton
+              variant="blue"
+              className="w-full"
+              disabled={!email || loading}
+              onClick={handleLogin}
+            >
+              {loading ? "Sending\u2026" : "Login with Holiday Extras"}
+            </GlassButton>
+            <GlassButton
+              variant="teal"
+              className="w-full"
+              disabled={!email || loading}
+              onClick={handleGuest}
+            >
+              Continue as Guest
+            </GlassButton>
+          </div>
+        </GlassCard>
+      </div>
     </PageShell>
   );
 }

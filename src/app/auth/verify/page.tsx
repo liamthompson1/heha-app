@@ -82,44 +82,54 @@ function VerifyForm() {
   }
 
   return (
-    <GlassCard shimmer className="max-w-md mx-auto text-center">
-      <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold mb-2">
-        Check your phone
-      </h1>
-      <p className="page-enter stagger-2 text-sm text-white/50 mb-8">
-        We sent a 6-digit code to your phone{email ? ` for ${email}` : ""}.
-      </p>
+    <div className="relative max-w-md mx-auto">
+      {/* Brand glow behind card */}
+      <div
+        className="absolute -inset-16 -z-10 opacity-30 blur-3xl"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(105,30,225,0.3) 0%, rgba(47,149,243,0.15) 50%, transparent 80%)',
+        }}
+      />
+      <GlassCard shimmer elevated className="text-center">
+        <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold mb-2">
+          Check your phone
+        </h1>
+        <p className="page-enter stagger-2 text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+          We sent a 6-digit code to your phone{email ? ` for ${email}` : ""}.
+        </p>
 
-      <div className="page-enter stagger-3 mb-8">
-        <OtpInput length={6} onChange={setOtp} />
-      </div>
+        <div className="page-enter stagger-3 mb-8">
+          <OtpInput length={6} onChange={setOtp} />
+        </div>
 
-      {error && (
-        <p className="text-red-400 text-sm mb-4">{error}</p>
-      )}
+        {error && (
+          <p className="text-red-400 text-sm mb-4">{error}</p>
+        )}
 
-      <div className="page-enter stagger-4 mb-4">
-        <GlassButton
-          variant="blue"
-          className="w-full"
-          disabled={otp.length !== 6 || loading}
-          onClick={handleVerify}
-        >
-          {loading ? "Verifying\u2026" : "Verify"}
-        </GlassButton>
-      </div>
+        <div className="page-enter stagger-4 mb-4">
+          <GlassButton
+            variant="blue"
+            className="w-full"
+            disabled={otp.length !== 6 || loading}
+            onClick={handleVerify}
+          >
+            {loading ? "Verifying\u2026" : "Verify"}
+          </GlassButton>
+        </div>
 
-      <p className="page-enter stagger-5 text-xs text-white/40">
-        Didn&rsquo;t get the code?{" "}
-        <button
-          onClick={handleResend}
-          disabled={resending}
-          className="text-white/60 underline underline-offset-2 hover:text-white/80 transition-colors disabled:opacity-50"
-        >
-          {resending ? "Resending\u2026" : "Resend"}
-        </button>
-      </p>
-    </GlassCard>
+        <p className="page-enter stagger-5 text-xs" style={{ color: 'var(--text-tertiary)' }}>
+          Didn&rsquo;t get the code?{" "}
+          <button
+            onClick={handleResend}
+            disabled={resending}
+            className="underline underline-offset-2 transition-colors disabled:opacity-50"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {resending ? "Resending\u2026" : "Resend"}
+          </button>
+        </p>
+      </GlassCard>
+    </div>
   );
 }
 

@@ -21,7 +21,7 @@ export default function PageShell({
   return (
     <div
       className={clsx(
-        "relative flex min-h-screen overflow-hidden bg-[var(--background)]",
+        "page-shell relative flex min-h-screen overflow-hidden bg-[var(--background)]",
         centered ? "items-center justify-center" : "items-start justify-center pt-24 pb-16"
       )}
     >
@@ -33,6 +33,11 @@ export default function PageShell({
           "page-enter relative z-10 mx-4 w-full",
           variant === "full" ? "" : "max-w-2xl"
         )}
+        style={{
+          paddingLeft: 'env(safe-area-inset-left)',
+          paddingRight: 'env(safe-area-inset-right)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
       >
         {children}
       </main>

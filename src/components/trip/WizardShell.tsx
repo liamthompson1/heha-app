@@ -207,7 +207,7 @@ export default function WizardShell() {
   return (
     <div className="mx-auto w-full max-w-2xl px-4">
       {/* Mode selector + progress */}
-      <div className="mb-8 flex flex-col items-center gap-6">
+      <div className="mb-10 flex flex-col items-center gap-6">
         <ModeSelector
           mode={mode}
           onChange={(m) => dispatch({ type: "SET_MODE", mode: m })}

@@ -88,7 +88,7 @@ export default function VoiceMode({ tripData, onTripDataChange, onComplete }: Vo
       <VoiceTranscript lines={lines} />
 
       {agentResponse && (
-        <p className="mt-6 text-center text-white/70 text-sm max-w-md page-enter">
+        <p className="mt-6 text-center text-sm max-w-md page-enter" style={{ color: 'var(--text-secondary)' }}>
           {agentResponse}
         </p>
       )}

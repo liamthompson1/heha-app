@@ -11,8 +11,8 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   if (!value) return null;
   return (
     <div className="text-sm">
-      <span className="text-white/40">{label}: </span>
-      <span className="text-white/75">{value}</span>
+      <span style={{ color: 'var(--text-tertiary)' }}>{label}: </span>
+      <span style={{ color: 'var(--text-primary)' }}>{value}</span>
     </div>
   );
 }
@@ -49,8 +49,12 @@ export default function TripDetailPage() {
   if (loading) {
     return (
       <PageShell backHref="/trips">
-        <div className="text-white/40 text-sm text-center py-12">
-          Loading trip…
+        <div className="space-y-4 animate-pulse">
+          <div className="glass-panel rounded-2xl h-12 w-2/3" />
+          <div className="glass-panel rounded-2xl h-4 w-1/3" />
+          <div className="prismatic-line w-full mt-4" />
+          <div className="glass-panel rounded-2xl h-40 w-full mt-4" />
+          <div className="glass-panel rounded-2xl h-32 w-full" />
         </div>
       </PageShell>
     );
@@ -59,11 +63,11 @@ export default function TripDetailPage() {
   if (notFound || !trip) {
     return (
       <PageShell backHref="/trips">
-        <GlassCard className="text-center">
-          <h1 className="text-2xl font-bold text-white/90 mb-3">
+        <GlassCard className="text-center" elevated>
+          <h1 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
             Trip Not Found
           </h1>
-          <p className="text-white/50 mb-6">
+          <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
             This trip doesn&rsquo;t exist or may have been removed.
           </p>
           <GlassButton href="/trips" variant="blue">
@@ -84,7 +88,7 @@ export default function TripDetailPage() {
         <h1 className="gradient-text text-4xl font-bold sm:text-5xl">
           {trip.trip.destination}
         </h1>
-        <p className="mt-2 text-sm text-white/50">
+        <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
           {[trip.trip.start_date, trip.trip.end_date]
             .filter(Boolean)
             .join(" – ")}
@@ -96,7 +100,7 @@ export default function TripDetailPage() {
 
       {/* Overview */}
       <GlassCard className="page-enter stagger-2 mb-5">
-        <h2 className="text-lg font-semibold text-white/90 mb-3">Overview</h2>
+        <h2 className="text-lg font-semibold mb-3">Overview</h2>
         <div className="space-y-1">
           <InfoRow label="Destination" value={trip.trip.destination} />
           <InfoRow label="Trip type" value={trip.trip.trip_type ?? ""} />
@@ -112,18 +116,18 @@ export default function TripDetailPage() {
       {/* Travelers */}
       {travelerCount > 0 && (
         <GlassCard className="page-enter stagger-3 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">
+          <h2 className="text-lg font-semibold mb-3">
             Travelers
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {trip.people_travelling.map((p, i) => (
               <div key={i} className="glass-panel rounded-xl p-4">
-                <p className="font-medium text-white/90">{p.name}</p>
+                <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{p.name}</p>
                 {p.age != null && (
-                  <p className="text-xs text-white/40 mt-1">Age: {p.age}</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Age: {p.age}</p>
                 )}
                 {p.dietary_requirements && p.dietary_requirements.length > 0 && (
-                  <p className="text-xs text-white/30 mt-1">
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
                     Diet: {p.dietary_requirements.join(", ")}
                   </p>
                 )}
@@ -136,7 +140,7 @@ export default function TripDetailPage() {
       {/* Journey */}
       {trip.journey_locations && (
         <GlassCard className="page-enter stagger-3 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Journey</h2>
+          <h2 className="text-lg font-semibold mb-3">Journey</h2>
           <div className="space-y-1">
             <InfoRow label="Origin" value={trip.journey_locations.origin ?? ""} />
             {trip.journey_locations.stops &&
@@ -153,22 +157,22 @@ export default function TripDetailPage() {
       {/* Flights */}
       {trip.flights_if_known && trip.flights_if_known.length > 0 && (
         <GlassCard className="page-enter stagger-4 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Flights</h2>
+          <h2 className="text-lg font-semibold mb-3">Flights</h2>
           <div className="space-y-3">
             {trip.flights_if_known.map((f, i) => (
               <div key={i} className="glass-panel rounded-xl p-4">
                 {(f.airline || f.flight_number) && (
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="font-medium text-white/90">
+                    <span className="font-medium" style={{ color: 'var(--text-primary)' }}>
                       {[f.airline, f.flight_number].filter(Boolean).join(" ")}
                     </span>
                   </div>
                 )}
-                <p className="text-sm text-white/60">
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                   {f.departure_airport} → {f.arrival_airport}
                 </p>
                 {(f.departure_time || f.arrival_time) && (
-                  <p className="text-xs text-white/40 mt-1">
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
                     {f.departure_time && `Departs ${f.departure_time}`}
                     {f.departure_time && f.arrival_time && " · "}
                     {f.arrival_time && `Arrives ${f.arrival_time}`}
@@ -183,7 +187,7 @@ export default function TripDetailPage() {
       {/* Activities */}
       {activities.length > 0 && (
         <GlassCard className="page-enter stagger-4 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">
+          <h2 className="text-lg font-semibold mb-3">
             Activities
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -202,10 +206,10 @@ export default function TripDetailPage() {
       {/* Anything else */}
       {trip.anything_else_we_should_know && (
         <GlassCard className="page-enter stagger-5 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">
+          <h2 className="text-lg font-semibold mb-3">
             Anything Else
           </h2>
-          <p className="text-sm text-white/60">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             {trip.anything_else_we_should_know}
           </p>
         </GlassCard>

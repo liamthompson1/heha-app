@@ -11,8 +11,8 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   if (!value) return null;
   return (
     <div className="text-sm">
-      <span className="text-white/40">{label}: </span>
-      <span className="text-white/75">{value}</span>
+      <span style={{ color: 'var(--text-tertiary)' }}>{label}: </span>
+      <span style={{ color: 'var(--text-primary)' }}>{value}</span>
     </div>
   );
 }
@@ -45,7 +45,7 @@ export default function TripGeneratedPage() {
         <h1 className="gradient-text text-4xl font-bold sm:text-5xl">
           {trip.name || "Your Trip"}
         </h1>
-        <p className="mt-2 text-sm text-white/50">
+        <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
           {[trip.dates.start_date, trip.dates.end_date].filter(Boolean).join(" – ")}
           {trip.reason && ` · ${trip.reason}`}
         </p>
@@ -55,7 +55,7 @@ export default function TripGeneratedPage() {
 
       {/* Overview */}
       <GlassCard className="page-enter stagger-2 mb-5">
-        <h2 className="text-lg font-semibold text-white/90 mb-3">Overview</h2>
+        <h2 className="text-lg font-semibold mb-3">Overview</h2>
         <div className="space-y-1">
           <InfoRow label="Trip name" value={trip.name} />
           <InfoRow label="Type" value={trip.reason} />
@@ -69,16 +69,16 @@ export default function TripGeneratedPage() {
       {/* Travelers */}
       {trip.people_travelling.length > 0 && (
         <GlassCard className="page-enter stagger-3 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Travelers</h2>
+          <h2 className="text-lg font-semibold mb-3">Travelers</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {trip.people_travelling.map((t, i) => (
               <div key={i} className="glass-panel rounded-xl p-4">
-                <p className="font-medium text-white/90">
+                <p className="font-medium">
                   {t.first_name} {t.last_name}
                 </p>
-                {t.email && <p className="text-xs text-white/40 mt-1">{t.email}</p>}
-                {t.phone && <p className="text-xs text-white/40">{t.phone}</p>}
-                {t.dob && <p className="text-xs text-white/30 mt-1">DOB: {t.dob}</p>}
+                {t.email && <p className="text-xs mt-1">{t.email}</p>}
+                {t.phone && <p className="text-xs">{t.phone}</p>}
+                {t.dob && <p className="text-xs mt-1">DOB: {t.dob}</p>}
               </div>
             ))}
           </div>
@@ -87,7 +87,7 @@ export default function TripGeneratedPage() {
 
       {/* Journey */}
       <GlassCard className="page-enter stagger-3 mb-5">
-        <h2 className="text-lg font-semibold text-white/90 mb-3">Journey</h2>
+        <h2 className="text-lg font-semibold mb-3">Journey</h2>
         <div className="space-y-1">
           <InfoRow
             label="From"
@@ -104,18 +104,18 @@ export default function TripGeneratedPage() {
       {/* Flights */}
       {trip.flights_if_known.length > 0 && (
         <GlassCard className="page-enter stagger-4 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Flights</h2>
+          <h2 className="text-lg font-semibold mb-3">Flights</h2>
           <div className="space-y-3">
             {trip.flights_if_known.map((f, i) => (
               <div key={i} className="glass-panel rounded-xl p-4">
                 <div className="flex items-baseline gap-2 mb-1">
-                  <span className="font-medium text-white/90">{f.airline} {f.flight_number}</span>
-                  <span className="text-xs text-white/30 capitalize">{f.direction}</span>
+                  <span className="font-medium">{f.airline} {f.flight_number}</span>
+                  <span className="text-xs capitalize">{f.direction}</span>
                 </div>
-                <p className="text-sm text-white/60">
+                <p className="text-sm">
                   {f.from_airport} → {f.to_airport}
                 </p>
-                <p className="text-xs text-white/40 mt-1">
+                <p className="text-xs mt-1">
                   Departs {f.departure_date} {f.departure_time} · Arrives {f.arrival_date} {f.arrival_time}
                 </p>
               </div>
@@ -127,7 +127,7 @@ export default function TripGeneratedPage() {
       {/* Preferences */}
       {(prefLabels.length > 0 || trip.preferences.notes) && (
         <GlassCard className="page-enter stagger-4 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Preferences</h2>
+          <h2 className="text-lg font-semibold mb-3">Preferences</h2>
           {prefLabels.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-3">
               {prefLabels.map((label) => (
@@ -138,7 +138,7 @@ export default function TripGeneratedPage() {
             </div>
           )}
           {trip.preferences.notes && (
-            <p className="text-sm text-white/60">{trip.preferences.notes}</p>
+            <p className="text-sm">{trip.preferences.notes}</p>
           )}
         </GlassCard>
       )}
@@ -146,8 +146,8 @@ export default function TripGeneratedPage() {
       {/* Anything else */}
       {trip.anything_else_we_should_know && (
         <GlassCard className="page-enter stagger-5 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Anything Else</h2>
-          <p className="text-sm text-white/60">{trip.anything_else_we_should_know}</p>
+          <h2 className="text-lg font-semibold mb-3">Anything Else</h2>
+          <p className="text-sm">{trip.anything_else_we_should_know}</p>
         </GlassCard>
       )}
 

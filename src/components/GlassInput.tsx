@@ -30,7 +30,7 @@ export default function GlassInput({
   return (
     <label className={clsx("block", className)}>
       {label && (
-        <span className="mb-2 block text-sm font-medium text-white/50">
+        <span className="mb-2 block text-[0.8rem] font-medium tracking-[0.03em]" style={{ color: 'var(--text-secondary)' }}>
           {label}
         </span>
       )}

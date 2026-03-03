@@ -13,18 +13,19 @@ interface StepReviewProps {
 
 function Section({ title, onEdit, children }: { title: string; onEdit: () => void; children: React.ReactNode }) {
   return (
-    <div className="glass-panel rounded-2xl p-5 mb-4">
+    <div className="glass-panel-elevated rounded-2xl p-5 mb-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{title}</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>{title}</h3>
         <button
           type="button"
-          className="text-xs text-blue-400/70 hover:text-blue-400 transition-colors"
+          className="glass-button glass-button-ghost glass-button-sm text-xs"
+          style={{ color: 'var(--blue)', padding: '4px 12px' }}
           onClick={onEdit}
         >
           Edit
         </button>
       </div>
-      <div className="text-sm text-white/60 space-y-1">{children}</div>
+      <div className="text-sm space-y-1" style={{ color: 'var(--text-secondary)' }}>{children}</div>
     </div>
   );
 }
@@ -33,8 +34,8 @@ function Field({ label, value }: { label: string; value: string }) {
   if (!value) return null;
   return (
     <div>
-      <span className="text-white/40">{label}: </span>
-      <span className="text-white/80">{value}</span>
+      <span style={{ color: 'var(--text-tertiary)' }}>{label}: </span>
+      <span style={{ color: 'var(--text-primary)' }}>{value}</span>
     </div>
   );
 }
@@ -77,7 +78,7 @@ export default function StepReview({ data, onNext, onBack, onEdit }: StepReviewP
 
         <Section title="Travelers" onEdit={() => onEdit(4)}>
           {data.people_travelling.length === 0 ? (
-            <p className="text-white/30">No travelers added</p>
+            <p style={{ color: 'var(--text-disabled)' }}>No travelers added</p>
           ) : (
             data.people_travelling.map((t, i) => (
               <div key={i}>{t.first_name} {t.last_name}{t.email ? ` — ${t.email}` : ""}</div>

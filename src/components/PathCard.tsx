@@ -14,8 +14,8 @@ export default function PathCard({ href, title, description, color }: PathCardPr
       href={href}
       className={clsx("path-card", `path-card-${color}`)}
     >
-      <h3 className="text-2xl font-bold mb-1">{title}</h3>
-      <p className="text-sm text-white/50">{description}</p>
+      <h3 className="relative z-10 text-2xl font-bold mb-1">{title}</h3>
+      <p className="relative z-10 text-sm" style={{ color: 'var(--text-secondary)' }}>{description}</p>
     </Link>
   );
 }
