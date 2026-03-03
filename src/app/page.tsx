@@ -290,13 +290,13 @@ export default function Home() {
           <div className="grid gap-10 sm:grid-cols-2 items-center">
             <ScrollReveal variant="left">
               <p className="text-sm font-medium uppercase tracking-widest mb-4" style={{ color: "var(--purple)" }}>
-                For developers
+                For AI Agents
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4" style={{ color: "var(--foreground)" }}>
-                Build with HEHA! Agents
+                Let your AI plan trips with HEHA!
               </h2>
               <p className="text-base leading-relaxed mb-8" style={{ color: "var(--text-secondary)" }}>
-                Integrate trip planning into your own product. Our agents support MCP, A2A, and REST — plan trips, search flights, and manage bookings programmatically.
+                Connect your personal AI agent to HEHA! and let it manage your trips for you. Search flights, build itineraries, and book — all through MCP, A2A, or REST.
               </p>
               <Link
                 href="/agents/skills"
@@ -309,15 +309,14 @@ export default function Home() {
             <ScrollReveal variant="right" delay={150}>
               <div className="glass-panel p-8">
                 <pre className="text-sm overflow-x-auto" style={{ color: "var(--text-secondary)" }}>
-                  <code>{`const trip = await agent.plan({
-  destination: "Tokyo",
-  duration: "7 days",
-  interests: ["food", "temples"],
-  budget: { currency: "GBP", max: 2500 }
-});
+                  <code>{`"Plan me a week in Tokyo
+ focused on food and temples,
+ under £2,500."
 
-// Returns full itinerary with
-// flights, hotels & activities`}</code>
+→ Your AI agent calls HEHA!
+→ Finds flights & hotels
+→ Builds a full itinerary
+→ Books it all for you`}</code>
                 </pre>
               </div>
             </ScrollReveal>
