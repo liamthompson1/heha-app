@@ -198,7 +198,16 @@ export default function Home() {
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-2">Log in with Holiday Extras</h3>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center gap-2 flex-wrap justify-center">
+                  Log in with
+                  <Image
+                    src="/holiday-extras-logo.png"
+                    alt="Holiday Extras"
+                    width={180}
+                    height={36}
+                    className="inline-block h-[1.4em] w-auto"
+                  />
+                </h3>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
                   Already a Holiday Extras customer? Sign in to sync your bookings and preferences.
                 </p>
