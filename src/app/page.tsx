@@ -186,11 +186,11 @@ export default function Home() {
             </p>
           </ScrollReveal>
 
-          <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 max-w-3xl mx-auto">
-            <ScrollReveal delay={100}>
+          <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 max-w-3xl mx-auto items-stretch">
+            <ScrollReveal delay={100} className="h-full">
               <Link
                 href="/auth/entry"
-                className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12"
+                className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12 h-full"
                 style={{ textDecoration: "none", color: "var(--foreground)" }}
               >
                 <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(90, 200, 250, 0.12)" }}>
@@ -214,10 +214,10 @@ export default function Home() {
               </Link>
             </ScrollReveal>
 
-            <ScrollReveal delay={200}>
+            <ScrollReveal delay={200} className="h-full">
               <Link
                 href="/auth/entry"
-                className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12"
+                className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12 h-full"
                 style={{ textDecoration: "none", color: "var(--foreground)" }}
               >
                 <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(46, 205, 193, 0.12)" }}>
