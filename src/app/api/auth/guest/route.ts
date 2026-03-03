@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   await supabase
     .from('users')
     .upsert(
-      { id: userHash, email: normalized, auth_type: 'guest', last_seen_at: new Date().toISOString() },
+      { id: userHash, email: email.toLowerCase().trim(), auth_type: 'guest', last_seen_at: new Date().toISOString() },
       { onConflict: 'id' }
     )
 
