@@ -28,6 +28,10 @@ export function useVoiceConversation({
   const [formComplete, setFormComplete] = useState(false);
   const [lastMemories, setLastMemories] = useState<SavedMemory[]>([]);
 
+  // Use refs for everything callbacks need to avoid stale closures
+  const voiceStateRef = useRef(voiceState);
+  voiceStateRef.current = voiceState;
+
   const historyRef = useRef<ChatMessage[]>([
     {
       role: "assistant",
@@ -38,11 +42,22 @@ export function useVoiceConversation({
   const tripDataRef = useRef(tripData);
   tripDataRef.current = tripData;
 
+  const onTripDataChangeRef = useRef(onTripDataChange);
+  onTripDataChangeRef.current = onTripDataChange;
+
+  const userIdRef = useRef(userId);
+  userIdRef.current = userId;
+
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const mountedRef = useRef(true);
   const autoListenRef = useRef(false);
   const memoryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Store callbacks in refs so they're always fresh
+  const speakResponseRef = useRef<(text: string) => Promise<void>>(null!);
+  const sendToAgentRef = useRef<(transcript: string) => Promise<void>>(null!);
+  const startListeningRef = useRef<() => void>(null!);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -65,17 +80,22 @@ export function useVoiceConversation({
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.onended = null;
+      audioRef.current.onerror = null;
       audioRef.current = null;
     }
   }, []);
 
-  const startListening = useCallback(() => {
+  // Define startListening — reads sendToAgentRef at call-time, no stale closure
+  startListeningRef.current = () => {
     if (!mountedRef.current) return;
 
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) return;
+
+    // Abort any previous recognition
+    recognitionRef.current?.abort();
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
@@ -90,162 +110,166 @@ export function useVoiceConversation({
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0]?.[0]?.transcript;
       if (transcript && mountedRef.current) {
-        autoListenRef.current = true; // successful speech → keep loop alive
-        sendToAgent(transcript);
+        autoListenRef.current = true;
+        sendToAgentRef.current?.(transcript);
       }
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       if (!mountedRef.current) return;
-      if (event.error === "no-speech" || event.error === "aborted") {
-        // No speech or aborted — break auto-listen loop
-        autoListenRef.current = false;
-        setVoiceState("idle");
-      } else {
-        autoListenRef.current = false;
-        setVoiceState("idle");
+      autoListenRef.current = false;
+      setVoiceState("idle");
+      // Silently handle no-speech and aborted — these are expected
+      if (event.error !== "no-speech" && event.error !== "aborted") {
+        console.warn("SpeechRecognition error:", event.error);
       }
     };
 
     recognition.onend = () => {
-      // Only go idle if we didn't transition to processing
-      if (mountedRef.current && voiceState === "listening") {
-        // Will be handled by onresult or onerror
+      // If we're still in "listening" state when recognition ends without
+      // onresult or onerror, go back to idle
+      if (mountedRef.current && voiceStateRef.current === "listening") {
+        autoListenRef.current = false;
+        setVoiceState("idle");
       }
     };
 
     recognition.start();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
-  const speakResponse = useCallback(
-    async (text: string) => {
-      if (!mountedRef.current) return;
-      setVoiceState("speaking");
+  // Define speakResponse — reads startListeningRef at call-time
+  speakResponseRef.current = async (text: string) => {
+    if (!mountedRef.current) return;
+    setVoiceState("speaking");
 
-      try {
-        const res = await fetch("/api/agent/speak", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text }),
-        });
+    try {
+      const res = await fetch("/api/agent/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
 
-        if (!res.ok) throw new Error("TTS failed");
+      if (!res.ok) throw new Error(`TTS failed: ${res.status}`);
 
-        const audioBlob = await res.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audioRef.current = audio;
+      const audioBlob = await res.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
 
-        audio.onended = () => {
-          URL.revokeObjectURL(audioUrl);
-          audioRef.current = null;
-          if (!mountedRef.current) return;
-
-          if (autoListenRef.current) {
-            // Auto-listen after TTS finishes
-            setTimeout(() => {
-              if (mountedRef.current && autoListenRef.current) {
-                startListening();
-              }
-            }, 300);
-          } else {
-            setVoiceState("idle");
-          }
-        };
-
-        audio.onerror = () => {
-          URL.revokeObjectURL(audioUrl);
-          audioRef.current = null;
-          if (mountedRef.current) {
-            setVoiceState("idle");
-          }
-        };
-
-        await audio.play();
-      } catch {
-        if (mountedRef.current) {
-          setVoiceState("idle");
-        }
-      }
-    },
-    [startListening]
-  );
-
-  const sendToAgent = useCallback(
-    async (transcript: string) => {
-      if (!mountedRef.current) return;
-      setVoiceState("processing");
-      setLastMemories([]);
-
-      const userMessage: ChatMessage = { role: "user", content: transcript };
-      historyRef.current = [...historyRef.current, userMessage];
-
-      try {
-        const res = await fetch("/api/agent/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: historyRef.current,
-            tripData: tripDataRef.current,
-            sessionId: "voice",
-            userId,
-          }),
-        });
-
-        if (!res.ok) throw new Error("API request failed");
-
-        const data: AgentChatResponse = await res.json();
-
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
         if (!mountedRef.current) return;
 
-        onTripDataChange(data.updatedTripData);
-
-        if (data.memories.length > 0) {
-          setLastMemories(data.memories);
-          // Auto-clear memory chips after 3 seconds
-          if (memoryTimerRef.current) clearTimeout(memoryTimerRef.current);
-          memoryTimerRef.current = setTimeout(() => {
-            if (mountedRef.current) setLastMemories([]);
-          }, 3000);
+        if (autoListenRef.current) {
+          setTimeout(() => {
+            if (mountedRef.current && autoListenRef.current) {
+              startListeningRef.current?.();
+            }
+          }, 300);
+        } else {
+          setVoiceState("idle");
         }
+      };
 
-        if (data.formComplete) {
-          setFormComplete(true);
-        }
+      audio.onerror = () => {
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+        if (mountedRef.current) setVoiceState("idle");
+      };
 
-        const assistantMessage: ChatMessage = {
-          role: "assistant",
-          content: data.message,
-        };
-        historyRef.current = [...historyRef.current, assistantMessage];
-
-        // Speak the response
-        await speakResponse(data.message);
-      } catch {
-        if (mountedRef.current) {
-          autoListenRef.current = false;
+      await audio.play();
+    } catch (err) {
+      console.error("TTS playback error:", err);
+      if (mountedRef.current) {
+        // TTS failed — still auto-listen so conversation continues
+        if (autoListenRef.current) {
+          setTimeout(() => {
+            if (mountedRef.current && autoListenRef.current) {
+              startListeningRef.current?.();
+            }
+          }, 300);
+        } else {
           setVoiceState("idle");
         }
       }
-    },
-    [onTripDataChange, userId, speakResponse]
-  );
+    }
+  };
+
+  // Define sendToAgent — reads speakResponseRef at call-time
+  sendToAgentRef.current = async (transcript: string) => {
+    if (!mountedRef.current) return;
+    setVoiceState("processing");
+    setLastMemories([]);
+
+    const userMessage: ChatMessage = { role: "user", content: transcript };
+    historyRef.current = [...historyRef.current, userMessage];
+
+    try {
+      const res = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: historyRef.current,
+          tripData: tripDataRef.current,
+          sessionId: "voice",
+          userId: userIdRef.current,
+        }),
+      });
+
+      if (!res.ok) throw new Error("API request failed");
+
+      const data: AgentChatResponse = await res.json();
+
+      if (!mountedRef.current) return;
+
+      onTripDataChangeRef.current(data.updatedTripData);
+
+      if (data.memories.length > 0) {
+        setLastMemories(data.memories);
+        if (memoryTimerRef.current) clearTimeout(memoryTimerRef.current);
+        memoryTimerRef.current = setTimeout(() => {
+          if (mountedRef.current) setLastMemories([]);
+        }, 3000);
+      }
+
+      if (data.formComplete) {
+        setFormComplete(true);
+      }
+
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: data.message,
+      };
+      historyRef.current = [...historyRef.current, assistantMessage];
+
+      // Speak the response via TTS
+      await speakResponseRef.current?.(data.message);
+    } catch (err) {
+      console.error("Agent chat error:", err);
+      if (mountedRef.current) {
+        autoListenRef.current = false;
+        setVoiceState("idle");
+      }
+    }
+  };
 
   const handleMicClick = useCallback(() => {
-    if (voiceState === "speaking") {
+    const state = voiceStateRef.current;
+
+    if (state === "speaking") {
       // Interrupt TTS and start listening
       stopAudio();
       autoListenRef.current = true;
-      startListening();
+      startListeningRef.current?.();
       return;
     }
 
-    if (voiceState !== "idle") return;
+    if (state !== "idle") return;
 
     autoListenRef.current = true;
-    startListening();
-  }, [voiceState, stopAudio, startListening]);
+    startListeningRef.current?.();
+  }, [stopAudio]);
 
   return {
     voiceState,
