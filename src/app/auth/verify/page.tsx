@@ -85,9 +85,9 @@ function VerifyForm() {
     <div className="relative max-w-md mx-auto">
       {/* Brand glow behind card */}
       <div
-        className="absolute -inset-16 -z-10 opacity-30 blur-3xl"
+        className="absolute -inset-20 -z-10 blur-3xl"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(105,30,225,0.3) 0%, rgba(47,149,243,0.15) 50%, transparent 80%)',
+          background: 'radial-gradient(ellipse at center, rgba(105,30,225,0.35) 0%, rgba(47,149,243,0.20) 50%, transparent 75%)',
         }}
       />
       <GlassCard shimmer elevated className="text-center">
