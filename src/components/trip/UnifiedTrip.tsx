@@ -145,6 +145,14 @@ export default function UnifiedTrip({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history, thinking]);
 
+  // Auto-focus input after morph animation (500ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 550);
+    return () => clearTimeout(timer);
+  }, []);
+
   // ————————————————————————————————————————
   // Core: send message to agent
   // ————————————————————————————————————————
