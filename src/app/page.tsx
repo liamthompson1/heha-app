@@ -290,13 +290,13 @@ export default function Home() {
           <div className="grid gap-10 sm:grid-cols-2 items-center">
             <ScrollReveal variant="left">
               <p className="text-sm font-medium uppercase tracking-widest mb-4" style={{ color: "var(--purple)" }}>
-                For AI Agents
+                AI-Powered
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4" style={{ color: "var(--foreground)" }}>
-                Let your AI plan trips with HEHA!
+                Your AI agent, your trips.
               </h2>
               <p className="text-base leading-relaxed mb-8" style={{ color: "var(--text-secondary)" }}>
-                Connect your personal AI agent to HEHA! and let it manage your trips for you. Search flights, build itineraries, and book — all through MCP, A2A, or REST.
+                HEHA! works with your favourite AI agents. They can search flights, build itineraries, and manage bookings on your behalf — via MCP, A2A, or REST.
               </p>
               <Link
                 href="/agents/skills"
