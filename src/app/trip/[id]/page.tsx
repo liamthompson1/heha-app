@@ -99,14 +99,54 @@ export default function TripDetailPage() {
 
   if (loading) {
     return (
-      <PageShell>
-        <div className="space-y-6 animate-pulse pt-8">
-          <div className="glass-panel rounded-2xl h-[45vh] w-full" />
-          <div className="max-w-5xl mx-auto px-6 space-y-6 pt-8">
-            <div className="glass-panel rounded-2xl h-48" />
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="glass-panel rounded-2xl h-48" />
-              <div className="glass-panel rounded-2xl h-48" />
+      <PageShell variant="full">
+        <div className="animate-pulse">
+          {/* Hero skeleton */}
+          <div className="trip-hero">
+            <div className="trip-hero-skeleton" />
+            <div className="trip-hero-overlay" />
+            <div className="trip-hero-content">
+              <div className="glass-panel rounded-lg h-4 w-20 mb-3" style={{ background: "rgba(255,255,255,0.08)" }} />
+              <div className="glass-panel rounded-xl h-12 w-72 mb-3" style={{ background: "rgba(255,255,255,0.1)" }} />
+              <div className="glass-panel rounded-lg h-4 w-44" style={{ background: "rgba(255,255,255,0.06)" }} />
+            </div>
+          </div>
+
+          {/* Content skeleton */}
+          <div className="max-w-5xl mx-auto px-6 pt-12 space-y-12">
+            {/* Flights skeleton */}
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-6 h-6 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }} />
+                <div className="glass-panel rounded-xl h-6 w-20" />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="glass-panel rounded-2xl h-32" />
+                <div className="glass-panel rounded-2xl h-32" />
+              </div>
+            </div>
+
+            {/* Weather skeleton */}
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-6 h-6 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }} />
+                <div className="glass-panel rounded-xl h-6 w-24" />
+              </div>
+              <div className="glass-panel rounded-2xl h-36" />
+            </div>
+
+            {/* Things to do skeleton */}
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-6 h-6 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }} />
+                <div className="glass-panel rounded-xl h-6 w-32" />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="glass-panel rounded-2xl h-40" />
+                <div className="glass-panel rounded-2xl h-40" />
+                <div className="glass-panel rounded-2xl h-40" />
+                <div className="glass-panel rounded-2xl h-40" />
+              </div>
             </div>
           </div>
         </div>

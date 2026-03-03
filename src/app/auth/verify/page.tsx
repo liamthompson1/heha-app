@@ -78,7 +78,20 @@ function VerifyForm() {
   }
 
   if (session.loading || session.authenticated) {
-    return <div className="text-white/40 text-sm text-center">Loading…</div>;
+    return (
+      <div className="max-w-md mx-auto w-full animate-pulse">
+        <GlassCard>
+          <div className="glass-panel rounded-xl h-8 w-44 mx-auto mb-2" />
+          <div className="glass-panel rounded-xl h-4 w-64 mx-auto mb-8" />
+          <div className="flex justify-center gap-2 mb-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="glass-panel rounded-xl w-11 h-14" />
+            ))}
+          </div>
+          <div className="glass-panel rounded-2xl h-12 w-full" />
+        </GlassCard>
+      </div>
+    );
   }
 
   return (

@@ -190,10 +190,22 @@ export default function EditTripShell({ tripId, collectField }: EditTripShellPro
 
   if (!tripLoaded) {
     return (
-      <div className="mx-auto w-full max-w-2xl px-4 flex-1 flex flex-col items-center justify-center">
+      <div className="mx-auto w-full max-w-2xl px-4 flex-1 flex flex-col pt-8">
         <div className="animate-pulse space-y-4 w-full">
-          <div className="glass-panel rounded-2xl h-16 w-full" />
-          <div className="glass-panel rounded-2xl h-10 w-2/3" />
+          {/* Agent message bubble skeleton */}
+          <div className="flex gap-3">
+            <div className="w-8 h-8 rounded-full flex-shrink-0" style={{ background: "rgba(255,255,255,0.06)" }} />
+            <div className="glass-panel rounded-2xl p-4 flex-1 space-y-2" style={{ maxWidth: "80%" }}>
+              <div className="glass-panel rounded-lg h-3 w-full" />
+              <div className="glass-panel rounded-lg h-3 w-3/4" />
+            </div>
+          </div>
+          {/* Suggestion chips skeleton */}
+          <div className="flex gap-2 pl-11">
+            <div className="glass-panel rounded-full h-9 w-24" />
+            <div className="glass-panel rounded-full h-9 w-20" />
+            <div className="glass-panel rounded-full h-9 w-28" />
+          </div>
         </div>
       </div>
     );

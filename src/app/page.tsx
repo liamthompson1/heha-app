@@ -125,13 +125,23 @@ export default function Home() {
 
   if (session.loading) {
     return (
-      <div className="page-shell relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-[var(--background)] px-6 py-20">
-        <OrbField orbs={LANDING_ORBS} />
-        <div
-          className="relative z-10 text-sm"
-          style={{ color: "var(--text-tertiary)" }}
-        >
-          Loading&hellip;
+      <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20">
+        <OrbField orbs={SUBTLE_ORBS} />
+        <LogoHeader />
+        <div className="relative z-10 w-full max-w-7xl mx-auto animate-pulse">
+          <div className="glass-panel rounded-2xl h-12 w-56 mb-12" />
+          <div className="prismatic-line w-full mb-12" style={{ opacity: 0.3 }} />
+          <div className="bento-trip-grid">
+            <div className="trip-card trip-card-hero">
+              <div className="trip-card-skeleton" />
+            </div>
+            <div className="trip-card trip-card-standard">
+              <div className="trip-card-skeleton" />
+            </div>
+            <div className="trip-card trip-card-standard">
+              <div className="trip-card-skeleton" />
+            </div>
+          </div>
         </div>
       </div>
     );

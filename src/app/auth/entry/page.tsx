@@ -78,7 +78,17 @@ export default function AuthEntryPage() {
   if (session.loading || session.authenticated) {
     return (
       <PageShell backHref="/" centered>
-        <div className="text-white/40 text-sm text-center">Loading…</div>
+        <div className="max-w-md mx-auto w-full animate-pulse">
+          <GlassCard>
+            <div className="glass-panel rounded-xl h-8 w-32 mx-auto mb-2" />
+            <div className="glass-panel rounded-xl h-4 w-56 mx-auto mb-8" />
+            <div className="glass-panel rounded-2xl h-14 w-full mb-6" />
+            <div className="space-y-3">
+              <div className="glass-panel rounded-2xl h-12 w-full" />
+              <div className="glass-panel rounded-2xl h-12 w-full" />
+            </div>
+          </GlassCard>
+        </div>
       </PageShell>
     );
   }

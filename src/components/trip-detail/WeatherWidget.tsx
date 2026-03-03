@@ -70,10 +70,28 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
           <h2 className="widget-title">Weather</h2>
         </div>
         <div className="weather-widget animate-pulse">
-          <div className="glass-panel rounded-2xl h-24 mb-4" />
+          {/* Main display skeleton — icon + temp left, label right */}
+          <div className="weather-main">
+            <div className="flex items-center gap-4">
+              <div className="rounded-full w-12 h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
+              <div className="space-y-2">
+                <div className="glass-panel rounded-lg h-8 w-16" />
+                <div className="glass-panel rounded-lg h-3 w-12" />
+              </div>
+            </div>
+            <div className="space-y-2 text-right">
+              <div className="glass-panel rounded-lg h-4 w-20 ml-auto" />
+              <div className="glass-panel rounded-lg h-3 w-14 ml-auto" />
+            </div>
+          </div>
+          {/* Day pills skeleton */}
           <div className="flex gap-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="glass-panel rounded-2xl h-16 w-16 flex-shrink-0" />
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-1 min-w-[56px] p-2 rounded-2xl" style={{ background: i === 0 ? "rgba(255,255,255,0.06)" : "transparent" }}>
+                <div className="glass-panel rounded h-2 w-6" />
+                <div className="rounded-full w-5 h-5" style={{ background: "rgba(255,255,255,0.06)" }} />
+                <div className="glass-panel rounded h-3 w-6" />
+              </div>
             ))}
           </div>
         </div>
