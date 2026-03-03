@@ -271,6 +271,8 @@ export function useRealtimeVoice({
   const vad = useMicVAD({
     startOnLoad: false,
     positiveSpeechThreshold: 0.6,
+    baseAssetPath: "/",
+    onnxWASMBasePath: "/",
     onSpeechStart: () => {
       if (!mountedRef.current || !activeRef.current) return;
 
@@ -325,6 +327,13 @@ export function useRealtimeVoice({
         });
     },
   });
+
+  // Log VAD errors
+  useEffect(() => {
+    if (vad.errored) {
+      console.error("VAD error:", vad.errored);
+    }
+  }, [vad.errored]);
 
   // --- Toggle voice on/off ---
   const toggleVoice = useCallback(() => {
