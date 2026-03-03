@@ -1450,6 +1450,89 @@ body {
 }
 
 /* ——————————————————————————————————————
+   Floating New Trip Pill — Apple "Shop" style
+   —————————————————————————————————————— */
+
+.new-trip-pill-floating {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  right: 24px;
+  z-index: 42;
+  animation: float-up-right 0.6s var(--ease-spring) 0.3s both;
+}
+
+@media (min-width: 640px) {
+  .new-trip-pill-floating {
+    right: 40px;
+    bottom: calc(32px + env(safe-area-inset-bottom));
+  }
+}
+
+@keyframes float-up-right {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.new-trip-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 6px 6px 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-standard);
+}
+
+.new-trip-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.new-trip-pill:active {
+  transform: scale(0.97);
+}
+
+.new-trip-pill-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.new-trip-pill-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s var(--ease-standard);
+}
+
+.new-trip-pill:hover .new-trip-pill-action {
+  background: #4dbcff;
+}
+
+/* ——————————————————————————————————————
    Floating Search Bar
    —————————————————————————————————————— */
 

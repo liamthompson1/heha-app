@@ -12,6 +12,7 @@ import LogoHeader from "@/components/LogoHeader";
 import BentoTripGrid from "@/components/BentoTripGrid";
 import GlassButton from "@/components/GlassButton";
 import GlassCard from "@/components/GlassCard";
+import NewTripPill from "@/components/NewTripPill";
 import type { TripRow } from "@/types/trip";
 
 function getGreeting(): string {
@@ -70,13 +71,12 @@ function Dashboard() {
             Your Trips
           </h2>
           {trips.length > 0 && (
-            <Link
-              href="/trips"
-              className="text-sm font-medium"
-              style={{ color: "var(--teal)" }}
+            <span
+              className="text-sm"
+              style={{ color: "var(--text-tertiary)" }}
             >
-              View all &rarr;
-            </Link>
+              {trips.length} trip{trips.length !== 1 ? "s" : ""}
+            </span>
           )}
         </div>
         <div className="page-enter stagger-3 prismatic-line w-full mt-4 mb-12" />
@@ -131,6 +131,7 @@ function Dashboard() {
         )}
       </main>
 
+      <NewTripPill />
       <SearchBar />
     </div>
   );

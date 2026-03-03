@@ -52,7 +52,7 @@ export default function TripDetailPage() {
 
   if (loading) {
     return (
-      <PageShell backHref="/trips">
+      <PageShell backHref="/">
         <div className="space-y-6 animate-pulse pt-8">
           <div className="glass-panel rounded-2xl h-16 w-2/3" />
           <div className="glass-panel rounded-2xl h-5 w-1/3" />
@@ -67,7 +67,7 @@ export default function TripDetailPage() {
 
   if (notFound || !trip) {
     return (
-      <PageShell backHref="/trips">
+      <PageShell backHref="/">
         <div className="flex flex-col items-center justify-center py-32">
           <h1 className="text-3xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
             Trip Not Found
@@ -75,7 +75,7 @@ export default function TripDetailPage() {
           <p className="text-lg mb-10" style={{ color: 'var(--text-secondary)' }}>
             This trip doesn&rsquo;t exist or may have been removed.
           </p>
-          <GlassButton href="/trips" variant="blue" size="lg">
+          <GlassButton href="/" variant="blue" size="lg">
             Back to My Trips
           </GlassButton>
         </div>
@@ -88,7 +88,7 @@ export default function TripDetailPage() {
   const hasFlights = trip.flights_if_known && trip.flights_if_known.length > 0;
 
   return (
-    <PageShell backHref="/trips" variant="full" maxWidth="5xl">
+    <PageShell backHref="/" variant="full" maxWidth="5xl">
       {/* ── Hero Section ── */}
       <section className="page-enter stagger-1 pt-4 pb-16 sm:pt-8 sm:pb-24 text-center">
         <p className="text-sm font-medium uppercase tracking-widest mb-4" style={{ color: 'var(--text-tertiary)' }}>
@@ -229,7 +229,7 @@ export default function TripDetailPage() {
 
       {/* ── Actions ── */}
       <section className="page-enter stagger-5 w-full max-w-5xl mx-auto pb-12 flex flex-col gap-4 sm:flex-row sm:justify-center">
-        <GlassButton href="/trips" variant="blue" size="lg">
+        <GlassButton href="/" variant="blue" size="lg">
           Back to My Trips
         </GlassButton>
         <GlassButton href="/trip/new" variant="purple" size="lg">

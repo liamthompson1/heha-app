@@ -17,7 +17,7 @@ function VerifyForm() {
 
   useEffect(() => {
     if (session.authenticated) {
-      router.replace("/trips");
+      router.replace("/");
     }
   }, [session.authenticated, router]);
 
@@ -45,7 +45,7 @@ function VerifyForm() {
         return;
       }
 
-      router.push("/trips");
+      router.push("/");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

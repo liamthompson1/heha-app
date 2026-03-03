@@ -17,7 +17,7 @@ export default function AuthEntryPage() {
 
   useEffect(() => {
     if (session.authenticated) {
-      router.replace("/trips");
+      router.replace("/");
     }
   }, [session.authenticated, router]);
 
@@ -67,7 +67,7 @@ export default function AuthEntryPage() {
         return;
       }
 
-      router.push("/trips");
+      router.push("/");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
