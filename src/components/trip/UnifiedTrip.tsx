@@ -525,10 +525,13 @@ export default function UnifiedTrip({
 
   return (
     <div className="relative flex-1 min-h-0">
+      {/* Top fade gradient */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-8" style={{ background: 'linear-gradient(to bottom, var(--background), transparent)' }} />
+
       {/* ——— Chat thread (absolute so it sizes to parent's flex allocation, not content) ——— */}
       <div
         ref={chatRef}
-        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pb-32"
+        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6 pb-20"
       >
         {history.map((msg, i) => (
           <AgentMessage
