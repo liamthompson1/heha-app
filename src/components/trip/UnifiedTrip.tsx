@@ -133,6 +133,7 @@ export default function UnifiedTrip({
   const collectFieldRef = useRef(collectField);
   collectFieldRef.current = collectField;
 
+  const chatRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const floatingRef = useRef<HTMLDivElement>(null);
@@ -180,7 +181,9 @@ export default function UnifiedTrip({
   }, [initialMessage]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatRef.current) {
+      chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
+    }
   }, [history, thinking]);
 
   // Auto-focus input after morph animation (desktop only — avoids keyboard pop on mobile)
@@ -522,6 +525,7 @@ export default function UnifiedTrip({
     <div className="flex flex-col flex-1">
       {/* ——— Chat thread ——— */}
       <div
+        ref={chatRef}
         className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-1 pb-28"
       >
         {history.map((msg, i) => (
