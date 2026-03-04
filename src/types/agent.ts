@@ -1,6 +1,11 @@
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+  image?: {
+    base64: string;
+    mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
+  };
+  _preview?: string;
 }
 
 export interface SavedMemory {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, ChangeEvent } from "react";
 import type { TripData } from "@/types/trip";
 import type { ChatMessage, AgentChatResponse, SavedMemory } from "@/types/agent";
 import AgentMessage from "@/components/agent/AgentMessage";
@@ -66,6 +66,41 @@ const UK_ORIGIN_CHIPS: ChipOption[] = [
   { icon: "🏙", label: "Glasgow", value: "Glasgow" },
 ];
 
+interface PendingImage {
+  base64: string;
+  mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
+  preview: string;
+}
+
+function resizeImage(file: File, maxDim = 1024): Promise<PendingImage> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        const base64 = dataUrl.split(",")[1];
+        resolve({ base64, mediaType: "image/jpeg", preview: dataUrl });
+      };
+      img.onerror = reject;
+      img.src = reader.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function getDateChips(): ChipOption[] {
   const now = new Date();
   const chips: ChipOption[] = [];
@@ -112,6 +147,7 @@ export default function UnifiedTrip({
   const [lastMemories, setLastMemories] = useState<SavedMemory[]>([]);
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [conversationActive, setConversationActive] = useState(false);
+  const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
 
   // --- Refs (stale-closure prevention) ---
   const historyRef = useRef(history);
@@ -133,10 +169,15 @@ export default function UnifiedTrip({
   const collectFieldRef = useRef(collectField);
   collectFieldRef.current = collectField;
 
+  const pendingImageRef = useRef<PendingImage | null>(null);
+  pendingImageRef.current = pendingImage;
+
   const chatRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const floatingRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioSourceRef = useRef<AudioBufferSourceNode | null>(null);
@@ -229,10 +270,20 @@ export default function UnifiedTrip({
     text: string,
     useVoice: boolean = false
   ) => {
-    if (!text.trim() || thinkingRef.current) return;
+    const hasImage = !!pendingImageRef.current;
+    if ((!text.trim() && !hasImage) || thinkingRef.current) return;
 
     setLastMemories([]);
-    const userMessage: ChatMessage = { role: "user", content: text.trim() };
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: text.trim() || (hasImage ? "Here's a travel document — please extract the details." : ""),
+      ...(pendingImageRef.current && {
+        image: { base64: pendingImageRef.current.base64, mediaType: pendingImageRef.current.mediaType },
+        _preview: pendingImageRef.current.preview,
+      }),
+    };
+    setPendingImage(null);
+    pendingImageRef.current = null;
     const updatedHistory = [...historyRef.current, userMessage];
     historyRef.current = updatedHistory;
     setHistory(updatedHistory);
@@ -492,8 +543,16 @@ export default function UnifiedTrip({
   // ————————————————————————————————————————
   // Text send
   // ————————————————————————————————————————
+  const handleImageSelect = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    resizeImage(file).then(setPendingImage);
+  }, []);
+
   const handleSend = useCallback(() => {
-    if (!input.trim() || thinkingRef.current) return;
+    const hasImage = !!pendingImageRef.current;
+    if ((!input.trim() && !hasImage) || thinkingRef.current) return;
     const text = input.trim();
     setInput("");
     sendMessageRef.current?.(text, false);
@@ -543,6 +602,7 @@ export default function UnifiedTrip({
                 ? lastMemories
                 : undefined
             }
+            imagePreview={msg._preview}
           />
         ))}
 
@@ -577,11 +637,64 @@ export default function UnifiedTrip({
         </div>
       ) : (
         <div ref={floatingRef} className="unified-input-floating">
+          {/* Pending image preview strip */}
+          {pendingImage && (
+            <div className="image-preview-strip">
+              <img src={pendingImage.preview} alt="Pending upload" />
+              <button
+                type="button"
+                className="image-preview-dismiss"
+                onClick={() => setPendingImage(null)}
+                aria-label="Remove image"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+          )}
           <div className="unified-input-bar">
             {/* Voice state indicator */}
             {voiceState === "listening" && (
               <span className="voice-listening-dot" />
             )}
+
+            {/* Hidden file inputs */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
+
+            <button
+              type="button"
+              className="image-icon-btn morph-btn-enter"
+              onClick={() => cameraInputRef.current?.click()}
+              aria-label="Take photo"
+              title="Take photo"
+            >
+              <CameraIcon />
+            </button>
+
+            <button
+              type="button"
+              className="image-icon-btn morph-btn-enter"
+              onClick={() => fileInputRef.current?.click()}
+              aria-label="Choose photo"
+              title="Choose photo"
+            >
+              <ImageIcon />
+            </button>
 
             <input
               ref={inputRef}
@@ -633,7 +746,7 @@ export default function UnifiedTrip({
               type="button"
               className="send-icon-btn morph-btn-enter"
               onClick={handleSend}
-              disabled={!input.trim() || thinking}
+              disabled={(!input.trim() && !pendingImage) || thinking}
               aria-label="Send"
             >
               <SendIcon />
@@ -701,6 +814,43 @@ function StopIconSmall() {
       stroke="none"
     >
       <rect x="6" y="6" width="12" height="12" rx="2" />
+    </svg>
+  );
+}
+
+function CameraIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
+  );
+}
+
+function ImageIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
     </svg>
   );
 }

@@ -4,11 +4,19 @@ interface AgentMessageProps {
   role: "user" | "agent";
   text: string;
   memories?: SavedMemory[];
+  imagePreview?: string;
 }
 
-export default function AgentMessage({ role, text, memories }: AgentMessageProps) {
+export default function AgentMessage({ role, text, memories, imagePreview }: AgentMessageProps) {
   return (
     <div className={`chat-bubble chat-bubble-${role}`}>
+      {imagePreview && (
+        <img
+          src={imagePreview}
+          alt="Uploaded"
+          className="chat-bubble-image"
+        />
+      )}
       {text}
       {memories && memories.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">

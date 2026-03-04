@@ -12,7 +12,11 @@ const MAX_TOOL_ROUNDS = 5;
 const anthropic = new Anthropic();
 
 interface EditChatRequest {
-  messages: { role: "user" | "assistant"; content: string }[];
+  messages: {
+    role: "user" | "assistant";
+    content: string;
+    image?: { base64: string; mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif" };
+  }[];
   tripData: TripData;
   userId: string | null;
   collectField?: string;
@@ -39,10 +43,31 @@ export async function POST(req: NextRequest) {
     // Build edit-specific system prompt
     const systemPrompt = buildEditSystemPrompt(tripData, userMemories, collectField);
 
-    const claudeMessages: Anthropic.MessageParam[] = messages.map((m) => ({
-      role: m.role === "user" ? "user" : "assistant",
-      content: m.content,
-    }));
+    const claudeMessages: Anthropic.MessageParam[] = messages.map((m) => {
+      if (m.role === "user" && m.image) {
+        return {
+          role: "user" as const,
+          content: [
+            {
+              type: "image" as const,
+              source: {
+                type: "base64" as const,
+                media_type: m.image.mediaType,
+                data: m.image.base64,
+              },
+            },
+            {
+              type: "text" as const,
+              text: m.content || "Please extract any travel information from this image and update my trip details.",
+            },
+          ],
+        };
+      }
+      return {
+        role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+        content: m.content,
+      };
+    });
 
     // Tool-use loop
     let currentTripData: TripData = { ...tripData };
