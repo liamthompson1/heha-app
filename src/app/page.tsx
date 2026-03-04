@@ -7,7 +7,6 @@ import { useCachedFetch } from "@/hooks/useCachedFetch";
 import OrbField, { LANDING_ORBS, SUBTLE_ORBS } from "@/components/OrbField";
 import AuthStatus from "@/components/AuthStatus";
 import ScrollReveal from "@/components/ScrollReveal";
-import SearchBar from "@/components/SearchBar";
 import NewTripPill from "@/components/NewTripPill";
 import LogoHeader from "@/components/LogoHeader";
 import BentoTripGrid from "@/components/BentoTripGrid";
@@ -116,7 +115,6 @@ function Dashboard() {
         )}
       </main>
 
-      <SearchBar />
       <NewTripPill />
     </div>
   );
