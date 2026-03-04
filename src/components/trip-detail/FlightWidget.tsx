@@ -26,11 +26,9 @@ function FlightDetailCard({ flight, direction }: { flight: ApiFlight; direction:
       <div className="flight-route">
         <div className="flight-route-endpoint">
           <span className="flight-airport-code">{flight.departure_airport}</span>
-          {flight.departure_time && (
-            <span className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
-              {flight.departure_time}
-            </span>
-          )}
+          <span className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
+            {flight.departure_time || "\u00A0"}
+          </span>
         </div>
 
         <div className="flight-route-line">
@@ -40,11 +38,9 @@ function FlightDetailCard({ flight, direction }: { flight: ApiFlight; direction:
 
         <div className="flight-route-endpoint" style={{ textAlign: "right" }}>
           <span className="flight-airport-code">{flight.arrival_airport}</span>
-          {flight.arrival_time && (
-            <span className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
-              {flight.arrival_time}
-            </span>
-          )}
+          <span className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
+            {flight.arrival_time || "\u00A0"}
+          </span>
         </div>
       </div>
     </div>
