@@ -198,9 +198,10 @@ export default function UnifiedTrip({
 
     const update = () => {
       if (!floatingRef.current) return;
-      const kbHeight = window.innerHeight - vv.height;
+      // Subtract offsetTop: iOS scrolls the visual viewport when focusing inputs
+      const kbHeight = window.innerHeight - vv.height - vv.offsetTop;
       if (kbHeight > 50) {
-        floatingRef.current.style.bottom = `${kbHeight + 8}px`;
+        floatingRef.current.style.bottom = `${kbHeight}px`;
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       } else {
         floatingRef.current.style.bottom = "";
