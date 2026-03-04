@@ -202,17 +202,14 @@ export default function UnifiedTrip({
       const kbHeight = window.innerHeight - vv.height - vv.offsetTop;
       if (kbHeight > 50) {
         floatingRef.current.style.bottom = `${kbHeight}px`;
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       } else {
         floatingRef.current.style.bottom = "";
       }
     };
 
     vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
     return () => {
       vv.removeEventListener("resize", update);
-      vv.removeEventListener("scroll", update);
     };
   }, []);
 
@@ -518,10 +515,10 @@ export default function UnifiedTrip({
     : "Tap to start conversation";
 
   return (
-    <div className="flex flex-col flex-1 pb-28">
+    <div className="flex flex-col flex-1">
       {/* ——— Chat thread ——— */}
       <div
-        className="flex-1 space-y-3 mb-4 overflow-y-auto px-1"
+        className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-1 pb-28"
       >
         {history.map((msg, i) => (
           <AgentMessage
@@ -588,6 +585,7 @@ export default function UnifiedTrip({
               }
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onFocus={() => setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 300)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               disabled={voiceState !== "idle"}
             />
