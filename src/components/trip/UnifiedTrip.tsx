@@ -20,6 +20,10 @@ interface UnifiedTripProps {
 
 type VoiceState = "idle" | "listening" | "processing" | "speaking";
 
+// Tiny silent WAV used to unlock Audio on Safari iOS during user gesture
+const SILENT_AUDIO =
+  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+
 interface ChipOption {
   icon: string;
   label: string;
@@ -137,6 +141,7 @@ export default function UnifiedTrip({
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
@@ -156,6 +161,10 @@ export default function UnifiedTrip({
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
+      }
+      if (audioElRef.current) {
+        audioElRef.current.pause();
+        audioElRef.current = null;
       }
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     };
@@ -280,8 +289,13 @@ export default function UnifiedTrip({
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
+
+      // Reuse the gesture-unlocked Audio element (required for Safari iOS)
+      const audio = audioElRef.current || new Audio();
+      audioElRef.current = audio;
       audioRef.current = audio;
+      audio.onended = null;
+      audio.onerror = null;
 
       await new Promise<void>((resolve) => {
         audio.onended = () => {
@@ -294,6 +308,7 @@ export default function UnifiedTrip({
           audioRef.current = null;
           resolve();
         };
+        audio.src = url;
         audio.play();
       });
     } catch (err) {
@@ -327,29 +342,39 @@ export default function UnifiedTrip({
     const recognition = new SpeechRecognitionCtor();
     recognitionRef.current = recognition;
     recognition.lang = "en-GB";
-    recognition.interimResults = false;
-    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.continuous = true;
 
     let transcript = "";
 
     recognition.onstart = () => {
       if (mountedRef.current) setVoiceState("listening");
+      // Initial timeout: if user doesn't speak at all, stop after 8s
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = setTimeout(() => {
+        if (recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
+      }, 8000);
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let full = "";
+      // Build transcript from final results only
+      let final = "";
       for (let i = 0; i < event.results.length; i++) {
-        full += event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          final += event.results[i][0].transcript;
+        }
       }
-      transcript = full;
+      transcript = final;
 
-      // Silence timeout fallback: force-stop if browser hangs
+      // Reset silence timer: 2s after last speech activity
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       silenceTimerRef.current = setTimeout(() => {
-        if (recognitionRef.current && transcript) {
+        if (recognitionRef.current) {
           recognitionRef.current.stop();
         }
-      }, 2500);
+      }, 2000);
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -420,6 +445,13 @@ export default function UnifiedTrip({
       stopAudio();
       setVoiceState("idle");
     } else {
+      // Warm up Audio element for Safari iOS (must happen in gesture handler)
+      if (!audioElRef.current) {
+        audioElRef.current = new Audio();
+      }
+      audioElRef.current.src = SILENT_AUDIO;
+      audioElRef.current.play().then(() => audioElRef.current?.pause()).catch(() => {});
+
       // Start conversation
       setConversationActive(true);
       conversationActiveRef.current = true;
