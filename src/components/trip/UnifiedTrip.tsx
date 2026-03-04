@@ -196,7 +196,7 @@ export default function UnifiedTrip({
     const vv = window.visualViewport;
     if (!vv) return;
 
-    const onResize = () => {
+    const update = () => {
       if (!floatingRef.current) return;
       const kbHeight = window.innerHeight - vv.height;
       if (kbHeight > 50) {
@@ -207,8 +207,12 @@ export default function UnifiedTrip({
       }
     };
 
-    vv.addEventListener("resize", onResize);
-    return () => vv.removeEventListener("resize", onResize);
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
   }, []);
 
   // ————————————————————————————————————————
