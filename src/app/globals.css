@@ -1833,6 +1833,36 @@ body {
   margin: 0 auto;
 }
 
+.trip-hero-name {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.trip-hero-name:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.trip-hero-name-input {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  padding: 4px 8px;
+  caret-color: var(--blue);
+}
+
 @media (max-width: 640px) {
   .trip-hero-content {
     padding: 24px;

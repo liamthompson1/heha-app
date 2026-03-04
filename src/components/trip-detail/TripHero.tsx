@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 interface TripHeroProps {
   destination: string;
@@ -8,10 +8,28 @@ interface TripHeroProps {
   tripType?: string;
   tripId: string;
   imageUrl?: string | null;
+  onDestinationChange?: (name: string) => void;
 }
 
-export default function TripHero({ destination, dateRange, tripType, tripId, imageUrl }: TripHeroProps) {
+export default function TripHero({ destination, dateRange, tripType, tripId, imageUrl, onDestinationChange }: TripHeroProps) {
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">("loading");
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(destination);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) inputRef.current?.focus();
+  }, [editing]);
+
+  const save = useCallback(() => {
+    const trimmed = draft.trim();
+    if (trimmed && trimmed !== destination) {
+      onDestinationChange?.(trimmed);
+    } else {
+      setDraft(destination);
+    }
+    setEditing(false);
+  }, [draft, destination, onDestinationChange]);
 
   // Use persisted image if available, otherwise generate via trip-specific endpoint
   const imgSrc = imageUrl || `/api/trips/${tripId}/image`;
@@ -43,9 +61,26 @@ export default function TripHero({ destination, dateRange, tripType, tripId, ima
             {tripType}
           </p>
         )}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-none" style={{ color: "#fff" }}>
-          {destination}
-        </h1>
+        {editing ? (
+          <input
+            ref={inputRef}
+            className="trip-hero-name-input"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") save();
+              if (e.key === "Escape") { setDraft(destination); setEditing(false); }
+            }}
+            onBlur={save}
+          />
+        ) : (
+          <h1
+            className="trip-hero-name"
+            onClick={() => { setDraft(destination); setEditing(true); }}
+          >
+            {destination}
+          </h1>
+        )}
         {dateRange && (
           <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.7)" }}>
             {dateRange}

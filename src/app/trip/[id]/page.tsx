@@ -82,6 +82,22 @@ export default function TripDetailPage() {
     if (trip) fetchContent(trip);
   }, [trip, fetchContent]);
 
+  const handleDestinationChange = useCallback(async (name: string) => {
+    if (!trip) return;
+    const updatedTrip = { ...trip, trip: { ...trip.trip, destination: name } };
+    setTrip(updatedTrip);
+    try {
+      await fetch(`/api/trips/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trip: updatedTrip.trip }),
+      });
+    } catch {
+      // Revert on failure
+      setTrip(trip);
+    }
+  }, [trip, id]);
+
   const handleDelete = useCallback(async () => {
     setDeleting(true);
     try {
@@ -183,6 +199,7 @@ export default function TripDetailPage() {
         tripType={trip.trip.trip_type}
         tripId={trip.id}
         imageUrl={trip.image_url}
+        onDestinationChange={handleDestinationChange}
       />
 
       {/* Main content */}
