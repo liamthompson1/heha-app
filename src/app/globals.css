@@ -1545,16 +1545,72 @@ body {
   justify-content: center;
   padding: 10px 20px;
   border-radius: 999px;
-  background: var(--blue);
+  background: linear-gradient(135deg, rgba(255,99,89,0.25), rgba(46,205,193,0.25), rgba(137,68,229,0.25));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: background 0.2s var(--ease-standard);
+  position: relative;
+  overflow: hidden;
+  animation: pill-glow-pulse 3s ease-in-out infinite;
+  box-shadow:
+    0 0 16px rgba(255, 99, 89, 0.3),
+    0 0 32px rgba(46, 205, 193, 0.15),
+    0 0 48px rgba(137, 68, 229, 0.1);
+  transition: transform 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard);
+}
+
+.new-trip-pill-action::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--siri-angle, 0deg),
+    #FF6359, #F0B429, #2ECDC1, #5AC8FA, #8944E5, #FF6359
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.7;
+  animation: pill-border-spin 4s linear infinite;
+}
+
+@keyframes pill-glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 16px rgba(255, 99, 89, 0.3),
+      0 0 32px rgba(46, 205, 193, 0.15),
+      0 0 48px rgba(137, 68, 229, 0.1);
+  }
+  33% {
+    box-shadow:
+      0 0 20px rgba(46, 205, 193, 0.35),
+      0 0 36px rgba(137, 68, 229, 0.2),
+      0 0 52px rgba(255, 99, 89, 0.12);
+  }
+  66% {
+    box-shadow:
+      0 0 20px rgba(137, 68, 229, 0.35),
+      0 0 36px rgba(255, 99, 89, 0.2),
+      0 0 52px rgba(46, 205, 193, 0.12);
+  }
+}
+
+@keyframes pill-border-spin {
+  to { --siri-angle: 360deg; }
 }
 
 .floating-new-trip-pill:hover .new-trip-pill-action {
-  background: #4dbcff;
+  transform: scale(1.04);
+  box-shadow:
+    0 0 24px rgba(255, 99, 89, 0.4),
+    0 0 48px rgba(46, 205, 193, 0.25),
+    0 0 64px rgba(137, 68, 229, 0.15);
 }
 
 /* ——————————————————————————————————————
