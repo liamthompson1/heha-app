@@ -1621,13 +1621,21 @@ body {
 
 .unified-input-floating {
   position: fixed;
-  bottom: calc(24px + env(safe-area-inset-bottom));
+  bottom: calc(16px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 48px);
+  width: calc(100% - 32px);
   max-width: 640px;
   z-index: 40;
   animation: morph-pill-to-input 0.5s var(--ease-spring) both;
+  transition: bottom 0.18s ease-out;
+}
+
+@media (min-width: 640px) {
+  .unified-input-floating {
+    bottom: calc(24px + env(safe-area-inset-bottom));
+    width: calc(100% - 48px);
+  }
 }
 
 @keyframes morph-pill-to-input {

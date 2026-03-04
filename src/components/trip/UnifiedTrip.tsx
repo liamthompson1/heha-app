@@ -135,6 +135,7 @@ export default function UnifiedTrip({
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const floatingRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const audioSourceRef = useRef<AudioBufferSourceNode | null>(null);
@@ -182,12 +183,32 @@ export default function UnifiedTrip({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history, thinking]);
 
-  // Auto-focus input after morph animation (500ms)
+  // Auto-focus input after morph animation (desktop only — avoids keyboard pop on mobile)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      inputRef.current?.focus();
-    }, 550);
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    if (isCoarse) return;
+    const timer = setTimeout(() => inputRef.current?.focus(), 550);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Keyboard-aware positioning via visualViewport (Safari iOS fix)
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const onResize = () => {
+      if (!floatingRef.current) return;
+      const kbHeight = window.innerHeight - vv.height;
+      if (kbHeight > 50) {
+        floatingRef.current.style.bottom = `${kbHeight + 8}px`;
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        floatingRef.current.style.bottom = "";
+      }
+    };
+
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
   }, []);
 
   // ————————————————————————————————————————
@@ -534,13 +555,13 @@ export default function UnifiedTrip({
 
       {/* ——— Input bar (fixed to bottom with morph animation) ——— */}
       {formComplete ? (
-        <div className="unified-input-floating">
+        <div ref={floatingRef} className="unified-input-floating">
           <GlassButton variant="coral" className="w-full" onClick={onComplete}>
             {editMode ? "Save Changes" : "Plan My Trip"}
           </GlassButton>
         </div>
       ) : (
-        <div className="unified-input-floating">
+        <div ref={floatingRef} className="unified-input-floating">
           <div className="unified-input-bar">
             {/* Voice state indicator */}
             {voiceState === "listening" && (
