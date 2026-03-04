@@ -14,6 +14,7 @@ interface UseRealtimeVoiceOptions {
 
 interface UseRealtimeVoiceReturn {
   voiceState: VoiceState;
+  conversationActive: boolean;
   formComplete: boolean;
   lastMemories: SavedMemory[];
   lastTranscript: string;
@@ -26,12 +27,16 @@ export function useRealtimeVoice({
   userId,
 }: UseRealtimeVoiceOptions): UseRealtimeVoiceReturn {
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
+  const [conversationActive, setConversationActive] = useState(false);
   const [formComplete, setFormComplete] = useState(false);
   const [lastMemories, setLastMemories] = useState<SavedMemory[]>([]);
   const [lastTranscript, setLastTranscript] = useState("");
 
   const voiceStateRef = useRef(voiceState);
   voiceStateRef.current = voiceState;
+
+  const conversationActiveRef = useRef(conversationActive);
+  conversationActiveRef.current = conversationActive;
 
   const tripDataRef = useRef(tripData);
   tripDataRef.current = tripData;
@@ -44,6 +49,7 @@ export function useRealtimeVoice({
 
   const mountedRef = useRef(true);
   const memoryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -70,6 +76,7 @@ export function useRealtimeVoice({
         audioRef.current = null;
       }
       if (memoryTimerRef.current) clearTimeout(memoryTimerRef.current);
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     };
   }, []);
 
@@ -98,7 +105,7 @@ export function useRealtimeVoice({
     recognitionRef.current = recognition;
     recognition.lang = "en-GB";
     recognition.interimResults = false;
-    recognition.continuous = true;
+    recognition.continuous = false;
 
     let transcript = "";
 
@@ -107,16 +114,34 @@ export function useRealtimeVoice({
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      // Accumulate all results
       let full = "";
       for (let i = 0; i < event.results.length; i++) {
         full += event.results[i][0].transcript;
       }
       transcript = full;
+
+      // Silence timeout fallback: force-stop if browser hangs
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = setTimeout(() => {
+        if (recognitionRef.current && transcript) {
+          recognitionRef.current.stop();
+        }
+      }, 2500);
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       if (!mountedRef.current) return;
+
+      if (event.error === "no-speech" && conversationActiveRef.current) {
+        // Auto-restart after brief delay when in conversation mode
+        setTimeout(() => {
+          if (mountedRef.current && conversationActiveRef.current) {
+            startListening();
+          }
+        }, 300);
+        return;
+      }
+
       if (event.error !== "aborted" && event.error !== "no-speech") {
         console.warn("Speech error:", event.error);
       }
@@ -127,22 +152,29 @@ export function useRealtimeVoice({
 
     recognition.onend = () => {
       recognitionRef.current = null;
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
       if (!mountedRef.current) return;
 
-      // If we have a transcript, send it
       if (transcript && voiceStateRef.current === "listening") {
         sendToAgentRef.current?.(transcript);
       } else if (voiceStateRef.current === "listening") {
-        setVoiceState("idle");
+        // No transcript — auto-restart if conversation active, else idle
+        if (conversationActiveRef.current) {
+          setTimeout(() => {
+            if (mountedRef.current && conversationActiveRef.current) {
+              startListening();
+            }
+          }, 300);
+        } else {
+          setVoiceState("idle");
+        }
       }
     };
 
     recognition.start();
-  }, []);
-
-  // --- Stop listening and process ---
-  const stopListening = useCallback(() => {
-    recognitionRef.current?.stop();
   }, []);
 
   // --- Send transcript to agent ---
@@ -202,7 +234,13 @@ export function useRealtimeVoice({
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
       console.error("Agent chat error:", err);
-      if (mountedRef.current) setVoiceState("idle");
+      if (mountedRef.current) {
+        if (conversationActiveRef.current) {
+          startListening();
+        } else {
+          setVoiceState("idle");
+        }
+      }
     }
   };
 
@@ -233,50 +271,65 @@ export function useRealtimeVoice({
       audio.onended = () => {
         URL.revokeObjectURL(url);
         audioRef.current = null;
-        if (mountedRef.current) setVoiceState("idle");
+        if (!mountedRef.current) return;
+        if (conversationActiveRef.current) {
+          startListening();
+        } else {
+          setVoiceState("idle");
+        }
       };
 
       audio.onerror = () => {
         URL.revokeObjectURL(url);
         audioRef.current = null;
-        if (mountedRef.current) setVoiceState("idle");
+        if (!mountedRef.current) return;
+        if (conversationActiveRef.current) {
+          startListening();
+        } else {
+          setVoiceState("idle");
+        }
       };
 
       await audio.play();
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
       console.error("TTS error:", err);
-      if (mountedRef.current) setVoiceState("idle");
+      if (mountedRef.current) {
+        if (conversationActiveRef.current) {
+          startListening();
+        } else {
+          setVoiceState("idle");
+        }
+      }
     }
   };
 
-  // --- Toggle: tap to start/stop listening, or interrupt speaking ---
+  // --- Toggle: conversation mode on/off ---
   const toggleVoice = useCallback(() => {
-    const state = voiceStateRef.current;
-
-    if (state === "idle") {
-      startListening();
-      return;
-    }
-
-    if (state === "listening") {
-      stopListening();
-      return;
-    }
-
-    if (state === "speaking") {
-      // Stop audio, go back to idle
+    if (conversationActiveRef.current) {
+      // Stop everything
+      setConversationActive(false);
+      conversationActiveRef.current = false;
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+      recognitionRef.current?.abort();
+      recognitionRef.current = null;
       abortRef.current?.abort();
       stopAudio();
       setVoiceState("idle");
-      return;
+    } else {
+      // Start conversation
+      setConversationActive(true);
+      conversationActiveRef.current = true;
+      startListening();
     }
-
-    // processing — ignore taps
-  }, [startListening, stopListening, stopAudio]);
+  }, [startListening, stopAudio]);
 
   return {
     voiceState,
+    conversationActive,
     formComplete,
     lastMemories,
     lastTranscript,

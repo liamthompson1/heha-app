@@ -111,6 +111,7 @@ export default function UnifiedTrip({
   const [formComplete, setFormComplete] = useState(false);
   const [lastMemories, setLastMemories] = useState<SavedMemory[]>([]);
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
+  const [conversationActive, setConversationActive] = useState(false);
 
   // --- Refs (stale-closure prevention) ---
   const historyRef = useRef(history);
@@ -121,6 +122,8 @@ export default function UnifiedTrip({
   thinkingRef.current = thinking;
   const voiceStateRef = useRef(voiceState);
   voiceStateRef.current = voiceState;
+  const conversationActiveRef = useRef(conversationActive);
+  conversationActiveRef.current = conversationActive;
   const onTripDataChangeRef = useRef(onTripDataChange);
   onTripDataChangeRef.current = onTripDataChange;
   const userIdRef = useRef(userId);
@@ -135,6 +138,7 @@ export default function UnifiedTrip({
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
 
   // Mutable function refs
@@ -153,6 +157,7 @@ export default function UnifiedTrip({
         audioRef.current.pause();
         audioRef.current = null;
       }
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     };
   }, []);
 
@@ -248,7 +253,7 @@ export default function UnifiedTrip({
     } finally {
       if (mountedRef.current) {
         setThinking(false);
-        if (useVoice) setVoiceState("idle");
+        if (useVoice && !conversationActiveRef.current) setVoiceState("idle");
       }
     }
   };
@@ -295,7 +300,13 @@ export default function UnifiedTrip({
       if ((err as Error).name === "AbortError") return;
       console.error("TTS error:", err);
     } finally {
-      if (mountedRef.current) setVoiceState("idle");
+      if (mountedRef.current) {
+        if (conversationActiveRef.current) {
+          startListening();
+        } else {
+          setVoiceState("idle");
+        }
+      }
     }
   };
 
@@ -317,7 +328,7 @@ export default function UnifiedTrip({
     recognitionRef.current = recognition;
     recognition.lang = "en-GB";
     recognition.interimResults = false;
-    recognition.continuous = true;
+    recognition.continuous = false;
 
     let transcript = "";
 
@@ -331,10 +342,28 @@ export default function UnifiedTrip({
         full += event.results[i][0].transcript;
       }
       transcript = full;
+
+      // Silence timeout fallback: force-stop if browser hangs
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = setTimeout(() => {
+        if (recognitionRef.current && transcript) {
+          recognitionRef.current.stop();
+        }
+      }, 2500);
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       if (!mountedRef.current) return;
+
+      if (event.error === "no-speech" && conversationActiveRef.current) {
+        setTimeout(() => {
+          if (mountedRef.current && conversationActiveRef.current) {
+            startListening();
+          }
+        }, 300);
+        return;
+      }
+
       if (event.error !== "aborted" && event.error !== "no-speech") {
         console.warn("Speech error:", event.error);
       }
@@ -343,19 +372,28 @@ export default function UnifiedTrip({
 
     recognition.onend = () => {
       recognitionRef.current = null;
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
       if (!mountedRef.current) return;
+
       if (transcript && voiceStateRef.current === "listening") {
         sendMessageRef.current?.(transcript, true);
       } else if (voiceStateRef.current === "listening") {
-        setVoiceState("idle");
+        if (conversationActiveRef.current) {
+          setTimeout(() => {
+            if (mountedRef.current && conversationActiveRef.current) {
+              startListening();
+            }
+          }, 300);
+        } else {
+          setVoiceState("idle");
+        }
       }
     };
 
     recognition.start();
-  }, []);
-
-  const stopListening = useCallback(() => {
-    recognitionRef.current?.stop();
   }, []);
 
   const stopAudio = useCallback(() => {
@@ -368,23 +406,26 @@ export default function UnifiedTrip({
   }, []);
 
   const handleMicClick = useCallback(() => {
-    const state = voiceStateRef.current;
-    if (state === "idle") {
-      startListening();
-      return;
-    }
-    if (state === "listening") {
-      stopListening();
-      return;
-    }
-    if (state === "speaking") {
+    if (conversationActiveRef.current) {
+      // Stop conversation
+      setConversationActive(false);
+      conversationActiveRef.current = false;
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+      recognitionRef.current?.abort();
+      recognitionRef.current = null;
       abortRef.current?.abort();
       stopAudio();
       setVoiceState("idle");
-      return;
+    } else {
+      // Start conversation
+      setConversationActive(true);
+      conversationActiveRef.current = true;
+      startListening();
     }
-    // processing — ignore
-  }, [startListening, stopListening, stopAudio]);
+  }, [startListening, stopAudio]);
 
   // ————————————————————————————————————————
   // Text send
@@ -410,14 +451,15 @@ export default function UnifiedTrip({
   const chips = !thinking ? getNextChips(tripData) : null;
 
   // Get voice status text for the mic tooltip
-  const micLabel =
-    voiceState === "idle"
-      ? "Tap to speak"
-      : voiceState === "listening"
-        ? "Tap to stop"
+  const micLabel = conversationActive
+    ? voiceState === "listening"
+      ? "Listening... tap to stop"
+      : voiceState === "processing"
+        ? "Processing... tap to stop"
         : voiceState === "speaking"
-          ? "Tap to interrupt"
-          : "Processing...";
+          ? "Speaking... tap to stop"
+          : "Tap to start conversation"
+    : "Tap to start conversation";
 
   return (
     <div className="flex flex-col flex-1 pb-28">
@@ -498,6 +540,7 @@ export default function UnifiedTrip({
               type="button"
               className="voice-icon-btn morph-btn-enter"
               data-state={voiceState}
+              data-conversation={conversationActive || undefined}
               onClick={handleMicClick}
               aria-label={micLabel}
               title={micLabel}
@@ -505,7 +548,13 @@ export default function UnifiedTrip({
               {voiceState === "listening" && (
                 <span className="voice-btn-pulse" />
               )}
-              {voiceState === "speaking" ? <WaveIconSmall /> : <MicIconSmall />}
+              {conversationActive && voiceState !== "idle" ? (
+                voiceState === "speaking" ? <WaveIconSmall /> : <StopIconSmall />
+              ) : voiceState === "speaking" ? (
+                <WaveIconSmall />
+              ) : (
+                <MicIconSmall />
+              )}
             </button>
 
             <button
@@ -566,6 +615,20 @@ function WaveIconSmall() {
       <path d="M14 6v12" />
       <path d="M18 8v8" />
       <path d="M22 12h-2" />
+    </svg>
+  );
+}
+
+function StopIconSmall() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="none"
+    >
+      <rect x="6" y="6" width="12" height="12" rx="2" />
     </svg>
   );
 }

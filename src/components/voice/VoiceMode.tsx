@@ -12,32 +12,35 @@ interface VoiceModeProps {
   userId: string | null;
 }
 
-const STATUS_TEXT: Record<string, string> = {
-  idle: "Tap to start",
-  listening: "Tap to stop",
-  processing: "Thinking...",
-  speaking: "Tap to interrupt",
-};
-
 export default function VoiceMode({
   tripData,
   onTripDataChange,
   onComplete,
   userId,
 }: VoiceModeProps) {
-  const { voiceState, formComplete, lastMemories, lastTranscript, toggleVoice } =
+  const { voiceState, conversationActive, formComplete, lastMemories, lastTranscript, toggleVoice } =
     useRealtimeVoice({
       tripData,
       onTripDataChange,
       userId,
     });
 
+  const statusText = conversationActive
+    ? voiceState === "listening"
+      ? "Listening... tap to stop"
+      : voiceState === "processing"
+        ? "Thinking..."
+        : voiceState === "speaking"
+          ? "Speaking... tap to stop"
+          : "Tap to start conversation"
+    : "Tap to start conversation";
+
   return (
     <div className="flex flex-col items-center justify-center" style={{ minHeight: "60vh" }}>
-      <MicButton voiceState={voiceState} onClick={toggleVoice} />
+      <MicButton voiceState={voiceState} conversationActive={conversationActive} onClick={toggleVoice} />
 
       <p className="mt-4 text-sm" style={{ color: "var(--text-secondary)" }}>
-        {STATUS_TEXT[voiceState]}
+        {statusText}
       </p>
 
       {voiceState === "processing" && lastTranscript && (
