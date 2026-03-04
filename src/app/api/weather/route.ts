@@ -14,20 +14,14 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Check if trip is beyond forecast range (16 days)
   const startDate = new Date(start);
   const now = new Date();
   const daysOut = Math.floor(
     (startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
   );
 
-  if (daysOut > 16) {
-    return NextResponse.json({
-      available: false,
-      reason: "too_far_out",
-      days: [],
-    });
-  }
+  // If trip is beyond 16-day forecast range, show next 7 days as preview
+  const isPreview = daysOut > 16;
 
   try {
     // Step 1: Geocode destination
@@ -46,21 +40,31 @@ export async function GET(request: NextRequest) {
 
     const { latitude, longitude } = geoData.results[0];
 
-    // Clamp dates to forecast range
-    const forecastEnd = new Date(now);
-    forecastEnd.setDate(forecastEnd.getDate() + 16);
+    let fetchStart: string;
+    let fetchEnd: string;
 
-    const clampedStart =
-      startDate < now ? now.toISOString().split("T")[0] : start;
-    const endDate = new Date(end);
-    const clampedEnd =
-      endDate > forecastEnd
-        ? forecastEnd.toISOString().split("T")[0]
-        : end;
+    if (isPreview) {
+      // Show next 7 days from today as a preview
+      fetchStart = now.toISOString().split("T")[0];
+      const previewEnd = new Date(now);
+      previewEnd.setDate(previewEnd.getDate() + 6);
+      fetchEnd = previewEnd.toISOString().split("T")[0];
+    } else {
+      // Clamp dates to forecast range
+      const forecastEnd = new Date(now);
+      forecastEnd.setDate(forecastEnd.getDate() + 16);
+
+      fetchStart = startDate < now ? now.toISOString().split("T")[0] : start;
+      const endDate = new Date(end);
+      fetchEnd =
+        endDate > forecastEnd
+          ? forecastEnd.toISOString().split("T")[0]
+          : end;
+    }
 
     // Step 2: Fetch weather
     const weatherRes = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max,windspeed_10m_max&start_date=${clampedStart}&end_date=${clampedEnd}&timezone=auto`
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_probability_max,windspeed_10m_max&start_date=${fetchStart}&end_date=${fetchEnd}&timezone=auto`
     );
     const weatherData = await weatherRes.json();
 
@@ -84,7 +88,7 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    return NextResponse.json({ available: true, days });
+    return NextResponse.json({ available: true, days, preview: isPreview });
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch weather data" },

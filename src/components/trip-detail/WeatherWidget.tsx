@@ -10,6 +10,7 @@ interface WeatherData {
   days: WeatherDay[];
   available: boolean;
   reason: string;
+  preview: boolean;
 }
 
 interface WeatherWidgetProps {
@@ -37,6 +38,7 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
           days: (r.days as WeatherDay[]) ?? [],
           available: r.available !== false,
           reason: (r.reason as string) ?? "",
+          preview: !!(r.preview),
         };
       },
     }
@@ -45,6 +47,7 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
   const days = weather?.days ?? [];
   const available = weather?.available ?? true;
   const reason = weather?.reason ?? "";
+  const isPreview = weather?.preview ?? false;
 
   if (!hasDates) {
     return (
@@ -138,6 +141,11 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
       </div>
 
       <div className="weather-widget">
+        {isPreview && (
+          <p className="text-xs mb-2" style={{ color: "var(--text-tertiary)" }}>
+            Weather now in {destination} — trip forecast available closer to your dates
+          </p>
+        )}
         {/* Main display */}
         <div className="weather-main">
           <div className="flex items-center gap-4">
