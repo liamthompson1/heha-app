@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { WeatherDay } from "@/types/trip-content";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 import WeatherIcon, { getWeatherLabel } from "./WeatherIcon";
 import MissingInfoCard from "./MissingInfoCard";
+
+interface WeatherData {
+  days: WeatherDay[];
+  available: boolean;
+  reason: string;
+}
 
 interface WeatherWidgetProps {
   destination: string;
@@ -13,35 +20,31 @@ interface WeatherWidgetProps {
 }
 
 export default function WeatherWidget({ destination, startDate, endDate, tripId }: WeatherWidgetProps) {
-  const [days, setDays] = useState<WeatherDay[]>([]);
-  const [available, setAvailable] = useState(true);
-  const [reason, setReason] = useState("");
-  const [loading, setLoading] = useState(true);
   const [selectedIdx, setSelectedIdx] = useState(0);
 
   const hasDates = !!(startDate && endDate);
 
-  useEffect(() => {
-    if (!hasDates || !destination) {
-      setLoading(false);
-      return;
-    }
+  const weatherUrl = hasDates && destination
+    ? `/api/weather?destination=${encodeURIComponent(destination)}&start=${startDate}&end=${endDate}`
+    : null;
 
-    fetch(`/api/weather?destination=${encodeURIComponent(destination)}&start=${startDate}&end=${endDate}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.available === false) {
-          setAvailable(false);
-          setReason(data.reason);
-        } else if (data.days?.length > 0) {
-          setDays(data.days);
-        } else {
-          setAvailable(false);
-        }
-      })
-      .catch(() => setAvailable(false))
-      .finally(() => setLoading(false));
-  }, [destination, startDate, endDate, hasDates]);
+  const { data: weather, loading } = useCachedFetch<WeatherData>(
+    weatherUrl,
+    {
+      transform: (raw) => {
+        const r = raw as Record<string, unknown>;
+        return {
+          days: (r.days as WeatherDay[]) ?? [],
+          available: r.available !== false,
+          reason: (r.reason as string) ?? "",
+        };
+      },
+    }
+  );
+
+  const days = weather?.days ?? [];
+  const available = weather?.available ?? true;
+  const reason = weather?.reason ?? "";
 
   if (!hasDates) {
     return (

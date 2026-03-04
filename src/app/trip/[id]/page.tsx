@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 import PageShell from "@/components/PageShell";
 import GlassButton from "@/components/GlassButton";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -20,37 +21,15 @@ import { formatDateRange } from "@/lib/format-date";
 export default function TripDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [trip, setTrip] = useState<TripRow | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+  const { data: trip, loading, mutate: setTrip } = useCachedFetch<TripRow>(
+    id ? `/api/trips/${id}` : null,
+    { transform: (raw) => (raw as { trip?: TripRow }).trip ?? null }
+  );
+  const notFound = !loading && !trip;
   const [content, setContent] = useState<TripContent | null>(null);
   const [contentLoading, setContentLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
-
-  // Fetch trip data
-  useEffect(() => {
-    if (!id) return;
-
-    fetch(`/api/trips/${id}`)
-      .then((res) => {
-        if (res.status === 404) {
-          setNotFound(true);
-          return null;
-        }
-        if (!res.ok) throw new Error("Failed to fetch trip");
-        return res.json();
-      })
-      .then((data) => {
-        if (data?.trip) setTrip(data.trip);
-      })
-      .catch(() => {
-        setNotFound(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [id]);
 
   // Fetch or generate AI content
   const fetchContent = useCallback(async (tripData: TripRow) => {
@@ -84,6 +63,7 @@ export default function TripDetailPage() {
 
   const handleDestinationChange = useCallback(async (name: string) => {
     if (!trip) return;
+    const prev = trip;
     const updatedTrip = { ...trip, trip: { ...trip.trip, destination: name } };
     setTrip(updatedTrip);
     try {
@@ -94,9 +74,9 @@ export default function TripDetailPage() {
       });
     } catch {
       // Revert on failure
-      setTrip(trip);
+      setTrip(prev);
     }
-  }, [trip, id]);
+  }, [trip, id, setTrip]);
 
   const handleDelete = useCallback(async () => {
     setDeleting(true);

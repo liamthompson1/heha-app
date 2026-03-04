@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "@/lib/auth/use-session";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 import OrbField, { LANDING_ORBS, SUBTLE_ORBS } from "@/components/OrbField";
 import AuthStatus from "@/components/AuthStatus";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -23,32 +23,10 @@ function getGreeting(): string {
 }
 
 function Dashboard() {
-  const [trips, setTrips] = useState<TripRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("/api/trips")
-      .then(async (res) => {
-        const text = await res.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch {
-          throw new Error(
-            `Server returned non-JSON (${res.status}): ${text.slice(0, 200)}`
-          );
-        }
-        if (!res.ok) throw new Error(data.error || `API error ${res.status}`);
-        return data;
-      })
-      .then((data) => setTrips(data.trips ?? []))
-      .catch((err) => {
-        console.error("Trips fetch error:", err);
-        setError(err.message || "Failed to load trips.");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: trips, loading, error } = useCachedFetch<TripRow[]>(
+    "/api/trips",
+    { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
+  );
 
   return (
     <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20 pb-28">
@@ -109,7 +87,7 @@ function Dashboard() {
         )}
 
         {/* Empty state */}
-        {!loading && !error && trips.length === 0 && (
+        {!loading && !error && (!trips || trips.length === 0) && (
           <div className="max-w-lg mx-auto">
             <GlassCard className="page-enter stagger-4 text-center" elevated>
               <div className="text-5xl mb-4">&#9992;&#65039;</div>
@@ -133,7 +111,7 @@ function Dashboard() {
         )}
 
         {/* Bento grid */}
-        {!loading && !error && trips.length > 0 && (
+        {!loading && !error && trips && trips.length > 0 && (
           <BentoTripGrid trips={trips} />
         )}
       </main>
