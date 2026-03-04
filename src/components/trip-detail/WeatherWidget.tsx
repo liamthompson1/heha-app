@@ -49,6 +49,11 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
   const reason = weather?.reason ?? "";
   const isPreview = weather?.preview ?? false;
 
+  const dayName = (dateStr: string) => {
+    const d = new Date(dateStr + "T12:00:00");
+    return d.toLocaleDateString("en-GB", { weekday: "short" });
+  };
+
   if (!hasDates) {
     return (
       <div className="widget-section">
@@ -75,28 +80,24 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
           <span style={{ fontSize: "1.25rem" }}>🌤</span>
           <h2 className="widget-title">Weather</h2>
         </div>
-        <div className="weather-widget animate-pulse">
-          {/* Main display skeleton — icon + temp left, label right */}
-          <div className="weather-main">
-            <div className="flex items-center gap-4">
-              <div className="rounded-full w-12 h-12" style={{ background: "rgba(255,255,255,0.06)" }} />
-              <div className="space-y-2">
-                <div className="glass-panel rounded-lg h-8 w-16" />
-                <div className="glass-panel rounded-lg h-3 w-12" />
-              </div>
+        <div className="weather-card animate-pulse">
+          <div className="weather-card-top">
+            <div>
+              <div className="rounded-lg h-4 w-24 mb-3" style={{ background: "rgba(255,255,255,0.2)" }} />
+              <div className="rounded-lg h-10 w-20" style={{ background: "rgba(255,255,255,0.15)" }} />
             </div>
-            <div className="space-y-2 text-right">
-              <div className="glass-panel rounded-lg h-4 w-20 ml-auto" />
-              <div className="glass-panel rounded-lg h-3 w-14 ml-auto" />
+            <div className="flex flex-col items-end gap-2">
+              <div className="rounded-full w-10 h-10" style={{ background: "rgba(255,255,255,0.15)" }} />
+              <div className="rounded-lg h-3 w-16" style={{ background: "rgba(255,255,255,0.12)" }} />
             </div>
           </div>
-          {/* Day pills skeleton */}
-          <div className="flex gap-2">
+          <div className="weather-card-divider" />
+          <div className="weather-card-days">
             {Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="flex flex-col items-center gap-1 min-w-[56px] p-2 rounded-2xl" style={{ background: i === 0 ? "rgba(255,255,255,0.06)" : "transparent" }}>
-                <div className="glass-panel rounded h-2 w-6" />
-                <div className="rounded-full w-5 h-5" style={{ background: "rgba(255,255,255,0.06)" }} />
-                <div className="glass-panel rounded h-3 w-6" />
+              <div key={i} className="weather-card-day">
+                <div className="rounded h-2 w-6" style={{ background: "rgba(255,255,255,0.15)" }} />
+                <div className="rounded-full w-5 h-5" style={{ background: "rgba(255,255,255,0.12)" }} />
+                <div className="rounded h-3 w-6" style={{ background: "rgba(255,255,255,0.15)" }} />
               </div>
             ))}
           </div>
@@ -112,8 +113,8 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
           <span style={{ fontSize: "1.25rem" }}>🌤</span>
           <h2 className="widget-title">Weather</h2>
         </div>
-        <div className="weather-widget">
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        <div className="weather-card" style={{ padding: "28px" }}>
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
             {reason === "too_far_out"
               ? "Weather forecast available closer to your trip"
               : "Weather data unavailable for this destination"}
@@ -124,14 +125,6 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
   }
 
   const selected = days[selectedIdx];
-  const dayName = (dateStr: string) => {
-    const d = new Date(dateStr + "T12:00:00");
-    return d.toLocaleDateString("en-GB", { weekday: "short" });
-  };
-  const dayNum = (dateStr: string) => {
-    const d = new Date(dateStr + "T12:00:00");
-    return d.getDate();
-  };
 
   return (
     <div className="widget-section">
@@ -140,55 +133,61 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
         <h2 className="widget-title">Weather</h2>
       </div>
 
-      <div className="weather-widget">
-        {isPreview && (
-          <p className="text-xs mb-2" style={{ color: "var(--text-tertiary)" }}>
-            Weather now in {destination} — trip forecast available closer to your dates
-          </p>
-        )}
-        {/* Main display */}
-        <div className="weather-main">
-          <div className="flex items-center gap-4">
-            <WeatherIcon code={selected.weather_code} size={48} />
-            <div>
-              <p className="text-3xl font-bold" style={{ color: "var(--text-primary)" }}>
-                {Math.round(selected.temp_max)}°
+      <div className="weather-card">
+        {/* Top section: destination + temp left, icon + condition right */}
+        <div className="weather-card-top">
+          <div>
+            <p className="weather-card-destination">{destination}</p>
+            {isPreview && (
+              <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.55)" }}>
+                Weather now
               </p>
-              <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
-                Low {Math.round(selected.temp_min)}°
-              </p>
-            </div>
+            )}
+            <p className="weather-card-temp">{Math.round(selected.temp_max)}°</p>
           </div>
-          <div className="text-right">
-            <p className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+          <div className="weather-card-right">
+            <WeatherIcon code={selected.weather_code} size={40} />
+            <p className="weather-card-condition">
               {getWeatherLabel(selected.weather_code)}
             </p>
-            {selected.precipitation_probability > 0 && (
-              <p className="text-xs mt-1" style={{ color: "var(--blue)" }}>
-                {selected.precipitation_probability}% rain
-              </p>
-            )}
-            {selected.wind_speed_max > 30 && (
-              <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
-                Wind {Math.round(selected.wind_speed_max)} km/h
-              </p>
-            )}
+            <p className="weather-card-hilo">
+              H:{Math.round(selected.temp_max)}° L:{Math.round(selected.temp_min)}°
+            </p>
           </div>
         </div>
 
+        {/* Extra details */}
+        {(selected.precipitation_probability > 0 || selected.wind_speed_max > 30) && (
+          <div className="flex gap-4 mt-1 mb-1">
+            {selected.precipitation_probability > 0 && (
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.65)" }}>
+                💧 {selected.precipitation_probability}% rain
+              </p>
+            )}
+            {selected.wind_speed_max > 30 && (
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.65)" }}>
+                💨 {Math.round(selected.wind_speed_max)} km/h
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Divider */}
+        <div className="weather-card-divider" />
+
         {/* Day pills */}
-        <div className="weather-day-scroll">
+        <div className="weather-card-days">
           {days.map((day, i) => (
             <button
               key={day.date}
-              className={`weather-day-pill ${i === selectedIdx ? "weather-day-pill-active" : ""}`}
+              className={`weather-card-day ${i === selectedIdx ? "weather-card-day-active" : ""}`}
               onClick={() => setSelectedIdx(i)}
             >
-              <span className="text-[10px] font-medium" style={{ color: "var(--text-tertiary)" }}>
-                {dayName(day.date)}
+              <span className="weather-card-day-label">
+                {i === 0 ? "Now" : dayName(day.date)}
               </span>
               <WeatherIcon code={day.weather_code} size={20} />
-              <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
+              <span className="weather-card-day-temp">
                 {Math.round(day.temp_max)}°
               </span>
             </button>
