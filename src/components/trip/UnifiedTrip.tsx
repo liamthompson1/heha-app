@@ -181,9 +181,13 @@ export default function UnifiedTrip({
   }, [initialMessage]);
 
   useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
-    }
+    // requestAnimationFrame ensures the DOM has painted the new messages
+    // before we measure scrollHeight and scroll to bottom
+    requestAnimationFrame(() => {
+      if (chatRef.current) {
+        chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
+      }
+    });
   }, [history, thinking]);
 
   // Auto-focus input after morph animation (desktop only — avoids keyboard pop on mobile)
