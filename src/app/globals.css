@@ -449,7 +449,7 @@ body {
 
 /* Page enter animation */
 .page-enter {
-  animation: fade-in-up 0.6s var(--ease-standard) both;
+  animation: fade-in 0.6s var(--ease-standard) both;
 }
 
 /* Stagger delays */

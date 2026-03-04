@@ -195,29 +195,27 @@ export default function UnifiedTrip({
   }, []);
 
   // Keyboard-aware positioning via visualViewport (Safari iOS fix)
-  // Both resize AND scroll listeners are needed: iOS fires resize when keyboard
-  // opens/closes, then scroll as it adjusts the viewport position. Without scroll,
-  // the initial calculation (offsetTop=0) overshoots, and dismiss may not reset.
+  // Only listen to resize (keyboard open/close), NOT scroll — scroll fires during
+  // normal page interactions and would make the input jump around.
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
 
-    const update = () => {
+    const onResize = () => {
       if (!floatingRef.current) return;
-      const kbHeight = window.innerHeight - vv.height - vv.offsetTop;
-      if (kbHeight > 50) {
+      // For position:fixed, keyboard height = layout viewport - visual viewport height.
+      // Don't use offsetTop — it changes with scroll and isn't relevant for fixed elements.
+      // Threshold of 150 ignores address bar changes (~50px) while catching keyboard (250+).
+      const kbHeight = window.innerHeight - vv.height;
+      if (kbHeight > 150) {
         floatingRef.current.style.bottom = `${kbHeight}px`;
       } else {
         floatingRef.current.style.bottom = "";
       }
     };
 
-    vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
-    return () => {
-      vv.removeEventListener("resize", update);
-      vv.removeEventListener("scroll", update);
-    };
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
   }, []);
 
   // ————————————————————————————————————————
