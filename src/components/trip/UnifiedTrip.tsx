@@ -524,11 +524,11 @@ export default function UnifiedTrip({
     : "Tap to start conversation";
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 min-h-0">
       {/* ——— Chat thread ——— */}
       <div
         ref={chatRef}
-        className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-1 pb-28"
+        className="flex-1 min-h-0 space-y-3 overflow-y-auto overscroll-contain px-1 pb-32"
       >
         {history.map((msg, i) => (
           <AgentMessage

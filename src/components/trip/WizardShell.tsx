@@ -119,7 +119,7 @@ export default function WizardShell() {
   }, [tripData, router, session.userId, submitting]);
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 flex-1 flex flex-col">
+    <div className="mx-auto w-full max-w-2xl px-4 flex-1 min-h-0 flex flex-col">
       <UnifiedTrip
         tripData={tripData}
         onTripDataChange={onUpdate}
