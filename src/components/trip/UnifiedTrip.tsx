@@ -20,10 +20,6 @@ interface UnifiedTripProps {
 
 type VoiceState = "idle" | "listening" | "processing" | "speaking";
 
-// Tiny silent WAV used to unlock Audio on Safari iOS during user gesture
-const SILENT_AUDIO =
-  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
-
 interface ChipOption {
   icon: string;
   label: string;
@@ -140,8 +136,8 @@ export default function UnifiedTrip({
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioElRef = useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const audioSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
@@ -158,13 +154,14 @@ export default function UnifiedTrip({
       mountedRef.current = false;
       recognitionRef.current?.abort();
       abortRef.current?.abort();
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (audioSourceRef.current) {
+        try { audioSourceRef.current.stop(); } catch {}
+        audioSourceRef.current.disconnect();
+        audioSourceRef.current = null;
       }
-      if (audioElRef.current) {
-        audioElRef.current.pause();
-        audioElRef.current = null;
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current = null;
       }
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     };
@@ -287,29 +284,31 @@ export default function UnifiedTrip({
 
       if (!res.ok) throw new Error(`TTS failed: ${res.status}`);
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
+      const arrayBuffer = await res.arrayBuffer();
 
-      // Reuse the gesture-unlocked Audio element (required for Safari iOS)
-      const audio = audioElRef.current || new Audio();
-      audioElRef.current = audio;
-      audioRef.current = audio;
-      audio.onended = null;
-      audio.onerror = null;
+      const audioCtx = audioCtxRef.current;
+      if (!audioCtx) throw new Error("AudioContext not initialized");
+      await audioCtx.resume();
+
+      // Cross-browser decodeAudioData (callback form works on older Safari)
+      const audioBuffer = await new Promise<AudioBuffer>((resolve, reject) => {
+        audioCtx.decodeAudioData(arrayBuffer, resolve, reject);
+      });
+
+      // Bail if user stopped during decode
+      if (!mountedRef.current || voiceStateRef.current === "idle") return;
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioCtx.destination);
+      audioSourceRef.current = source;
 
       await new Promise<void>((resolve) => {
-        audio.onended = () => {
-          URL.revokeObjectURL(url);
-          audioRef.current = null;
+        source.onended = () => {
+          audioSourceRef.current = null;
           resolve();
         };
-        audio.onerror = () => {
-          URL.revokeObjectURL(url);
-          audioRef.current = null;
-          resolve();
-        };
-        audio.src = url;
-        audio.play();
+        source.start(0);
       });
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
@@ -422,11 +421,10 @@ export default function UnifiedTrip({
   }, []);
 
   const stopAudio = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.onended = null;
-      audioRef.current.onerror = null;
-      audioRef.current = null;
+    if (audioSourceRef.current) {
+      try { audioSourceRef.current.stop(); } catch {}
+      audioSourceRef.current.disconnect();
+      audioSourceRef.current = null;
     }
   }, []);
 
@@ -445,12 +443,12 @@ export default function UnifiedTrip({
       stopAudio();
       setVoiceState("idle");
     } else {
-      // Warm up Audio element for Safari iOS (must happen in gesture handler)
-      if (!audioElRef.current) {
-        audioElRef.current = new Audio();
+      // Create and unlock AudioContext on user gesture (required for Safari iOS)
+      if (!audioCtxRef.current) {
+        const Ctor = window.AudioContext || (window as any).webkitAudioContext;
+        audioCtxRef.current = new Ctor();
       }
-      audioElRef.current.src = SILENT_AUDIO;
-      audioElRef.current.play().then(() => audioElRef.current?.pause()).catch(() => {});
+      audioCtxRef.current.resume().catch(() => {});
 
       // Start conversation
       setConversationActive(true);
