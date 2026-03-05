@@ -233,12 +233,14 @@ export default function Home() {
                 className="glass-card-purple glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12 h-full"
                 style={{ textDecoration: "none", color: "var(--foreground)" }}
               >
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(84, 46, 145, 0.3)" }}>
-                  <svg width="28" height="28" fill="none" stroke="rgba(168, 130, 230, 1)" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 20h16" />
-                    <path d="M5 16l2-12h2l1 6h4l1-6h2l2 12" />
-                    <path d="M3 20c0 0 2-2 9-2s9 2 9 2" />
-                  </svg>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(84, 46, 145, 0.35)" }}>
+                  <Image
+                    src="https://dmy0b9oeprz0f.cloudfront.net/holidayextras.co.uk/brand-guidelines/logo-tags/png/deck-chair.png"
+                    alt="Deck chair"
+                    width={36}
+                    height={36}
+                    className="w-9 h-9 object-contain"
+                  />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap gap-[0.3em]">
                   Log in with{" "}
