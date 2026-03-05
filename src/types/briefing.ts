@@ -10,11 +10,15 @@ export interface BriefingAirport {
 export interface BriefingFlight {
   flightNumber: string;
   airline: string;
+  airlineLogo: string | null;
+  alliance: string | null;
+  checkInUrl: string | null;
   aircraftType: string;
   departure: BriefingAirport;
   arrival: BriefingAirport;
   scheduledDepartureTime: string; // ISO 8601
   scheduledArrivalTime: string;
+  isHub: { departure: boolean; arrival: boolean };
 }
 
 // --- On-Time Performance ---
@@ -69,10 +73,10 @@ export interface GateInfo {
 
 export interface AircraftDetails {
   aircraftType: string;
-  tailNumber: string;
-  ageYears: number;
-  seatCount: number;
-  seatConfig: string;
+  tailNumber: string | null;
+  ageYears: number | null;
+  seatCount: number | null;
+  seatConfig: string | null;
   note: string;
 }
 
@@ -132,6 +136,7 @@ export interface SecurityQueue {
   projectedSlot: HourlySlot;
   hourlySlots: HourlySlot[];
   arrivalBufferMinutes: number;
+  tips: string | null;
 }
 
 // --- Restaurants ---
@@ -146,4 +151,39 @@ export interface Restaurant {
 
 export interface TerminalRestaurants {
   restaurants: Restaurant[];
+}
+
+// --- Destination Info ---
+
+export interface DestinationInfo {
+  city: string;
+  country: string;
+  description: string | null;
+  currency: string | null; // e.g. "€ EUR (Euro)"
+  languages: string[];
+  travelAdvisories: { level: string; description: string }[];
+  seasonNote: string | null; // e.g. "Peak season" / "Off season"
+  flagUrl: string | null;
+  timezone: string | null;
+  drivingSide: string | null; // "right" or "left"
+  callingCode: string | null; // e.g. "+34"
+  population: number | null;
+  region: string | null; // e.g. "Southern Europe"
+}
+
+// --- Assembled Briefing (returned by briefing-assembler) ---
+
+export interface BriefingData {
+  flight: BriefingFlight | null;
+  timeline: TimelineStep[];
+  weather: WeatherComparison | null;
+  gateInfo: GateInfo | null;
+  onTime: OnTimeStats | null;
+  inbound: InboundFlight | null;
+  aircraft: AircraftDetails | null;
+  security: SecurityQueue | null;
+  wifi: AirportWifi | null;
+  amenities: InFlightAmenities | null;
+  restaurants: TerminalRestaurants | null;
+  destination: DestinationInfo | null;
 }

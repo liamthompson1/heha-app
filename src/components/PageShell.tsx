@@ -3,12 +3,18 @@ import OrbField, { type Orb, SUBTLE_ORBS } from "./OrbField";
 import BackLink from "./BackLink";
 import AuthStatus from "./AuthStatus";
 
+const maxWidthClasses = {
+  "2xl": "max-w-2xl",
+  "6xl": "max-w-6xl",
+  full: "max-w-full",
+};
+
 interface PageShellProps {
   children: React.ReactNode;
   orbs?: Orb[];
   backHref?: string;
   centered?: boolean;
-  variant?: "default" | "full";
+  maxWidth?: "2xl" | "6xl" | "full";
 }
 
 export default function PageShell({
@@ -16,7 +22,7 @@ export default function PageShell({
   orbs = SUBTLE_ORBS,
   backHref,
   centered,
-  variant = "default",
+  maxWidth = "2xl",
 }: PageShellProps) {
   return (
     <div
@@ -28,12 +34,7 @@ export default function PageShell({
       <OrbField orbs={orbs} />
       {backHref && <BackLink href={backHref} />}
       <AuthStatus />
-      <main
-        className={clsx(
-          "page-enter relative z-10 mx-4 w-full",
-          variant === "full" ? "" : "max-w-2xl"
-        )}
-      >
+      <main className={clsx("page-enter relative z-10 mx-4 w-full", maxWidthClasses[maxWidth])}>
         {children}
       </main>
     </div>

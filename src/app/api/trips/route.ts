@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { createTripSchema } from "@/lib/validation/trip-schema";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { syncTripToTravellerApi } from "@/lib/traveller/client";
 import { getSession, getSessionCookieName, hashEmail } from "@/lib/auth/session";
+import { enrichTripEntities } from "@/lib/agent/enrichment-service";
 
 export async function GET(request: NextRequest) {
   try {
@@ -108,7 +109,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 5. Return response
+  // 5. Enrich reference data in the background (non-blocking)
+  after(async () => {
+    await enrichTripEntities({
+      flights: validated.flights_if_known,
+      destination: validated.trip.destination,
+    });
+  });
+
+  // 6. Return response
   return NextResponse.json(
     {
       trip,
