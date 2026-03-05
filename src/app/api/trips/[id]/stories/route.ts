@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
+const STORIES_BASE = "https://apigw.holidayextras.com/chat-assistant-gateway/llm-platform/v0beta2/stories";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -26,7 +28,7 @@ export async function GET(
     );
   }
 
-  // Get auth cookies for HX Stories API
+  // The Stories API authenticates via the auth_session cookie sent as auth_token
   const authSession = request.cookies.get("auth_session")?.value;
   if (!authSession) {
     return NextResponse.json(
@@ -50,20 +52,19 @@ export async function GET(
     : `trips/${trip.traveller_trip_id}`;
 
   try {
-    const storiesUrl = `https://www.holidayextras.com/mfe/stories/${resourcePath}`;
+    const storiesUrl = `${STORIES_BASE}?resourcePath=${encodeURIComponent(resourcePath)}&format=html&disableFallbackOnError=true`;
     console.log("[Stories API] Fetching:", storiesUrl);
-    console.log("[Stories API] API key present:", !!apiKey, "auth_session length:", authSession.length);
 
     const res = await fetch(storiesUrl, {
       headers: {
-        Cookie: `auth_session=${authSession}`,
-        "x-api-key": apiKey,
+        Cookie: `auth_token=${authSession}`,
+        "x-apikey": apiKey,
         Accept: "application/json",
       },
     });
 
     const responseText = await res.text();
-    console.log("[Stories API] Status:", res.status, "Response length:", responseText.length, "Preview:", responseText.substring(0, 200));
+    console.log("[Stories API] Status:", res.status, "Response length:", responseText.length);
 
     if (!res.ok) {
       return NextResponse.json(
