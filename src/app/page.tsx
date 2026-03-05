@@ -243,7 +243,7 @@ export default function Home() {
                   />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap">
-                  Log in with&nbsp;
+                  Log in with
                   <Image
                     src="/holiday-extras-logo.png"
                     alt="Holiday Extras"
