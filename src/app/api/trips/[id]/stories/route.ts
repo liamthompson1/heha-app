@@ -52,10 +52,19 @@ export async function GET(
     : `trips/${trip.traveller_trip_id}`;
 
   try {
-    const storiesUrl = `${STORIES_BASE}?resourcePath=${encodeURIComponent(resourcePath)}&format=html&disableFallbackOnError=true`;
-    console.log("[Stories API] Fetching:", storiesUrl);
+    // Build upstream URL, forwarding any extra params from the client
+    const storiesUrl = new URL(STORIES_BASE);
+    storiesUrl.searchParams.set("resourcePath", resourcePath);
+    storiesUrl.searchParams.set("format", "html");
+    storiesUrl.searchParams.set("disableFallbackOnError", "true");
+    for (const [key, value] of request.nextUrl.searchParams.entries()) {
+      if (key !== "path") {
+        storiesUrl.searchParams.set(key, value);
+      }
+    }
+    console.log("[Stories API] Fetching:", storiesUrl.toString());
 
-    const res = await fetch(storiesUrl, {
+    const res = await fetch(storiesUrl.toString(), {
       headers: {
         Cookie: `auth_token=${authSession}`,
         "x-apikey": apiKey,

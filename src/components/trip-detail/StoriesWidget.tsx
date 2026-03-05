@@ -65,15 +65,21 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
   const [navStack, setNavStack] = useState<string[]>([]);
   const [transitioning, setTransitioning] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Accumulated URL params that persist across the entire navigation flow
+  const accumulatedParams = useRef<Record<string, string>>({});
 
   const fetchStories = useCallback(
-    async (subPath?: string) => {
+    async (subPath?: string, params?: Record<string, string>) => {
       setLoading(true);
       try {
-        const url = subPath
-          ? `/api/trips/${tripId}/stories?path=${encodeURIComponent(subPath)}`
-          : `/api/trips/${tripId}/stories`;
-        const res = await fetch(url);
+        const url = new URL(`/api/trips/${tripId}/stories`, window.location.origin);
+        if (subPath) url.searchParams.set("path", subPath);
+        if (params) {
+          for (const [key, value] of Object.entries(params)) {
+            url.searchParams.set(key, value);
+          }
+        }
+        const res = await fetch(url.toString());
         if (res.ok) {
           const json = await res.json();
           setData(json);
@@ -109,9 +115,21 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       if (match) {
         e.preventDefault();
         const subPath = match[1];
+
+        // Extract query params from the link and merge into accumulated params
+        const queryIdx = href.indexOf("?");
+        if (queryIdx !== -1) {
+          const sp = new URLSearchParams(href.slice(queryIdx + 1));
+          sp.forEach((value, key) => {
+            accumulatedParams.current[key] = value;
+          });
+        }
+
         setTransitioning(true);
         setNavStack((prev) => [...prev, subPath]);
-        fetchStories(subPath).then(() => setTransitioning(false));
+        fetchStories(subPath, { ...accumulatedParams.current }).then(() =>
+          setTransitioning(false)
+        );
         containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     },
@@ -123,7 +141,9 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
     const newStack = navStack.slice(0, -1);
     setNavStack(newStack);
     const prevPath = newStack[newStack.length - 1];
-    fetchStories(prevPath).then(() => setTransitioning(false));
+    fetchStories(prevPath, { ...accumulatedParams.current }).then(() =>
+      setTransitioning(false)
+    );
     containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [navStack, fetchStories]);
 
