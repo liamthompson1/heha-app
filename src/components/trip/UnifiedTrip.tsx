@@ -185,6 +185,7 @@ export default function UnifiedTrip({
   const abortRef = useRef<AbortController | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
+  const lastSearchParamsRef = useRef<AgentChatResponse["flightSearchParams"]>(undefined);
 
   // Mutable function refs
   const sendMessageRef = useRef<
@@ -326,6 +327,7 @@ export default function UnifiedTrip({
 
       // When flight cards arrive, push an inline selector message
       if (data.flightCards && data.flightCards.length > 0) {
+        if (data.flightSearchParams) lastSearchParamsRef.current = data.flightSearchParams;
         const first = data.flightCards[0];
         const routeLabel = `${first.from} → ${first.to} · ${first.departure_date}`;
         newMessages.push({
@@ -609,9 +611,11 @@ export default function UnifiedTrip({
     };
 
     if (card.direction === "outbound") {
-      const endDate = currentData.dates?.end_date;
-      if (endDate) {
-        const routeLabel = `${card.to} → ${card.from} · ${endDate}`;
+      // Use returnDate from the original search params (properly formatted by the AI)
+      // Fall back to tripData end_date
+      const returnDate = lastSearchParamsRef.current?.returnDate || currentData.dates?.end_date;
+      if (returnDate) {
+        const routeLabel = `${card.to} → ${card.from} · ${returnDate}`;
         // Push loading message
         h.push({
           role: "assistant",
@@ -628,12 +632,15 @@ export default function UnifiedTrip({
         const params = new URLSearchParams({
           origin: card.to,
           destination: card.from,
-          departureDate: endDate,
+          departureDate: returnDate,
           format: "cards",
           direction: "return",
         });
         fetch(`/api/flights/search?${params}`)
-          .then((res) => res.json())
+          .then((res) => {
+            if (!res.ok) throw new Error(`API ${res.status}`);
+            return res.json();
+          })
           .then((data) => {
             if (!mountedRef.current) return;
             const h2 = [...historyRef.current];
@@ -655,7 +662,8 @@ export default function UnifiedTrip({
             historyRef.current = h2;
             setHistory([...h2]);
           })
-          .catch(() => {
+          .catch((err) => {
+            console.error("Return flight search failed:", err);
             if (!mountedRef.current) return;
             const h2 = [...historyRef.current];
             h2[loadingIndex] = {
