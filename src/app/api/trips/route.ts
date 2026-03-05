@@ -40,10 +40,14 @@ export async function GET(request: NextRequest) {
     const authToken = getTravellerAuthToken(
       (name) => request.cookies.get(name)?.value
     );
+    console.log("[Trips] hx_bearer_token present:", !!authToken, "token length:", authToken?.length ?? 0);
     if (authToken) {
       try {
+        console.log("[Trips] Fetching traveller trips from:", process.env.HX_TRAVELLER_API_URL || process.env.TRAVELLER_API_URL || "NO URL SET");
         const { trips: travellerTrips, error: travellerError } =
           await fetchTravellerTrips(authToken);
+
+        console.log("[Trips] Traveller API returned:", travellerTrips.length, "trips, error:", travellerError);
 
         if (travellerError) {
           console.warn("[Traveller API] Failed to fetch trips, using local only:", travellerError);
