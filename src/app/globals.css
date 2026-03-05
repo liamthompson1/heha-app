@@ -3041,3 +3041,98 @@ body {
   padding: 12px 16px;
   animation: fade-scale-in 0.3s var(--ease-standard) both;
 }
+
+/* ————————————————————————————————————————
+   Flight selector mobile compact
+   ———————————————————————————————————————— */
+@media (max-width: 639px) {
+  .flight-card {
+    padding: 10px 12px;
+  }
+  .flight-card-header {
+    margin-bottom: 6px;
+  }
+  .flight-card-airline-info {
+    gap: 5px;
+  }
+  .flight-card-logo {
+    width: 18px;
+    height: 18px;
+  }
+  .flight-card-airline {
+    font-size: 0.65rem;
+  }
+  .flight-card-number {
+    font-size: 0.65rem;
+  }
+  .flight-card-route {
+    margin-bottom: 6px;
+    gap: 4px;
+  }
+  .flight-card-time {
+    font-size: 0.85rem;
+  }
+  .flight-card-iata {
+    font-size: 0.6rem;
+  }
+  .flight-card-duration {
+    font-size: 0.55rem;
+  }
+  .flight-card-plane {
+    width: 10px;
+    height: 10px;
+  }
+  .flight-card-date {
+    font-size: 0.55rem;
+  }
+  .flight-card-badge {
+    font-size: 0.55rem;
+    padding: 1px 6px;
+  }
+  .flight-card-footer {
+    margin-top: -2px;
+  }
+
+  .flight-selector-inline {
+    max-height: 70vh;
+  }
+  .flight-selector-header {
+    padding: 10px 14px 8px;
+    gap: 8px;
+  }
+  .flight-selector-direction {
+    font-size: 0.6rem;
+    padding: 3px 8px;
+  }
+  .flight-selector-route {
+    font-size: 0.75rem;
+  }
+  .flight-selector-filters {
+    padding: 8px 14px;
+    gap: 8px;
+  }
+  .flight-selector-search {
+    padding: 8px 12px !important;
+    font-size: 0.8rem !important;
+  }
+  .flight-time-chip {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+  }
+  .flight-selector-count {
+    padding: 0 14px 4px;
+    font-size: 0.65rem;
+  }
+  .flight-selector-grid {
+    padding: 0 14px 8px;
+    gap: 8px;
+  }
+  .flight-selector-actions {
+    padding: 8px 14px;
+    gap: 8px;
+  }
+  .flight-selector-skip {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+}
