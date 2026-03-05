@@ -656,7 +656,7 @@ export default function UnifiedTrip({
             } else {
               h2[loadingIndex] = {
                 role: "assistant",
-                content: "No return flights found for that date. You can add them later.",
+                content: `Return flights from ${card.to} aren't available in our search (we cover UK departures). You can add your return flight details when booking.`,
               };
             }
             historyRef.current = h2;
