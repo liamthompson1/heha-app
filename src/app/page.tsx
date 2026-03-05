@@ -123,7 +123,7 @@ function Dashboard() {
 export default function Home() {
   const session = useSession();
 
-  if (session.loading) {
+  if (session.loading && session.authenticated) {
     return (
       <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20">
         <OrbField orbs={SUBTLE_ORBS} />
