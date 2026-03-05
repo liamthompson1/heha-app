@@ -50,10 +50,10 @@ function processHtml(html: string): string {
     }
   );
 
-  // 2. Wrap 2+ consecutive <img> tags in a grid container
+  // 2. Wrap 2+ consecutive <img> tags in a horizontal scroll container
   result = result.replace(
     /(<img\b[^>]*\/?>(\s*(<br\s*\/?>|<\/?p>|<\/?a[^>]*>)\s*)*<img\b[^>]*\/?>(\s*(<br\s*\/?>|<\/?p>|<\/?a[^>]*>)\s*<img\b[^>]*\/?>)*)/gi,
-    '<div class="stories-image-grid">$&</div>'
+    '<div class="stories-image-scroll">$&</div>'
   );
 
   return result;

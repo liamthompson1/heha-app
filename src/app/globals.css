@@ -2602,9 +2602,9 @@ body {
 }
 
 .stories-html-content img {
-  max-width: 100%;
   border-radius: 12px;
   margin: 0.5em 0;
+  height: auto;
 }
 
 /* Nav links as teal pills */
@@ -2620,18 +2620,33 @@ body {
   font-size: 0.8125rem;
 }
 
-/* Image grid for consecutive images */
-.stories-image-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+/* Horizontal scroll for consecutive images */
+.stories-image-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
   margin: 0.75em 0;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
-.stories-image-grid img {
-  width: 100%;
+.stories-image-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.stories-image-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.stories-image-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+.stories-image-scroll img {
+  flex-shrink: 0;
   border-radius: 12px;
-  object-fit: cover;
-  aspect-ratio: 16/10;
+  height: auto;
+  max-height: 200px;
+  width: auto;
+  scroll-snap-align: start;
   margin: 0;
 }
 
