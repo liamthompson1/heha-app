@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 interface OtpInputProps {
   length?: number;
@@ -11,6 +11,7 @@ interface OtpInputProps {
 export default function OtpInput({ length = 6, onChange, onSubmit }: OtpInputProps) {
   const [values, setValues] = useState<string[]>(Array(length).fill(""));
   const refs = useRef<(HTMLInputElement | null)[]>([]);
+  const hiddenRef = useRef<HTMLInputElement>(null);
 
   const focusIndex = useCallback(
     (i: number) => {
@@ -26,6 +27,33 @@ export default function OtpInput({ length = 6, onChange, onSubmit }: OtpInputPro
     },
     [onChange]
   );
+
+  // Distribute digits from a full string into cells
+  const distributeCode = useCallback(
+    (code: string) => {
+      const digits = code.replace(/\D/g, "").slice(0, length);
+      if (!digits) return;
+      const next = Array(length).fill("");
+      for (let i = 0; i < digits.length; i++) next[i] = digits[i];
+      update(next);
+      focusIndex(Math.min(digits.length, length - 1));
+    },
+    [length, update, focusIndex]
+  );
+
+  // Watch the hidden autofill input for iOS filling it
+  useEffect(() => {
+    const el = hiddenRef.current;
+    if (!el) return;
+    const observer = new MutationObserver(() => {
+      if (el.value) {
+        distributeCode(el.value);
+        el.value = "";
+      }
+    });
+    observer.observe(el, { attributes: true, attributeFilter: ["value"] });
+    return () => observer.disconnect();
+  }, [distributeCode]);
 
   const handleChange = (i: number, v: string) => {
     const digit = v.replace(/\D/g, "").slice(-1);
@@ -46,16 +74,27 @@ export default function OtpInput({ length = 6, onChange, onSubmit }: OtpInputPro
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
-    if (!pasted) return;
-    const next = [...values];
-    for (let i = 0; i < pasted.length; i++) next[i] = pasted[i];
-    update(next);
-    focusIndex(Math.min(pasted.length, length - 1));
+    distributeCode(e.clipboardData.getData("text"));
   };
 
   return (
-    <div className="flex justify-center gap-3">
+    <div className="relative flex justify-center gap-3">
+      {/* Hidden input for iOS SMS autofill */}
+      <input
+        ref={hiddenRef}
+        type="text"
+        autoComplete="one-time-code"
+        inputMode="numeric"
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute opacity-0 w-0 h-0 pointer-events-none"
+        onChange={(e) => {
+          if (e.target.value) {
+            distributeCode(e.target.value);
+            e.target.value = "";
+          }
+        }}
+      />
       {values.map((v, i) => (
         <input
           key={i}
@@ -67,7 +106,6 @@ export default function OtpInput({ length = 6, onChange, onSubmit }: OtpInputPro
           onChange={(e) => handleChange(i, e.target.value)}
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={i === 0 ? handlePaste : undefined}
-          autoComplete="one-time-code"
           className="glass-otp-cell"
           aria-label={`Digit ${i + 1}`}
         />
