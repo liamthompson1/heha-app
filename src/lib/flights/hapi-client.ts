@@ -2,22 +2,23 @@ import type { HapiFlight, SearchFlightsParams } from "./types";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
 const HAPI_HOST =
-  process.env.HAPI_HOST || "https://hapi-staging.holidayextras.co.uk";
+  process.env.HAPI_HOST || "https://hapi.holidayextras.co.uk";
 
 export async function searchFlights(
   params: SearchFlightsParams
 ): Promise<HapiFlight[]> {
   const query = new URLSearchParams({
-    airport: params.origin,
-    arrivalAirport: params.destination,
-    departDate: params.departureDate,
-    ...(params.returnDate && { departDateTo: params.returnDate }),
+    location: params.origin,
+    destination: params.destination,
+    departure: params.departureDate,
+    ...(params.returnDate && { to: params.returnDate }),
     country: "GB",
-    size: "5000",
+    size: "50",
     sort: "true",
   });
 
-  const url = `${HAPI_HOST}/transport/flight?${query.toString()}`;
+  const url = `${HAPI_HOST}/transport/flights?${query.toString()}`;
+  console.log("[HAPI] Searching flights:", url);
 
   const response = await fetch(url);
 
@@ -43,7 +44,23 @@ export async function searchFlights(
     return [];
   }
 
-  return data as HapiFlight[];
+  // HAPI may return flights beyond the requested route — filter to exact match
+  const origin = params.origin.toUpperCase();
+  const destination = params.destination.toUpperCase();
+  const filtered = (data as HapiFlight[]).filter(
+    (f) =>
+      f.departure.airport_iata === origin &&
+      f.arrival.airport_iata === destination
+  );
+
+  if (filtered.length === 0 && data.length > 0) {
+    const sample = (data as HapiFlight[]).slice(0, 3).map((f) => `${f.departure.airport_iata}→${f.arrival.airport_iata}`);
+    console.log(`[HAPI] ${data.length} results but none match ${origin}→${destination}. Got: ${sample.join(", ")}`);
+  } else {
+    console.log(`[HAPI] ${data.length} total results, ${filtered.length} match ${origin}→${destination}`);
+  }
+
+  return filtered;
 }
 
 export async function saveFlightsToSupabase(
