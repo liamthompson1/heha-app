@@ -17,8 +17,7 @@ export default function AuthStatus() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       cache.clear();
-      router.push("/");
-      router.refresh();
+      window.location.href = "/";
     } catch {
       setLoggingOut(false);
     }
