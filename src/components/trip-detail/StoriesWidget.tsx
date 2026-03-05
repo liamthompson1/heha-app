@@ -50,11 +50,36 @@ function processHtml(html: string): string {
     }
   );
 
-  // 2. Wrap 2+ consecutive <img> tags in a horizontal scroll container
-  result = result.replace(
-    /(<img\b[^>]*\/?>(\s*(<br\s*\/?>|<\/?p>|<\/?a[^>]*>)\s*)*<img\b[^>]*\/?>(\s*(<br\s*\/?>|<\/?p>|<\/?a[^>]*>)\s*<img\b[^>]*\/?>)*)/gi,
-    '<div class="stories-image-scroll">$&</div>'
-  );
+  // 2. Wrap 2+ consecutive image-bearing elements in a horizontal scroll.
+  //    An "image element" is either a bare <img> or an <a> wrapping an <img>.
+  //    Split HTML into tokens, find runs of image elements, wrap them.
+  const imgToken = /(<a\b[^>]*>\s*<img\b[^>]*\/?\s*>\s*<\/a>|<img\b[^>]*\/?\s*>)/gi;
+  const separator = /^(\s|<br\s*\/?>|<\/?p>)*$/i;
+  const tokens = result.split(imgToken);
+  let out = "";
+  let run: string[] = [];
+  const flushRun = () => {
+    if (run.length >= 2) {
+      out += '<div class="stories-image-scroll">' + run.join("") + "</div>";
+    } else {
+      out += run.join("");
+    }
+    run = [];
+  };
+  for (const token of tokens) {
+    if (imgToken.test(token)) {
+      imgToken.lastIndex = 0;
+      run.push(token);
+    } else if (run.length > 0 && separator.test(token)) {
+      // whitespace/br/p between images — keep in the run
+      run.push(token);
+    } else {
+      flushRun();
+      out += token;
+    }
+  }
+  flushRun();
+  result = out;
 
   return result;
 }

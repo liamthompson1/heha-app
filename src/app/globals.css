@@ -2640,14 +2640,18 @@ body {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 2px;
 }
-.stories-image-scroll img {
+.stories-image-scroll > a,
+.stories-image-scroll > img {
   flex-shrink: 0;
+  scroll-snap-align: start;
+}
+.stories-image-scroll img {
   border-radius: 12px;
   height: auto;
   max-height: 200px;
   width: auto;
-  scroll-snap-align: start;
   margin: 0;
+  display: block;
 }
 
 /* Heading hierarchy within sections */
