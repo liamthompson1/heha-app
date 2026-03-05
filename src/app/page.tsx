@@ -198,7 +198,16 @@ export default function Home() {
           AI-powered trip planning that understands you. Tell us where you want to go — we&rsquo;ll handle the rest.
         </p>
 
-        <div className="page-enter stagger-5 mt-16 animate-bounce" style={{ color: "var(--text-tertiary)" }}>
+        <div className="page-enter stagger-4 mt-12 flex items-center gap-3">
+          <a href="#get-started" className="hero-cta-primary">
+            I&rsquo;m a human
+          </a>
+          <a href="#agents" className="hero-cta-outline">
+            I&rsquo;m an agent
+          </a>
+        </div>
+
+        <div className="page-enter stagger-5 mt-10 animate-bounce" style={{ color: "var(--text-tertiary)" }}>
           <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path d="M12 5v14M5 12l7 7 7-7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -206,7 +215,7 @@ export default function Home() {
       </section>
 
       {/* ── Get Started Section ── */}
-      <section className="landing-snap-section relative z-10 flex flex-col items-center justify-center px-6">
+      <section id="get-started" className="landing-snap-section relative z-10 flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-5xl mx-auto">
           <ScrollReveal className="text-center mb-16">
             <h2 className="text-3xl sm:text-5xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
@@ -315,7 +324,7 @@ export default function Home() {
       </section>
 
       {/* ── Agents Section + Footer ── */}
-      <section className="landing-snap-section relative z-10 flex flex-col items-center justify-center px-6">
+      <section id="agents" className="landing-snap-section relative z-10 flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-5xl mx-auto">
           <div className="grid gap-10 sm:grid-cols-2 items-center">
             <ScrollReveal variant="left">

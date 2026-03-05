@@ -1701,6 +1701,95 @@ body {
 }
 
 /* ——————————————————————————————————————
+   Hero CTA buttons (landing page)
+   —————————————————————————————————————— */
+
+.hero-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,99,89,0.45), rgba(240,180,41,0.3), rgba(46,205,193,0.4), rgba(90,200,250,0.35), rgba(137,68,229,0.4));
+  background-size: 300% 300%;
+  animation: pill-bg-shift 4s ease-in-out infinite, pill-glow-pulse 3s ease-in-out infinite;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  box-shadow:
+    0 0 20px rgba(255, 99, 89, 0.4),
+    0 0 40px rgba(46, 205, 193, 0.2),
+    0 0 60px rgba(137, 68, 229, 0.15);
+  transition: transform 0.25s var(--ease-spring), box-shadow 0.25s var(--ease-standard), border-color 0.25s;
+}
+
+.hero-cta-primary::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--siri-angle, 0deg),
+    #FF6359, #F0B429, #2ECDC1, #5AC8FA, #8944E5, #FF6359
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 1;
+  animation: pill-border-spin 3s linear infinite;
+}
+
+.hero-cta-primary:hover {
+  transform: scale(1.06);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 0 28px rgba(255, 99, 89, 0.55),
+    0 0 56px rgba(46, 205, 193, 0.35),
+    0 0 80px rgba(137, 68, 229, 0.25);
+}
+
+.hero-cta-primary:active {
+  transform: scale(0.97);
+}
+
+.hero-cta-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-standard);
+}
+
+.hero-cta-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hero-cta-outline:active {
+  transform: scale(0.97);
+}
+
+/* ——————————————————————————————————————
    Mobile: stack vertically, no overlap
    —————————————————————————————————————— */
 
