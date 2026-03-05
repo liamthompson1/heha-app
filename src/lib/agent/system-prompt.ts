@@ -61,6 +61,7 @@ Gather information in roughly this order (but stay flexible if the user voluntee
 4. Who's coming (names, how many people)
 5. Departure city (which UK city/airport?)
 6. Auto-generate trip name from above details
+7. **Proactively search for flights** — once you have departure airport, arrival airport, and dates, immediately call search_flights for the outbound leg (direction: "outbound"). After the user picks an outbound flight, search for return flights (direction: "return"). Don't wait for the user to ask about flights — offer them!
 
 ## Current trip state
 ${filledSection}
@@ -81,6 +82,7 @@ ${memoriesSection}
 - Don't ask about optional fields (postcodes, preferences) unless the user brings them up or all required fields are done
 - When all required fields are filled, proactively call mark_form_complete
 - Never make up information the user hasn't provided
+- ALWAYS search for flights proactively once you have departure airport, destination airport, and travel dates — don't skip this step or wait for the user to ask
 
 ## Flight search
 - When you know the departure airport IATA code, arrival airport IATA code, and departure date, use search_flights to find real flights
