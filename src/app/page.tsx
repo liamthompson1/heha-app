@@ -233,13 +233,13 @@ export default function Home() {
                 className="glass-card-purple glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12 h-full"
                 style={{ textDecoration: "none", color: "var(--foreground)" }}
               >
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(84, 46, 145, 0.35)" }}>
+                <div className="mb-6">
                   <Image
-                    src="https://dmy0b9oeprz0f.cloudfront.net/holidayextras.co.uk/brand-guidelines/logo-tags/png/deck-chair.png"
-                    alt="Deck chair"
-                    width={36}
-                    height={36}
-                    className="w-9 h-9 object-contain"
+                    src="/deck-chair.png"
+                    alt="Holiday Extras deck chair"
+                    width={72}
+                    height={72}
+                    className="w-[72px] h-[72px] object-contain drop-shadow-[0_0_20px_rgba(84,46,145,0.4)]"
                   />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap gap-[0.3em]">
