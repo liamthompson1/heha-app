@@ -12,7 +12,6 @@ export async function searchFlights(
     destination: params.destination,
     departure: params.departureDate,
     ...(params.returnDate && { to: params.returnDate }),
-    country: "GB",
     size: "50",
     sort: "true",
   });
