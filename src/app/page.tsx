@@ -230,22 +230,22 @@ export default function Home() {
             <ScrollReveal delay={100} className="h-full">
               <Link
                 href="/auth/entry"
-                className="glass-panel-elevated glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12 h-full"
+                className="glass-card-purple glass-card-hoverable flex flex-col items-center text-center p-10 sm:p-12 h-full"
                 style={{ textDecoration: "none", color: "var(--foreground)" }}
               >
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(90, 200, 250, 0.12)" }}>
-                  <svg width="28" height="28" fill="none" stroke="var(--blue)" strokeWidth="2" viewBox="0 0 24 24">
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-6" style={{ background: "rgba(84, 46, 145, 0.3)" }}>
+                  <svg width="28" height="28" fill="none" stroke="rgba(168, 130, 230, 1)" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap" style={{ gap: "0.15em" }}>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap" style={{ gap: "0.25em" }}>
                   Log in with
                   <Image
                     src="/holiday-extras-logo.png"
                     alt="Holiday Extras"
                     width={240}
                     height={48}
-                    className="inline-block h-[2em] w-auto"
+                    className="inline-block h-[1.8em] w-auto"
                   />
                 </h3>
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
