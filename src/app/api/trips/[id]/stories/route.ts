@@ -50,7 +50,10 @@ export async function GET(
     : `trips/${trip.traveller_trip_id}`;
 
   try {
-    const storiesUrl = `https://stories.holidayextras.com/${resourcePath}`;
+    const storiesUrl = `https://www.holidayextras.com/mfe/stories/${resourcePath}`;
+    console.log("[Stories API] Fetching:", storiesUrl);
+    console.log("[Stories API] API key present:", !!apiKey, "auth_session length:", authSession.length);
+
     const res = await fetch(storiesUrl, {
       headers: {
         Cookie: `auth_session=${authSession}`,
@@ -59,24 +62,23 @@ export async function GET(
       },
     });
 
+    const responseText = await res.text();
+    console.log("[Stories API] Status:", res.status, "Response length:", responseText.length, "Preview:", responseText.substring(0, 200));
+
     if (!res.ok) {
-      console.error(
-        "[Stories API] Failed:",
-        res.status,
-        await res.text().catch(() => "")
-      );
       return NextResponse.json(
-        { error: "Failed to fetch stories" },
+        { error: "Failed to fetch stories", status: res.status, detail: responseText.substring(0, 500) },
         { status: res.status }
       );
     }
 
-    const data = await res.json();
+    const data = JSON.parse(responseText);
     return NextResponse.json(data);
   } catch (err) {
-    console.error("[Stories API] Error:", err);
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[Stories API] Error:", message);
     return NextResponse.json(
-      { error: "Failed to fetch stories" },
+      { error: "Failed to fetch stories", detail: message },
       { status: 502 }
     );
   }
