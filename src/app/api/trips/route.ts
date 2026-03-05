@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createTripSchema } from "@/lib/validation/trip-schema";
 import { getSupabaseClient } from "@/lib/supabase/client";
-import { syncTripToTravellerApi } from "@/lib/traveller/client";
+import { syncTripToTravellerApi, fetchTravellerTrips, mapTravellerTripToLocal, getTravellerAuthToken } from "@/lib/traveller/client";
 import { getSession, getSessionCookieName, hashEmail } from "@/lib/auth/session";
 
 export async function GET(request: NextRequest) {
@@ -34,7 +34,53 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ trips: data });
+    let trips = data ?? [];
+
+    // If HX-authenticated, merge trips from the Traveller API
+    const authToken = getTravellerAuthToken(
+      (name) => request.cookies.get(name)?.value
+    );
+    if (authToken) {
+      try {
+        const { trips: travellerTrips, error: travellerError } =
+          await fetchTravellerTrips(authToken);
+
+        if (travellerError) {
+          console.warn("[Traveller API] Failed to fetch trips, using local only:", travellerError);
+        } else if (travellerTrips.length > 0) {
+          // Build a set of traveller_trip_ids already known locally
+          const knownTravellerIds = new Set(
+            trips
+              .map((t) => t.traveller_trip_id)
+              .filter(Boolean)
+          );
+
+          // Import new Traveller API trips that don't exist locally
+          const newTrips = travellerTrips.filter(
+            (tt) => !knownTravellerIds.has(tt.id)
+          );
+
+          if (newTrips.length > 0) {
+            const inserts = newTrips.map((tt) => mapTravellerTripToLocal(tt, userId));
+            const { data: inserted, error: insertError } = await supabase
+              .from("trips")
+              .insert(inserts)
+              .select();
+
+            if (insertError) {
+              console.error("[Traveller API] Failed to import trips:", insertError);
+            } else if (inserted) {
+              trips = [...inserted, ...trips];
+            }
+          }
+        }
+      } catch (err) {
+        // Never break the dashboard if the Traveller API is unreachable
+        console.warn("[Traveller API] Unexpected error during trip merge:", err);
+      }
+    }
+
+    return NextResponse.json({ trips });
   } catch (err) {
     console.error("GET /api/trips crashed:", err);
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -74,12 +120,14 @@ export async function POST(request: NextRequest) {
   const sessionUserId = session?.userId || (session?.email ? await hashEmail(session.email) : null);
   const userId = sessionUserId || validated.user_id;
 
-  // 3. Check for auth_session cookie → sync to Traveller API
-  const authSession = request.cookies.get("auth_session")?.value;
+  // 3. Check for auth_token cookie → sync to Traveller API
+  const authTokenForPost = getTravellerAuthToken(
+    (name) => request.cookies.get(name)?.value
+  );
   let travellerResult = { synced: false, trip_id: null as string | null, error: null as string | null };
 
-  if (authSession) {
-    travellerResult = await syncTripToTravellerApi(validated, authSession);
+  if (authTokenForPost) {
+    travellerResult = await syncTripToTravellerApi(validated, authTokenForPost);
   }
 
   // 4. Save to Supabase

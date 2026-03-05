@@ -16,6 +16,7 @@ import LocalKnowledgeWidget from "@/components/trip-detail/LocalKnowledgeWidget"
 import TravelersWidget from "@/components/trip-detail/TravelersWidget";
 import TripOverviewWidget from "@/components/trip-detail/TripOverviewWidget";
 import ContentLoadingSkeleton from "@/components/trip-detail/ContentLoadingSkeleton";
+import StoriesWidget from "@/components/trip-detail/StoriesWidget";
 import { formatDateRange } from "@/lib/format-date";
 
 export default function TripDetailPage() {
@@ -202,6 +203,13 @@ export default function TripDetailPage() {
             tripId={trip.id}
           />
         </ScrollReveal>
+
+        {/* HX Stories content */}
+        {trip.traveller_trip_id && (
+          <ScrollReveal delay={150}>
+            <StoriesWidget tripId={trip.id} />
+          </ScrollReveal>
+        )}
 
         {/* AI-generated content */}
         {contentLoading ? (

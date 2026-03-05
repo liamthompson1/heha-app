@@ -2529,3 +2529,80 @@ body {
 .delete-cancel-btn:hover {
   background: rgba(255, 255, 255, 0.1);
 }
+
+/* ——————————————————————————————————————
+   Stories Widget
+   —————————————————————————————————————— */
+
+.stories-section-card {
+  padding: 20px;
+  border-radius: var(--glass-radius);
+}
+
+.stories-back-btn {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
+  flex-shrink: 0;
+}
+
+.stories-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.stories-html-content {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.stories-html-content h3 {
+  font-weight: 600;
+  margin: 1em 0 0.5em;
+  color: var(--text-primary);
+}
+
+.stories-html-content p {
+  margin: 0.5em 0;
+}
+
+.stories-html-content a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.15s;
+}
+
+.stories-html-content a:hover {
+  opacity: 0.8;
+}
+
+.stories-html-content ul,
+.stories-html-content ol {
+  padding-left: 1.25em;
+  margin: 0.5em 0;
+}
+
+.stories-html-content li {
+  margin: 0.25em 0;
+}
+
+.stories-html-content strong {
+  color: var(--text-primary);
+}
+
+.stories-html-content img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 0.5em 0;
+}

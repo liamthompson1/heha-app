@@ -11,5 +11,17 @@ export async function POST() {
     maxAge: cookieOpts.maxAge,
   })
 
+  // Clear HX auth cookies
+  response.cookies.set('hx_auth_token', '', {
+    httpOnly: true,
+    path: '/',
+    maxAge: 0,
+  })
+  response.cookies.set('hx_bearer_token', '', {
+    httpOnly: true,
+    path: '/',
+    maxAge: 0,
+  })
+
   return response
 }
