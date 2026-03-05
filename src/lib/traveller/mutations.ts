@@ -32,19 +32,6 @@ export const GET_TRAVELLER_TRIPS_QUERY = `
         }
         outboundOriginPostCode
       }
-      pastTrips {
-        id
-        name
-        from
-        to
-        departureIATA
-        destinationIATA
-        storedAt
-        travellers {
-          travellerCount
-        }
-        outboundOriginPostCode
-      }
     }
   }
 `;

@@ -194,12 +194,10 @@ export async function fetchTravellerTrips(
     }
 
     const traveller = (json.data as Record<string, unknown>)?.getTraveller as
-      | { upcomingTrips?: TravellerTrip[]; pastTrips?: TravellerTrip[] }
+      | { upcomingTrips?: TravellerTrip[] }
       | undefined;
 
-    const upcoming = traveller?.upcomingTrips ?? [];
-    const past = traveller?.pastTrips ?? [];
-    const trips = [...upcoming, ...past];
+    const trips = traveller?.upcomingTrips ?? [];
 
     return { trips, error: null };
   } catch (err) {
