@@ -11,6 +11,7 @@ interface ToolResult {
   /** Per-tool result content to feed back to Claude (keyed by tool_use_id) */
   toolResults: Record<string, string>;
   flightCards?: FlightCardData[];
+  flightSearchParams?: { origin: string; destination: string; departureDate: string; returnDate?: string };
 }
 
 /** Deep-merge partial trip data updates into existing tripData */
@@ -144,6 +145,7 @@ export async function handleToolCalls(
   let formComplete = false;
   const toolResults: Record<string, string> = {};
   let flightCards: FlightCardData[] | undefined;
+  let flightSearchParams: ToolResult["flightSearchParams"];
 
   for (const block of toolUseBlocks) {
     switch (block.name) {
@@ -196,9 +198,8 @@ export async function handleToolCalls(
 
           const flightDirection = direction || "outbound";
 
-          // Return top 8 flights with references + build card data
-          const top = allFlights.slice(0, 8);
-          const topForClaude = top.map((f) => ({
+          // Give Claude a summary of top 5 flights (just enough context)
+          const topForClaude = allFlights.slice(0, 5).map((f) => ({
             airline: f.flight.carrier.name,
             flight_number: f.flight.code,
             from: `${f.departure.airport_iata} (${f.departure.city})`,
@@ -206,11 +207,10 @@ export async function handleToolCalls(
             departure: `${f.departure.date} ${f.departure.time}`,
             arrival: `${f.arrival.date} ${f.arrival.time}`,
             duration: f.flight.elapsed_time,
-            flight_reference: buildFlightReference(f),
           }));
 
-          // Build FlightCardData for UI
-          flightCards = top.map((f): FlightCardData => ({
+          // Build FlightCardData for UI — ALL flights, no slice
+          flightCards = allFlights.map((f): FlightCardData => ({
             airline: f.flight.carrier.name,
             flight_number: f.flight.code,
             from: f.departure.airport_iata,
@@ -226,9 +226,18 @@ export async function handleToolCalls(
             direction: flightDirection,
           }));
 
+          // Capture search params for client-side return flight fetch
+          flightSearchParams = {
+            origin,
+            destination,
+            departureDate: departure_date,
+            ...(return_date && { returnDate: return_date }),
+          };
+
           toolResults[block.id] = JSON.stringify({
             total_found: allFlights.length,
             flights: topForClaude,
+            note: "Full flight list shown in UI selector. User selects from there.",
           });
         } catch (err) {
           console.error("Flight search error:", err);
@@ -249,5 +258,5 @@ export async function handleToolCalls(
     }
   }
 
-  return { updatedTripData, memories, formComplete, toolResults, flightCards };
+  return { updatedTripData, memories, formComplete, toolResults, flightCards, flightSearchParams };
 }

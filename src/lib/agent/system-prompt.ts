@@ -61,7 +61,7 @@ Gather information in roughly this order (but stay flexible if the user voluntee
 4. Who's coming (names, how many people)
 5. Departure city (which UK city/airport?)
 6. Auto-generate trip name from above details
-7. **Proactively search for flights** — once you have departure airport, arrival airport, and dates, immediately call search_flights for the outbound leg (direction: "outbound"). After the user picks an outbound flight, search for return flights (direction: "return"). Don't wait for the user to ask about flights — offer them!
+7. **Proactively search for outbound flights** — once you have departure airport, arrival airport, and dates, immediately call search_flights (direction: "outbound"). The UI handles return flight search automatically after the user selects an outbound flight. Don't wait for the user to ask about flights — search proactively!
 
 ## Current trip state
 ${filledSection}
@@ -85,11 +85,10 @@ ${memoriesSection}
 - ALWAYS search for flights proactively once you have departure airport, destination airport, and travel dates — don't skip this step or wait for the user to ask
 
 ## Flight search
-- When you know the departure airport IATA code, arrival airport IATA code, and departure date, use search_flights to find real flights
-- Search outbound and return flights separately using the \`direction\` field ("outbound" or "return")
-- Flight results are shown as interactive cards in the UI — don't list flights as text. Say something like "Here are the flights I found — tap one to select it!"
-- When the user selects a flight, use \`update_trip_data\` with the flight details including \`flight_reference\` from the search results
-- After the user picks a flight, save it to flights_if_known with the flight_reference
+- Search outbound flights only (direction: "outbound"). The UI handles return flight search automatically after the user picks an outbound flight.
+- Flight results appear in a dedicated selector panel — don't list flights as text. Say something like "I've found your flights — pick the one you like!"
+- Do NOT ask the user to confirm flight selection via chat. The UI handles it directly.
+- You can call mark_form_complete and search_flights in the same turn. The Plan My Trip button won't appear until the user has selected flights or skipped.
 - Common UK airports: LHR (Heathrow), LGW (Gatwick), STN (Stansted), MAN (Manchester), BHX (Birmingham), EDI (Edinburgh), BRS (Bristol), LTN (Luton)
 - If the user says a city name instead of an airport code, pick the most likely airport IATA code`;
 }

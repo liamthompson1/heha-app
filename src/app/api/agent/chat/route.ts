@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
     let formComplete = false;
     let finalText = "";
     let allFlightCards: FlightCardData[] | undefined;
+    let allFlightSearchParams: AgentChatResponse["flightSearchParams"];
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
       const response = await anthropic.messages.create({
@@ -106,6 +107,7 @@ export async function POST(req: NextRequest) {
       allMemories.push(...toolResult.memories);
       if (toolResult.formComplete) formComplete = true;
       if (toolResult.flightCards?.length) allFlightCards = toolResult.flightCards;
+      if (toolResult.flightSearchParams) allFlightSearchParams = toolResult.flightSearchParams;
 
       // Feed tool results back into conversation for next round
       claudeMessages.push({
@@ -132,6 +134,7 @@ export async function POST(req: NextRequest) {
       memories: allMemories,
       formComplete,
       flightCards: allFlightCards,
+      flightSearchParams: allFlightSearchParams,
     };
 
     return NextResponse.json(result);

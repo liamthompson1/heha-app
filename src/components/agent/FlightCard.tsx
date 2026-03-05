@@ -8,7 +8,7 @@ interface FlightCardProps {
   onSelect: (card: FlightCardData) => void;
 }
 
-function FlightCard({ card, selected, onSelect }: FlightCardProps) {
+export default function FlightCard({ card, selected, onSelect }: FlightCardProps) {
   return (
     <button
       type="button"
@@ -42,26 +42,5 @@ function FlightCard({ card, selected, onSelect }: FlightCardProps) {
         {selected && <span className="flight-card-badge">Selected</span>}
       </div>
     </button>
-  );
-}
-
-interface FlightCardListProps {
-  cards: FlightCardData[];
-  selectedRef?: string;
-  onSelect: (card: FlightCardData) => void;
-}
-
-export default function FlightCardList({ cards, selectedRef, onSelect }: FlightCardListProps) {
-  return (
-    <div className="flight-cards-container">
-      {cards.map((card) => (
-        <FlightCard
-          key={card.flight_reference}
-          card={card}
-          selected={card.flight_reference === selectedRef}
-          onSelect={onSelect}
-        />
-      ))}
-    </div>
   );
 }

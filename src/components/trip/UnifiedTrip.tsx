@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, ChangeEvent } from "react";
-import type { TripData } from "@/types/trip";
+import type { TripData, Flight } from "@/types/trip";
 import type { ChatMessage, AgentChatResponse, SavedMemory, FlightCardData } from "@/types/agent";
 import AgentMessage from "@/components/agent/AgentMessage";
 import AgentThinking from "@/components/agent/AgentThinking";
+import FlightSelector from "@/components/agent/FlightSelector";
 import GlassButton from "@/components/GlassButton";
 
 interface UnifiedTripProps {
@@ -148,6 +149,12 @@ export default function UnifiedTrip({
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [conversationActive, setConversationActive] = useState(false);
   const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
+  const [flightPhase, setFlightPhase] = useState<"idle" | "outbound" | "return" | "done" | "skipped">("idle");
+  const [outboundFlights, setOutboundFlights] = useState<FlightCardData[]>([]);
+  const [returnFlights, setReturnFlights] = useState<FlightCardData[]>([]);
+  const [flightRouteLabel, setFlightRouteLabel] = useState("");
+  const [loadingReturnFlights, setLoadingReturnFlights] = useState(false);
+  const [lastSearchParams, setLastSearchParams] = useState<AgentChatResponse["flightSearchParams"]>();
 
   // --- Refs (stale-closure prevention) ---
   const historyRef = useRef(history);
@@ -315,6 +322,15 @@ export default function UnifiedTrip({
       onTripDataChangeRef.current(data.updatedTripData);
       if (data.memories.length > 0) setLastMemories(data.memories);
       if (data.formComplete) setFormComplete(true);
+
+      // When flight cards arrive, open the selector panel
+      if (data.flightCards && data.flightCards.length > 0) {
+        setOutboundFlights(data.flightCards);
+        setFlightPhase("outbound");
+        const first = data.flightCards[0];
+        setFlightRouteLabel(`${first.from} → ${first.to} · ${first.departure_date}`);
+        if (data.flightSearchParams) setLastSearchParams(data.flightSearchParams);
+      }
 
       const assistantMessage: ChatMessage = {
         role: "assistant",
@@ -559,14 +575,70 @@ export default function UnifiedTrip({
   }, [input]);
 
   // ————————————————————————————————————————
-  // Flight card selection
+  // Flight selection (client-side)
   // ————————————————————————————————————————
-  const handleFlightSelect = useCallback((card: FlightCardData) => {
-    if (thinkingRef.current) return;
-    sendMessageRef.current?.(
-      `I'd like the ${card.airline} ${card.flight_number} departing at ${card.departure_time}`,
-      false
-    );
+  const handleFlightConfirm = useCallback((card: FlightCardData) => {
+    const flight: Flight = {
+      airline: card.airline,
+      flight_number: card.flight_number,
+      departure_date: card.departure_date,
+      departure_time: card.departure_time,
+      arrival_date: card.arrival_date,
+      arrival_time: card.arrival_time,
+      from_airport: card.from,
+      to_airport: card.to,
+      direction: card.direction,
+      flight_reference: card.flight_reference,
+    };
+
+    const currentData = tripDataRef.current;
+    const updatedFlights = [...(currentData.flights_if_known || []), flight];
+    const updated = { ...currentData, flights_if_known: updatedFlights };
+    onTripDataChangeRef.current(updated);
+
+    if (card.direction === "outbound") {
+      // Check if we need return flights
+      const endDate = currentData.dates?.end_date;
+      if (endDate) {
+        setLoadingReturnFlights(true);
+        setFlightPhase("return");
+        setFlightRouteLabel(`${card.to} → ${card.from} · ${endDate}`);
+
+        // Fetch return flights client-side
+        const params = new URLSearchParams({
+          origin: card.to,
+          destination: card.from,
+          departureDate: endDate,
+          format: "cards",
+          direction: "return",
+        });
+        fetch(`/api/flights/search?${params}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.flights?.length > 0) {
+              setReturnFlights(data.flights);
+            } else {
+              setFlightPhase("done");
+            }
+          })
+          .catch(() => {
+            setFlightPhase("done");
+          })
+          .finally(() => {
+            setLoadingReturnFlights(false);
+          });
+      } else {
+        // One-way trip
+        setFlightPhase("done");
+      }
+    } else {
+      // Return flight confirmed
+      setFlightPhase("done");
+    }
+  }, []);
+
+  const handleFlightSkip = useCallback(() => {
+    setFlightPhase("skipped");
   }, []);
 
   // ————————————————————————————————————————
@@ -615,7 +687,6 @@ export default function UnifiedTrip({
             }
             imagePreview={msg._preview}
             flightCards={msg.flightCards}
-            onFlightSelect={handleFlightSelect}
           />
         ))}
 
@@ -641,114 +712,141 @@ export default function UnifiedTrip({
         <div ref={bottomRef} />
       </div>
 
-      {/* ——— Input bar (fixed to bottom with morph animation) ——— */}
-      {formComplete ? (
-        <div ref={floatingRef} className="unified-input-floating">
-          <GlassButton variant="coral" className="w-full" onClick={onComplete}>
-            {editMode ? "Save Changes" : "Plan My Trip"}
-          </GlassButton>
-        </div>
-      ) : (
-        <div ref={floatingRef} className="unified-input-floating">
-          {/* Pending image preview strip */}
-          {pendingImage && (
-            <div className="image-preview-strip">
-              <img src={pendingImage.preview} alt="Pending upload" />
+      {/* ——— Bottom bar: three-way conditional ——— */}
+      {(() => {
+        const showSelector = flightPhase === "outbound" || flightPhase === "return";
+        const showButton = formComplete && (
+          flightPhase === "done" || flightPhase === "skipped" ||
+          (flightPhase === "idle" && tripData.how_we_are_travelling !== "Flying")
+        );
+
+        if (showSelector) {
+          return (
+            <div ref={floatingRef} className="unified-input-floating">
+              <FlightSelector
+                phase={flightPhase as "outbound" | "return"}
+                flights={flightPhase === "outbound" ? outboundFlights : returnFlights}
+                routeLabel={flightRouteLabel}
+                onConfirm={handleFlightConfirm}
+                onSkip={handleFlightSkip}
+                loading={loadingReturnFlights}
+              />
+            </div>
+          );
+        }
+
+        if (showButton) {
+          return (
+            <div ref={floatingRef} className="unified-input-floating">
+              <GlassButton variant="coral" className="w-full" onClick={onComplete}>
+                {editMode ? "Save Changes" : "Plan My Trip"}
+              </GlassButton>
+            </div>
+          );
+        }
+
+        return (
+          <div ref={floatingRef} className="unified-input-floating">
+            {/* Pending image preview strip */}
+            {pendingImage && (
+              <div className="image-preview-strip">
+                <img src={pendingImage.preview} alt="Pending upload" />
+                <button
+                  type="button"
+                  className="image-preview-dismiss"
+                  onClick={() => setPendingImage(null)}
+                  aria-label="Remove image"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+            )}
+            <div className="unified-input-bar">
+              {/* Voice state indicator */}
+              {voiceState === "listening" && (
+                <span className="voice-listening-dot" />
+              )}
+
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageSelect}
+              />
+
               <button
                 type="button"
-                className="image-preview-dismiss"
-                onClick={() => setPendingImage(null)}
-                aria-label="Remove image"
+                className="image-icon-btn morph-btn-enter"
+                onClick={() => fileInputRef.current?.click()}
+                aria-label="Add image"
+                title="Add image"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
+                <PlusIcon />
+              </button>
+
+              <input
+                ref={inputRef}
+                type="text"
+                className="glass-input flex-1"
+                placeholder={
+                  voiceState === "listening"
+                    ? "Listening..."
+                    : voiceState === "processing"
+                      ? "Thinking..."
+                      : voiceState === "speaking"
+                        ? "Speaking..."
+                        : "Tell me about your trip..."
+                }
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onBlur={() => {
+                  // Safety net: force-reset position when keyboard dismisses
+                  setTimeout(() => {
+                    if (floatingRef.current) floatingRef.current.style.bottom = "";
+                  }, 100);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                disabled={voiceState !== "idle"}
+              />
+
+              <button
+                type="button"
+                className="voice-icon-btn morph-btn-enter"
+                data-state={voiceState}
+                data-conversation={conversationActive || undefined}
+                onClick={handleMicClick}
+                aria-label={micLabel}
+                title={micLabel}
+              >
+                {voiceState === "listening" && (
+                  <span className="voice-btn-pulse" />
+                )}
+                {conversationActive && voiceState !== "idle" ? (
+                  voiceState === "speaking" ? <WaveIconSmall /> : <StopIconSmall />
+                ) : voiceState === "speaking" ? (
+                  <WaveIconSmall />
+                ) : (
+                  <MicIconSmall />
+                )}
+              </button>
+
+              <button
+                type="button"
+                className="send-icon-btn morph-btn-enter"
+                onClick={handleSend}
+                disabled={(!input.trim() && !pendingImage) || thinking}
+                aria-label="Send"
+              >
+                <SendIcon />
               </button>
             </div>
-          )}
-          <div className="unified-input-bar">
-            {/* Voice state indicator */}
-            {voiceState === "listening" && (
-              <span className="voice-listening-dot" />
-            )}
-
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageSelect}
-            />
-
-            <button
-              type="button"
-              className="image-icon-btn morph-btn-enter"
-              onClick={() => fileInputRef.current?.click()}
-              aria-label="Add image"
-              title="Add image"
-            >
-              <PlusIcon />
-            </button>
-
-            <input
-              ref={inputRef}
-              type="text"
-              className="glass-input flex-1"
-              placeholder={
-                voiceState === "listening"
-                  ? "Listening..."
-                  : voiceState === "processing"
-                    ? "Thinking..."
-                    : voiceState === "speaking"
-                      ? "Speaking..."
-                      : "Tell me about your trip..."
-              }
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onBlur={() => {
-                // Safety net: force-reset position when keyboard dismisses
-                setTimeout(() => {
-                  if (floatingRef.current) floatingRef.current.style.bottom = "";
-                }, 100);
-              }}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              disabled={voiceState !== "idle"}
-            />
-
-            <button
-              type="button"
-              className="voice-icon-btn morph-btn-enter"
-              data-state={voiceState}
-              data-conversation={conversationActive || undefined}
-              onClick={handleMicClick}
-              aria-label={micLabel}
-              title={micLabel}
-            >
-              {voiceState === "listening" && (
-                <span className="voice-btn-pulse" />
-              )}
-              {conversationActive && voiceState !== "idle" ? (
-                voiceState === "speaking" ? <WaveIconSmall /> : <StopIconSmall />
-              ) : voiceState === "speaking" ? (
-                <WaveIconSmall />
-              ) : (
-                <MicIconSmall />
-              )}
-            </button>
-
-            <button
-              type="button"
-              className="send-icon-btn morph-btn-enter"
-              onClick={handleSend}
-              disabled={(!input.trim() && !pendingImage) || thinking}
-              aria-label="Send"
-            >
-              <SendIcon />
-            </button>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

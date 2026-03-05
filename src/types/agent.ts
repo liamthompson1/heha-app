@@ -45,4 +45,5 @@ export interface AgentChatResponse {
   memories: SavedMemory[];
   formComplete: boolean;
   flightCards?: FlightCardData[];
+  flightSearchParams?: { origin: string; destination: string; departureDate: string; returnDate?: string };
 }
