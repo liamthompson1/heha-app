@@ -28,24 +28,32 @@ function parseStoriesHtml(html: string): Section[] {
     .filter(Boolean) as Section[];
 }
 
-/** Process HTML: external link targets, nav link classes, image grids */
+/** Regex to detect story-navigation links: any href containing trips/{id}/{subPath} */
+const TRIPS_PATH_RE = /trips\/[^/]+\/.+/;
+
+/** Process HTML: classify links, wrap image grids */
 function processHtml(html: string): string {
-  // 1. External links: add target="_blank"
+  // 1. Classify links in a single pass
   let result = html.replace(
-    /<a\s+href="(https?:\/\/[^"]+)"/g,
-    '<a href="$1" target="_blank" rel="noopener noreferrer"'
+    /<a\s+href="([^"]+)"/g,
+    (_match, href: string) => {
+      // Any link with a trips/{id}/... path is an in-container nav link
+      if (TRIPS_PATH_RE.test(href)) {
+        return `<a href="${href}" class="stories-nav-link"`;
+      }
+      // Other http(s) links are truly external
+      if (/^https?:\/\//i.test(href)) {
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer"`;
+      }
+      // Leave other links (mailto, tel, etc.) as-is
+      return `<a href="${href}"`;
+    }
   );
 
-  // 2. Nav links: add pill class
+  // 2. Wrap 2+ consecutive <img> tags in a grid container
   result = result.replace(
-    /<a\s+href="(#nav\/[^"]+)"/g,
-    '<a href="$1" class="stories-nav-link"'
-  );
-
-  // 3. Wrap 2+ consecutive <img> tags in a grid container
-  result = result.replace(
-    /(<img\b[^>]*\/?>(\s*<img\b[^>]*\/?>)+)/g,
-    '<div class="stories-image-grid">$1</div>'
+    /(<img\b[^>]*\/?>(\s*(<br\s*\/?>|<\/?p>|<\/?a[^>]*>)\s*)*<img\b[^>]*\/?>(\s*(<br\s*\/?>|<\/?p>|<\/?a[^>]*>)\s*<img\b[^>]*\/?>)*)/gi,
+    '<div class="stories-image-grid">$&</div>'
   );
 
   return result;
@@ -85,7 +93,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
     fetchStories();
   }, [fetchStories]);
 
-  // Intercept clicks on nav links (#nav/...)
+  // Intercept clicks on story nav links (any link containing trips/{id}/{subPath})
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -97,19 +105,17 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       const href = anchor.getAttribute("href");
       if (!href) return;
 
-      // Handle nav links
-      if (href.startsWith("#nav/")) {
+      // Extract trips/{id}/{subPath} from any href format:
+      //   #nav/trips/{id}/path, nav/trips/{id}/path,
+      //   https://example.com/trips/{id}/path, trips/{id}/path
+      const match = href.match(/trips\/[^/]+\/(.+?)(?:\?|$)/);
+      if (match) {
         e.preventDefault();
-        // Extract the resource path after #nav/
-        const fullPath = href.slice(5).split("?")[0]; // strip tracking params
-        // Extract sub-path after "trips/{tripId}/"
-        const match = fullPath.match(/^trips\/[^/]+\/(.+)$/);
-        if (match) {
-          setTransitioning(true);
-          setNavStack((prev) => [...prev, match[1]]);
-          fetchStories(match[1]).then(() => setTransitioning(false));
-          containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        const subPath = match[1];
+        setTransitioning(true);
+        setNavStack((prev) => [...prev, subPath]);
+        fetchStories(subPath).then(() => setTransitioning(false));
+        containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     };
 
