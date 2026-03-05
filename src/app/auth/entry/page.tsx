@@ -96,13 +96,6 @@ export default function AuthEntryPage() {
   return (
     <PageShell backHref="/" centered>
       <div className="relative max-w-md mx-auto">
-        {/* Brand glow behind card */}
-        <div
-          className="absolute -inset-20 -z-10 blur-3xl"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(47,149,243,0.35) 0%, rgba(105,30,225,0.20) 50%, transparent 75%)',
-          }}
-        />
         <GlassCard shimmer elevated>
           <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold text-center mb-2">
             Welcome
