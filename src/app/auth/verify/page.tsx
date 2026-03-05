@@ -112,7 +112,7 @@ function VerifyForm() {
         </p>
 
         <div className="page-enter stagger-3 mb-8">
-          <OtpInput length={6} onChange={setOtp} />
+          <OtpInput length={6} onChange={setOtp} onSubmit={handleVerify} />
         </div>
 
         {error && (
