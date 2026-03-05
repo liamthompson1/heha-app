@@ -100,7 +100,7 @@ function VerifyForm() {
       <div
         className="absolute -inset-20 -z-10 blur-3xl"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(105,30,225,0.35) 0%, rgba(47,149,243,0.20) 50%, transparent 75%)',
+          background: 'radial-gradient(ellipse at center, rgba(105,30,225,0.15) 0%, rgba(47,149,243,0.08) 50%, transparent 75%)',
         }}
       />
       <GlassCard shimmer elevated className="text-center">
