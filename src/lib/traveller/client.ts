@@ -30,13 +30,14 @@ export interface TravellerTrip {
 }
 
 /**
- * Read the HX bearer token from a request.
+ * Read the HX auth cookies from a request.
+ * The gateway authenticates via the auth_session cookie, not a Bearer header.
  * Returns null if not present (guest user).
  */
 export function getTravellerAuthToken(
   getCookie: (name: string) => string | undefined
 ): string | null {
-  return getCookie("hx_bearer_token") ?? null;
+  return getCookie("auth_session") ?? getCookie("hx_bearer_token") ?? null;
 }
 
 function getTravellerApiUrl(): string | undefined {
@@ -57,7 +58,7 @@ async function graphqlRequest(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Cookie: `auth_session=${authToken}`,
     },
     body: JSON.stringify({ query, variables }),
   });
