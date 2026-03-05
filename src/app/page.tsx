@@ -242,8 +242,8 @@ export default function Home() {
                     className="w-[72px] h-[72px] object-contain drop-shadow-[0_0_20px_rgba(84,46,145,0.4)]"
                   />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap gap-[0.3em]">
-                  Log in with{" "}
+                <h3 className="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center whitespace-nowrap">
+                  Log in with&nbsp;
                   <Image
                     src="/holiday-extras-logo.png"
                     alt="Holiday Extras"
