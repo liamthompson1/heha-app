@@ -235,7 +235,7 @@ export default function UnifiedTrip({
         chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
       }
     });
-  }, [history, thinking]);
+  }, [history, thinking, flightPhase]);
 
   // Auto-focus input after morph animation (desktop only — avoids keyboard pop on mobile)
   useEffect(() => {
@@ -673,7 +673,8 @@ export default function UnifiedTrip({
       {/* ——— Chat thread (absolute so it sizes to parent's flex allocation, not content) ——— */}
       <div
         ref={chatRef}
-        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6 pb-20"
+        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6"
+        style={{ paddingBottom: (flightPhase === "outbound" || flightPhase === "return") ? "75vh" : "5rem" }}
       >
         {history.map((msg, i) => (
           <AgentMessage
