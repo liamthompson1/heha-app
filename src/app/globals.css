@@ -2669,3 +2669,146 @@ body {
   opacity: 0.4;
   pointer-events: none;
 }
+
+/* ————————————————————————————————————————
+   Flight Cards
+   ———————————————————————————————————————— */
+
+.flight-cards-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 12px 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.flight-cards-container::-webkit-scrollbar {
+  display: none;
+}
+
+.flight-card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius-xs);
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard), transform 0.15s var(--ease-standard);
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.flight-card:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-2px);
+}
+
+.flight-card-selected {
+  border-color: var(--teal);
+  box-shadow: 0 0 24px rgba(46, 205, 193, 0.15);
+}
+
+.flight-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.flight-card-airline {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
+}
+
+.flight-card-number {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--teal);
+}
+
+.flight-card-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.flight-card-endpoint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.flight-card-time {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.flight-card-iata {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.flight-card-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.flight-card-duration {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+}
+
+.flight-card-line {
+  width: 100%;
+  height: 1px;
+  background: var(--glass-border);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flight-card-plane {
+  position: absolute;
+  color: var(--text-secondary);
+  width: 14px;
+  height: 14px;
+  transform: rotate(90deg);
+}
+
+.flight-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flight-card-date {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+}
+
+.flight-card-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--teal);
+  background: rgba(46, 205, 193, 0.12);
+  padding: 2px 8px;
+  border-radius: 999px;
+}

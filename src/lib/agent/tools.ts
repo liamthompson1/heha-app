@@ -69,6 +69,7 @@ export const agentTools: Anthropic.Tool[] = [
               from_airport: { type: "string" },
               to_airport: { type: "string" },
               direction: { type: "string", enum: ["outbound", "return"] },
+              flight_reference: { type: "string", description: "Base64 flight reference from search results" },
             },
           },
         },
@@ -143,6 +144,11 @@ export const agentTools: Anthropic.Tool[] = [
         return_date: {
           type: "string",
           description: "Return date in YYYY-MM-DD format (optional — for return flights)",
+        },
+        direction: {
+          type: "string",
+          enum: ["outbound", "return"],
+          description: "Whether this is an outbound or return flight search",
         },
       },
       required: ["origin", "destination", "departure_date"],

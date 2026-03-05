@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback, ChangeEvent } from "react";
 import type { TripData } from "@/types/trip";
-import type { ChatMessage, AgentChatResponse, SavedMemory } from "@/types/agent";
+import type { ChatMessage, AgentChatResponse, SavedMemory, FlightCardData } from "@/types/agent";
 import AgentMessage from "@/components/agent/AgentMessage";
 import AgentThinking from "@/components/agent/AgentThinking";
 import GlassButton from "@/components/GlassButton";
@@ -319,6 +319,7 @@ export default function UnifiedTrip({
       const assistantMessage: ChatMessage = {
         role: "assistant",
         content: data.message,
+        flightCards: data.flightCards,
       };
       historyRef.current = [...historyRef.current, assistantMessage];
       setHistory([...historyRef.current]);
@@ -558,6 +559,17 @@ export default function UnifiedTrip({
   }, [input]);
 
   // ————————————————————————————————————————
+  // Flight card selection
+  // ————————————————————————————————————————
+  const handleFlightSelect = useCallback((card: FlightCardData) => {
+    if (thinkingRef.current) return;
+    sendMessageRef.current?.(
+      `I'd like the ${card.airline} ${card.flight_number} departing at ${card.departure_time}`,
+      false
+    );
+  }, []);
+
+  // ————————————————————————————————————————
   // Visual card tap
   // ————————————————————————————————————————
   const handleVisualSelect = useCallback((value: string) => {
@@ -602,6 +614,8 @@ export default function UnifiedTrip({
                 : undefined
             }
             imagePreview={msg._preview}
+            flightCards={msg.flightCards}
+            onFlightSelect={handleFlightSelect}
           />
         ))}
 

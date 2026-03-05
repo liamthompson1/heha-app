@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import type { AgentChatRequest, AgentChatResponse, SavedMemory } from "@/types/agent";
+import type { AgentChatRequest, AgentChatResponse, SavedMemory, FlightCardData } from "@/types/agent";
 import type { TripData } from "@/types/trip";
 import { agentTools } from "@/lib/agent/tools";
 import { buildSystemPrompt } from "@/lib/agent/system-prompt";
@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
     const allMemories: SavedMemory[] = [];
     let formComplete = false;
     let finalText = "";
+    let allFlightCards: FlightCardData[] | undefined;
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
       const response = await anthropic.messages.create({
@@ -104,6 +105,7 @@ export async function POST(req: NextRequest) {
       currentTripData = toolResult.updatedTripData;
       allMemories.push(...toolResult.memories);
       if (toolResult.formComplete) formComplete = true;
+      if (toolResult.flightCards?.length) allFlightCards = toolResult.flightCards;
 
       // Feed tool results back into conversation for next round
       claudeMessages.push({
@@ -129,6 +131,7 @@ export async function POST(req: NextRequest) {
       updatedTripData: currentTripData,
       memories: allMemories,
       formComplete,
+      flightCards: allFlightCards,
     };
 
     return NextResponse.json(result);

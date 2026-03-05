@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createTripSchema } from "@/lib/validation/trip-schema";
 import { getSupabaseClient } from "@/lib/supabase/client";
-import { syncTripToTravellerApi, fetchTravellerTrips, mapTravellerTripToLocal, getTravellerAuthToken } from "@/lib/traveller/client";
+import { fetchTravellerTrips, mapTravellerTripToLocal, getTravellerAuthToken } from "@/lib/traveller/client";
+import { createHxTripViaDockYard } from "@/lib/traveller/dock-yard";
 import { getSession, getSessionCookieName, hashEmail } from "@/lib/auth/session";
 
 export async function GET(request: NextRequest) {
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
   let travellerResult = { synced: false, trip_id: null as string | null, error: null as string | null };
 
   if (authTokenForPost) {
-    travellerResult = await syncTripToTravellerApi(validated, authTokenForPost);
+    travellerResult = await createHxTripViaDockYard(validated, authTokenForPost);
   }
 
   // 4. Save to Supabase

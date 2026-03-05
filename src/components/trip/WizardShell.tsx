@@ -55,6 +55,7 @@ function mapTripDataToRequest(data: TripData, userId: string): CreateTripRequest
       arrival_airport: f.to_airport,
       departure_time: [f.departure_date, f.departure_time].filter(Boolean).join(" ") || undefined,
       arrival_time: [f.arrival_date, f.arrival_time].filter(Boolean).join(" ") || undefined,
+      flight_reference: f.flight_reference || undefined,
     })),
     journey_locations: {
       origin: data.journey_locations.travelling_from || undefined,

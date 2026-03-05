@@ -1,3 +1,19 @@
+export interface FlightCardData {
+  airline: string;
+  flight_number: string;
+  from: string;
+  from_city: string;
+  to: string;
+  to_city: string;
+  departure_date: string;
+  departure_time: string;
+  arrival_date: string;
+  arrival_time: string;
+  duration: string;
+  flight_reference: string;
+  direction: "outbound" | "return";
+}
+
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
@@ -6,6 +22,7 @@ export interface ChatMessage {
     mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
   };
   _preview?: string;
+  flightCards?: FlightCardData[];
 }
 
 export interface SavedMemory {
@@ -27,4 +44,5 @@ export interface AgentChatResponse {
   updatedTripData: import("./trip").TripData;
   memories: SavedMemory[];
   formComplete: boolean;
+  flightCards?: FlightCardData[];
 }

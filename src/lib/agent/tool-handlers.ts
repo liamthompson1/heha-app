@@ -1,7 +1,8 @@
 import type { TripData, Traveler, Flight } from "@/types/trip";
-import type { SavedMemory } from "@/types/agent";
+import type { SavedMemory, FlightCardData } from "@/types/agent";
 import { saveMemory } from "@/lib/supabase/memories";
 import { searchFlights } from "@/lib/flights/hapi-client";
+import { buildFlightReference } from "@/lib/flights/flight-reference";
 
 interface ToolResult {
   updatedTripData: TripData;
@@ -9,6 +10,7 @@ interface ToolResult {
   formComplete: boolean;
   /** Per-tool result content to feed back to Claude (keyed by tool_use_id) */
   toolResults: Record<string, string>;
+  flightCards?: FlightCardData[];
 }
 
 /** Deep-merge partial trip data updates into existing tripData */
@@ -92,6 +94,7 @@ function mergeTripData(
         from_airport: f.from_airport || "",
         to_airport: f.to_airport || "",
         direction: (f.direction as "outbound" | "return") || "outbound",
+        flight_reference: f.flight_reference || undefined,
       })
     );
   }
@@ -140,6 +143,7 @@ export async function handleToolCalls(
   const memories: SavedMemory[] = [];
   let formComplete = false;
   const toolResults: Record<string, string> = {};
+  let flightCards: FlightCardData[] | undefined;
 
   for (const block of toolUseBlocks) {
     switch (block.name) {
@@ -174,12 +178,13 @@ export async function handleToolCalls(
         break;
       }
       case "search_flights": {
-        const { origin, destination, departure_date, return_date } =
+        const { origin, destination, departure_date, return_date, direction } =
           block.input as {
             origin: string;
             destination: string;
             departure_date: string;
             return_date?: string;
+            direction?: "outbound" | "return";
           };
         try {
           const allFlights = await searchFlights({
@@ -189,8 +194,11 @@ export async function handleToolCalls(
             ...(return_date && { returnDate: return_date }),
           });
 
-          // Return top 8 flights so Claude can present options
-          const top = allFlights.slice(0, 8).map((f) => ({
+          const flightDirection = direction || "outbound";
+
+          // Return top 8 flights with references + build card data
+          const top = allFlights.slice(0, 8);
+          const topForClaude = top.map((f) => ({
             airline: f.flight.carrier.name,
             flight_number: f.flight.code,
             from: `${f.departure.airport_iata} (${f.departure.city})`,
@@ -198,11 +206,29 @@ export async function handleToolCalls(
             departure: `${f.departure.date} ${f.departure.time}`,
             arrival: `${f.arrival.date} ${f.arrival.time}`,
             duration: f.flight.elapsed_time,
+            flight_reference: buildFlightReference(f),
+          }));
+
+          // Build FlightCardData for UI
+          flightCards = top.map((f): FlightCardData => ({
+            airline: f.flight.carrier.name,
+            flight_number: f.flight.code,
+            from: f.departure.airport_iata,
+            from_city: f.departure.city,
+            to: f.arrival.airport_iata,
+            to_city: f.arrival.city,
+            departure_date: f.departure.date,
+            departure_time: f.departure.time,
+            arrival_date: f.arrival.date,
+            arrival_time: f.arrival.time,
+            duration: f.flight.elapsed_time,
+            flight_reference: buildFlightReference(f),
+            direction: flightDirection,
           }));
 
           toolResults[block.id] = JSON.stringify({
             total_found: allFlights.length,
-            flights: top,
+            flights: topForClaude,
           });
         } catch (err) {
           console.error("Flight search error:", err);
@@ -223,5 +249,5 @@ export async function handleToolCalls(
     }
   }
 
-  return { updatedTripData, memories, formComplete, toolResults };
+  return { updatedTripData, memories, formComplete, toolResults, flightCards };
 }

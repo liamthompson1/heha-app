@@ -84,9 +84,10 @@ ${memoriesSection}
 
 ## Flight search
 - When you know the departure airport IATA code, arrival airport IATA code, and departure date, use search_flights to find real flights
-- You can search outbound and return separately
-- Present the top 3-4 options clearly: airline, flight number, departure time → arrival time, duration
-- After the user picks a flight, use update_trip_data to save it to flights_if_known
+- Search outbound and return flights separately using the \`direction\` field ("outbound" or "return")
+- Flight results are shown as interactive cards in the UI — don't list flights as text. Say something like "Here are the flights I found — tap one to select it!"
+- When the user selects a flight, use \`update_trip_data\` with the flight details including \`flight_reference\` from the search results
+- After the user picks a flight, save it to flights_if_known with the flight_reference
 - Common UK airports: LHR (Heathrow), LGW (Gatwick), STN (Stansted), MAN (Manchester), BHX (Birmingham), EDI (Edinburgh), BRS (Bristol), LTN (Luton)
 - If the user says a city name instead of an airport code, pick the most likely airport IATA code`;
 }

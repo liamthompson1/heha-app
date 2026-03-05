@@ -27,6 +27,7 @@ const flightSchema = z.object({
   arrival_airport: z.string().min(1, "Arrival airport is required"),
   departure_time: z.string().optional(),
   arrival_time: z.string().optional(),
+  flight_reference: z.string().optional(),
 });
 
 const journeyLocationsSchema = z.object({
