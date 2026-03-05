@@ -94,11 +94,8 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
   }, [fetchStories]);
 
   // Intercept clicks on story nav links (any link containing trips/{id}/{subPath})
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleClick = (e: MouseEvent) => {
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest("a");
       if (!anchor) return;
 
@@ -117,11 +114,9 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
         fetchStories(subPath).then(() => setTransitioning(false));
         containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-    };
-
-    container.addEventListener("click", handleClick);
-    return () => container.removeEventListener("click", handleClick);
-  }, [fetchStories]);
+    },
+    [fetchStories]
+  );
 
   const handleBack = useCallback(() => {
     setTransitioning(true);
@@ -153,7 +148,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
   if (sections.length === 0) return null;
 
   return (
-    <div className="widget-section" ref={containerRef}>
+    <div className="widget-section" ref={containerRef} onClick={handleNavClick}>
       <div className="widget-header">
         {navStack.length > 0 && (
           <button
