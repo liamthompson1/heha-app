@@ -2606,3 +2606,52 @@ body {
   border-radius: 12px;
   margin: 0.5em 0;
 }
+
+/* Nav links as teal pills */
+.stories-nav-link {
+  display: inline-flex;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(46, 205, 193, 0.1);
+  border: 1px solid rgba(46, 205, 193, 0.25);
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.8125rem;
+}
+
+/* Image grid for consecutive images */
+.stories-image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 0.75em 0;
+}
+.stories-image-grid img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  aspect-ratio: 16/10;
+  margin: 0;
+}
+
+/* Heading hierarchy within sections */
+.stories-html-content h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 1.25em 0 0.5em;
+}
+.stories-html-content h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0.75em 0 0.25em;
+}
+
+/* Content fade transition */
+.stories-content {
+  transition: opacity 0.2s ease;
+}
+.stories-content-loading {
+  opacity: 0.4;
+  pointer-events: none;
+}

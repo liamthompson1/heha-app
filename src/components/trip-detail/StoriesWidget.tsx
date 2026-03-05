@@ -28,18 +28,34 @@ function parseStoriesHtml(html: string): Section[] {
     .filter(Boolean) as Section[];
 }
 
-/** Add target="_blank" to external links in the HTML */
-function processExternalLinks(html: string): string {
-  return html.replace(
+/** Process HTML: external link targets, nav link classes, image grids */
+function processHtml(html: string): string {
+  // 1. External links: add target="_blank"
+  let result = html.replace(
     /<a\s+href="(https?:\/\/[^"]+)"/g,
     '<a href="$1" target="_blank" rel="noopener noreferrer"'
   );
+
+  // 2. Nav links: add pill class
+  result = result.replace(
+    /<a\s+href="(#nav\/[^"]+)"/g,
+    '<a href="$1" class="stories-nav-link"'
+  );
+
+  // 3. Wrap 2+ consecutive <img> tags in a grid container
+  result = result.replace(
+    /(<img\b[^>]*\/?>(\s*<img\b[^>]*\/?>)+)/g,
+    '<div class="stories-image-grid">$1</div>'
+  );
+
+  return result;
 }
 
 export default function StoriesWidget({ tripId }: { tripId: string }) {
   const [data, setData] = useState<StoriesResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [navStack, setNavStack] = useState<string[]>([]);
+  const [transitioning, setTransitioning] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const fetchStories = useCallback(
@@ -89,8 +105,10 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
         // Extract sub-path after "trips/{tripId}/"
         const match = fullPath.match(/^trips\/[^/]+\/(.+)$/);
         if (match) {
+          setTransitioning(true);
           setNavStack((prev) => [...prev, match[1]]);
-          fetchStories(match[1]);
+          fetchStories(match[1]).then(() => setTransitioning(false));
+          containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }
     };
@@ -100,10 +118,12 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
   }, [fetchStories]);
 
   const handleBack = useCallback(() => {
+    setTransitioning(true);
     const newStack = navStack.slice(0, -1);
     setNavStack(newStack);
     const prevPath = newStack[newStack.length - 1];
-    fetchStories(prevPath);
+    fetchStories(prevPath).then(() => setTransitioning(false));
+    containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [navStack, fetchStories]);
 
   if (loading && !data) {
@@ -149,7 +169,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
           </span>
         )}
       </div>
-      <div className="space-y-4">
+      <div className={`space-y-4 stories-content${transitioning ? " stories-content-loading" : ""}`}>
         {sections.map((section, i) => (
           <div key={i} className="glass-panel stories-section-card">
             <h3
@@ -161,7 +181,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
             <div
               className="stories-html-content"
               dangerouslySetInnerHTML={{
-                __html: processExternalLinks(section.html),
+                __html: processHtml(section.html),
               }}
             />
           </div>
