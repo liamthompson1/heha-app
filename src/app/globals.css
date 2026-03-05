@@ -2607,17 +2607,10 @@ body {
   height: auto;
 }
 
-/* Nav links as teal pills */
+/* Nav links styled like regular content links */
 .stories-nav-link {
-  display: inline-flex;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(46, 205, 193, 0.1);
-  border: 1px solid rgba(46, 205, 193, 0.25);
   color: var(--teal);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.8125rem;
+  text-decoration: underline;
 }
 
 /* Horizontal scroll for consecutive images */
