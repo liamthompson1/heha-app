@@ -26,9 +26,9 @@ export async function GET(
     );
   }
 
-  // Get auth_token cookie for HX Stories API
-  const authToken = request.cookies.get("hx_auth_token")?.value;
-  if (!authToken) {
+  // Get auth cookies for HX Stories API
+  const authSession = request.cookies.get("auth_session")?.value;
+  if (!authSession) {
     return NextResponse.json(
       { error: "Not authenticated with HX" },
       { status: 401 }
@@ -53,7 +53,7 @@ export async function GET(
     const storiesUrl = `https://stories.holidayextras.com/${resourcePath}`;
     const res = await fetch(storiesUrl, {
       headers: {
-        Cookie: `auth_token=${authToken}`,
+        Cookie: `auth_session=${authSession}`,
         "x-api-key": apiKey,
         Accept: "application/json",
       },

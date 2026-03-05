@@ -68,21 +68,6 @@ export async function POST(request: Request) {
       response.headers.append('Set-Cookie', setCookie)
     }
 
-    // Extract auth_token from HX Set-Cookie headers and store as httpOnly cookie
-    const authTokenCookie = cookies.find((c) => c.startsWith('auth_token='))
-    if (authTokenCookie) {
-      const authTokenValue = authTokenCookie.split('=')[1]?.split(';')[0]
-      if (authTokenValue) {
-        response.cookies.set('hx_auth_token', authTokenValue, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          path: '/',
-          maxAge: 60 * 60 * 24 * 7, // 7 days
-        })
-      }
-    }
-
     // Store the firebaseToken so the Traveller API can authenticate server-side requests
     console.log("[Auth] OTP verify - firebaseToken present:", !!data.firebaseToken, "length:", data.firebaseToken?.length ?? 0)
     if (data.firebaseToken) {
