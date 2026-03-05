@@ -6,6 +6,7 @@ import type { ChatMessage, AgentChatResponse, SavedMemory, FlightCardData } from
 import AgentMessage from "@/components/agent/AgentMessage";
 import AgentThinking from "@/components/agent/AgentThinking";
 import FlightSelector from "@/components/agent/FlightSelector";
+import FlightConfirmation from "@/components/agent/FlightConfirmation";
 import GlassButton from "@/components/GlassButton";
 
 interface UnifiedTripProps {
@@ -149,12 +150,6 @@ export default function UnifiedTrip({
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [conversationActive, setConversationActive] = useState(false);
   const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
-  const [flightPhase, setFlightPhase] = useState<"idle" | "outbound" | "return" | "done" | "skipped">("idle");
-  const [outboundFlights, setOutboundFlights] = useState<FlightCardData[]>([]);
-  const [returnFlights, setReturnFlights] = useState<FlightCardData[]>([]);
-  const [flightRouteLabel, setFlightRouteLabel] = useState("");
-  const [loadingReturnFlights, setLoadingReturnFlights] = useState(false);
-  const [lastSearchParams, setLastSearchParams] = useState<AgentChatResponse["flightSearchParams"]>();
 
   // --- Refs (stale-closure prevention) ---
   const historyRef = useRef(history);
@@ -235,7 +230,7 @@ export default function UnifiedTrip({
         chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
       }
     });
-  }, [history, thinking, flightPhase]);
+  }, [history, thinking]);
 
   // Auto-focus input after morph animation (desktop only — avoids keyboard pop on mobile)
   useEffect(() => {
@@ -323,21 +318,27 @@ export default function UnifiedTrip({
       if (data.memories.length > 0) setLastMemories(data.memories);
       if (data.formComplete) setFormComplete(true);
 
-      // When flight cards arrive, open the selector panel
-      if (data.flightCards && data.flightCards.length > 0) {
-        setOutboundFlights(data.flightCards);
-        setFlightPhase("outbound");
-        const first = data.flightCards[0];
-        setFlightRouteLabel(`${first.from} → ${first.to} · ${first.departure_date}`);
-        if (data.flightSearchParams) setLastSearchParams(data.flightSearchParams);
-      }
-
       const assistantMessage: ChatMessage = {
         role: "assistant",
         content: data.message,
-        flightCards: data.flightCards,
       };
-      historyRef.current = [...historyRef.current, assistantMessage];
+      const newMessages: ChatMessage[] = [assistantMessage];
+
+      // When flight cards arrive, push an inline selector message
+      if (data.flightCards && data.flightCards.length > 0) {
+        const first = data.flightCards[0];
+        const routeLabel = `${first.from} → ${first.to} · ${first.departure_date}`;
+        newMessages.push({
+          role: "assistant",
+          content: "",
+          type: "flight-selector",
+          flightPhase: "outbound",
+          flightCards: data.flightCards,
+          routeLabel,
+        });
+      }
+
+      historyRef.current = [...historyRef.current, ...newMessages];
       setHistory([...historyRef.current]);
 
       // Speak response if voice was used
@@ -577,7 +578,7 @@ export default function UnifiedTrip({
   // ————————————————————————————————————————
   // Flight selection (client-side)
   // ————————————————————————————————————————
-  const handleFlightConfirm = useCallback((card: FlightCardData) => {
+  const handleFlightConfirm = useCallback((card: FlightCardData, selectorIndex: number) => {
     const flight: Flight = {
       airline: card.airline,
       flight_number: card.flight_number,
@@ -596,13 +597,32 @@ export default function UnifiedTrip({
     const updated = { ...currentData, flights_if_known: updatedFlights };
     onTripDataChangeRef.current(updated);
 
+    // Replace selector with confirmation card
+    const h = [...historyRef.current];
+    const selectorMsg = h[selectorIndex];
+    h[selectorIndex] = {
+      role: "assistant",
+      content: "",
+      type: "flight-confirmation",
+      confirmedFlight: card,
+      flightPhase: selectorMsg?.flightPhase || "outbound",
+    };
+
     if (card.direction === "outbound") {
-      // Check if we need return flights
       const endDate = currentData.dates?.end_date;
       if (endDate) {
-        setLoadingReturnFlights(true);
-        setFlightPhase("return");
-        setFlightRouteLabel(`${card.to} → ${card.from} · ${endDate}`);
+        const routeLabel = `${card.to} → ${card.from} · ${endDate}`;
+        // Push loading message
+        h.push({
+          role: "assistant",
+          content: "",
+          type: "flight-loading",
+          routeLabel,
+        });
+        historyRef.current = h;
+        setHistory([...h]);
+
+        const loadingIndex = h.length - 1;
 
         // Fetch return flights client-side
         const params = new URLSearchParams({
@@ -615,30 +635,53 @@ export default function UnifiedTrip({
         fetch(`/api/flights/search?${params}`)
           .then((res) => res.json())
           .then((data) => {
+            if (!mountedRef.current) return;
+            const h2 = [...historyRef.current];
             if (data.flights?.length > 0) {
-              setReturnFlights(data.flights);
+              h2[loadingIndex] = {
+                role: "assistant",
+                content: "",
+                type: "flight-selector",
+                flightPhase: "return",
+                flightCards: data.flights,
+                routeLabel,
+              };
             } else {
-              setFlightPhase("done");
+              h2[loadingIndex] = {
+                role: "assistant",
+                content: "No return flights found for that date. You can add them later.",
+              };
             }
+            historyRef.current = h2;
+            setHistory([...h2]);
           })
           .catch(() => {
-            setFlightPhase("done");
-          })
-          .finally(() => {
-            setLoadingReturnFlights(false);
+            if (!mountedRef.current) return;
+            const h2 = [...historyRef.current];
+            h2[loadingIndex] = {
+              role: "assistant",
+              content: "Couldn't search return flights. You can add them later.",
+            };
+            historyRef.current = h2;
+            setHistory([...h2]);
           });
-      } else {
-        // One-way trip
-        setFlightPhase("done");
+        return;
       }
-    } else {
-      // Return flight confirmed
-      setFlightPhase("done");
     }
+
+    // One-way or return confirmed — just update history
+    historyRef.current = h;
+    setHistory([...h]);
   }, []);
 
-  const handleFlightSkip = useCallback(() => {
-    setFlightPhase("skipped");
+  const handleFlightSkip = useCallback((selectorIndex: number) => {
+    const h = [...historyRef.current];
+    h[selectorIndex] = {
+      role: "assistant",
+      content: "Flights skipped — you can always add them later.",
+    };
+    historyRef.current = h;
+    setHistory([...h]);
   }, []);
 
   // ————————————————————————————————————————
@@ -673,23 +716,56 @@ export default function UnifiedTrip({
       {/* ——— Chat thread (absolute so it sizes to parent's flex allocation, not content) ——— */}
       <div
         ref={chatRef}
-        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6"
-        style={{ paddingBottom: (flightPhase === "outbound" || flightPhase === "return") ? "75vh" : "5rem" }}
+        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6 pb-20"
       >
-        {history.map((msg, i) => (
-          <AgentMessage
-            key={i}
-            role={msg.role === "user" ? "user" : "agent"}
-            text={msg.content}
-            memories={
-              msg.role === "assistant" && i === history.length - 1
-                ? lastMemories
-                : undefined
-            }
-            imagePreview={msg._preview}
-            flightCards={msg.flightCards}
-          />
-        ))}
+        {history.map((msg, i) => {
+          if (msg.type === "flight-selector" && msg.flightCards) {
+            return (
+              <FlightSelector
+                key={i}
+                phase={msg.flightPhase || "outbound"}
+                flights={msg.flightCards}
+                routeLabel={msg.routeLabel || ""}
+                onConfirm={(card) => handleFlightConfirm(card, i)}
+                onSkip={() => handleFlightSkip(i)}
+              />
+            );
+          }
+          if (msg.type === "flight-confirmation" && msg.confirmedFlight) {
+            return (
+              <FlightConfirmation
+                key={i}
+                card={msg.confirmedFlight}
+                direction={msg.flightPhase || "outbound"}
+              />
+            );
+          }
+          if (msg.type === "flight-loading") {
+            return (
+              <div key={i} className="flight-loading-inline">
+                <div className="thinking-dots">
+                  <span /><span /><span />
+                </div>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
+                  Searching return flights...
+                </p>
+              </div>
+            );
+          }
+          return (
+            <AgentMessage
+              key={i}
+              role={msg.role === "user" ? "user" : "agent"}
+              text={msg.content}
+              memories={
+                msg.role === "assistant" && i === history.length - 1
+                  ? lastMemories
+                  : undefined
+              }
+              imagePreview={msg._preview}
+            />
+          );
+        })}
 
         {thinking && <AgentThinking />}
 
@@ -713,28 +789,10 @@ export default function UnifiedTrip({
         <div ref={bottomRef} />
       </div>
 
-      {/* ——— Bottom bar: three-way conditional ——— */}
+      {/* ——— Bottom bar: two-way conditional ——— */}
       {(() => {
-        const showSelector = flightPhase === "outbound" || flightPhase === "return";
-        const showButton = formComplete && (
-          flightPhase === "done" || flightPhase === "skipped" ||
-          (flightPhase === "idle" && tripData.how_we_are_travelling !== "Flying")
-        );
-
-        if (showSelector) {
-          return (
-            <div ref={floatingRef} className="unified-input-floating">
-              <FlightSelector
-                phase={flightPhase as "outbound" | "return"}
-                flights={flightPhase === "outbound" ? outboundFlights : returnFlights}
-                routeLabel={flightRouteLabel}
-                onConfirm={handleFlightConfirm}
-                onSkip={handleFlightSkip}
-                loading={loadingReturnFlights}
-              />
-            </div>
-          );
-        }
+        const flightsDone = !history.some(m => m.type === "flight-selector" || m.type === "flight-loading");
+        const showButton = formComplete && flightsDone;
 
         if (showButton) {
           return (

@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
     if (format === "cards") {
       const cards: FlightCardData[] = flights.map((f) => ({
         airline: f.flight.carrier.name,
+        airline_code: f.flight.carrier.code,
         flight_number: f.flight.code,
         from: f.departure.airport_iata,
         from_city: f.departure.city,

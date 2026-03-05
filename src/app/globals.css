@@ -2711,7 +2711,6 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 60%;
 }
 
 .flight-card-number {
@@ -2799,33 +2798,34 @@ body {
 }
 
 /* ————————————————————————————————————————
-   Flight Selector Panel
+   Flight Selector Inline
    ———————————————————————————————————————— */
 
-@keyframes slide-up {
+@keyframes fade-scale-in {
   from {
-    transform: translateY(100%);
     opacity: 0;
+    transform: scale(0.97);
   }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: scale(1);
   }
 }
 
-.flight-selector-panel {
-  max-height: 70vh;
+.flight-selector-inline {
+  max-height: 60vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background: rgba(10, 10, 10, 0.97);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 20px 20px 0 0;
+  border-radius: var(--glass-radius);
   box-shadow:
     inset 0 0.5px 0 rgba(255, 255, 255, 0.12),
-    0 -8px 32px rgba(0, 0, 0, 0.5);
-  animation: slide-up 0.35s var(--ease-spring) both;
+    0 4px 24px rgba(0, 0, 0, 0.4);
+  animation: fade-scale-in 0.3s var(--ease-standard) both;
   overflow: hidden;
 }
 
@@ -2927,7 +2927,7 @@ body {
 }
 
 .flight-selector-actions {
-  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  padding: 12px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
@@ -2953,29 +2953,91 @@ body {
   color: var(--text-primary);
 }
 
-.flight-selector-loading {
+/* Flight card airline info (logo + name) */
+.flight-card-airline-info {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  gap: 12px;
+  gap: 6px;
+  min-width: 0;
+  max-width: 60%;
 }
 
-/* Compact flight summary badge in chat */
-.flight-summary-badge {
+.flight-card-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+/* Flight confirmation card */
+.flight-confirmation-card {
+  max-width: 80%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--teal);
+  border-radius: var(--glass-radius-xs);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fade-scale-in 0.3s var(--ease-standard) both;
+}
+
+.flight-confirmation-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.flight-confirmation-airline {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flight-confirmation-times {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.flight-confirmation-arrow {
+  color: var(--text-tertiary);
+}
+
+.flight-confirmation-duration {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+}
+
+.flight-confirmation-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--teal);
-  background: rgba(46, 205, 193, 0.10);
-  border: 1px solid rgba(46, 205, 193, 0.20);
-  padding: 4px 12px;
-  border-radius: 999px;
 }
 
-.flight-summary-badge::before {
-  content: "\2708";
+/* Flight loading inline (agent-bubble style) */
+.flight-loading-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 80%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--glass-radius-xs);
+  padding: 12px 16px;
+  animation: fade-scale-in 0.3s var(--ease-standard) both;
 }

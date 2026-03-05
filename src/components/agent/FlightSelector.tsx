@@ -13,7 +13,6 @@ interface FlightSelectorProps {
   routeLabel: string;
   onConfirm: (card: FlightCardData) => void;
   onSkip: () => void;
-  loading?: boolean;
 }
 
 export default function FlightSelector({
@@ -22,7 +21,6 @@ export default function FlightSelector({
   routeLabel,
   onConfirm,
   onSkip,
-  loading,
 }: FlightSelectorProps) {
   const [selectedRef, setSelectedRef] = useState<string | null>(null);
   const [filterText, setFilterText] = useState("");
@@ -57,27 +55,8 @@ export default function FlightSelector({
     setTimeFilter(timeFilter === t ? null : t);
   };
 
-  if (loading) {
-    return (
-      <div className="flight-selector-panel">
-        <div className="flight-selector-header">
-          <span className="flight-selector-direction">RETURN FLIGHT</span>
-          <span className="flight-selector-route">{routeLabel}</span>
-        </div>
-        <div className="flight-selector-loading">
-          <div className="thinking-dots">
-            <span /><span /><span />
-          </div>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
-            Searching return flights...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flight-selector-panel">
+    <div className="flight-selector-inline">
       {/* Header */}
       <div className="flight-selector-header">
         <span className="flight-selector-direction">

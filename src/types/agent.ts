@@ -1,5 +1,6 @@
 export interface FlightCardData {
   airline: string;
+  airline_code: string;
   flight_number: string;
   from: string;
   from_city: string;
@@ -22,7 +23,11 @@ export interface ChatMessage {
     mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
   };
   _preview?: string;
+  type?: "text" | "flight-selector" | "flight-confirmation" | "flight-loading";
+  flightPhase?: "outbound" | "return";
   flightCards?: FlightCardData[];
+  confirmedFlight?: FlightCardData;
+  routeLabel?: string;
 }
 
 export interface SavedMemory {

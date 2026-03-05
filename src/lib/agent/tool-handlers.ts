@@ -212,6 +212,7 @@ export async function handleToolCalls(
           // Build FlightCardData for UI — ALL flights, no slice
           flightCards = allFlights.map((f): FlightCardData => ({
             airline: f.flight.carrier.name,
+            airline_code: f.flight.carrier.code,
             flight_number: f.flight.code,
             from: f.departure.airport_iata,
             from_city: f.departure.city,

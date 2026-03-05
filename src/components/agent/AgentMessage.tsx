@@ -1,14 +1,13 @@
-import type { SavedMemory, FlightCardData } from "@/types/agent";
+import type { SavedMemory } from "@/types/agent";
 
 interface AgentMessageProps {
   role: "user" | "agent";
   text: string;
   memories?: SavedMemory[];
   imagePreview?: string;
-  flightCards?: FlightCardData[];
 }
 
-export default function AgentMessage({ role, text, memories, imagePreview, flightCards }: AgentMessageProps) {
+export default function AgentMessage({ role, text, memories, imagePreview }: AgentMessageProps) {
   return (
     <div className={`chat-bubble chat-bubble-${role}`}>
       {imagePreview && (
@@ -19,13 +18,6 @@ export default function AgentMessage({ role, text, memories, imagePreview, fligh
         />
       )}
       {text}
-      {flightCards && flightCards.length > 0 && (
-        <div className="mt-2">
-          <span className="flight-summary-badge">
-            {flightCards.length} flights found
-          </span>
-        </div>
-      )}
       {memories && memories.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
           {memories.map((m) => (

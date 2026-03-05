@@ -16,7 +16,18 @@ export default function FlightCard({ card, selected, onSelect }: FlightCardProps
       onClick={() => onSelect(card)}
     >
       <div className="flight-card-header">
-        <span className="flight-card-airline">{card.airline}</span>
+        <div className="flight-card-airline-info">
+          <img
+            src={`https://airlabs.co/img/airline/m/${card.airline_code}.png`}
+            className="flight-card-logo"
+            width={24}
+            height={24}
+            loading="lazy"
+            alt=""
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <span className="flight-card-airline">{card.airline}</span>
+        </div>
         <span className="flight-card-number">{card.flight_number}</span>
       </div>
       <div className="flight-card-route">
