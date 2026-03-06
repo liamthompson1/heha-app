@@ -274,8 +274,8 @@ export default function TripDetailPage() {
             </GlassButton>
           </div>
 
-          {/* Delete trip */}
-          <div className="flex justify-center pt-8">
+          {/* Delete trip + Log out */}
+          <div className="flex justify-center items-center gap-6 pt-8">
             {showDeleteConfirm ? (
               <div className="glass-panel delete-confirm-bar">
                 <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
@@ -298,12 +298,24 @@ export default function TripDetailPage() {
                 </div>
               </div>
             ) : (
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="delete-trip-btn"
-              >
-                Delete trip
-              </button>
+              <>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="delete-trip-btn"
+                >
+                  Delete trip
+                </button>
+                <span style={{ color: "var(--text-tertiary)" }}>·</span>
+                <button
+                  onClick={async () => {
+                    await fetch("/api/auth/logout", { method: "POST" });
+                    window.location.href = "/";
+                  }}
+                  className="delete-trip-btn"
+                >
+                  Log out
+                </button>
+              </>
             )}
           </div>
         </ScrollReveal>

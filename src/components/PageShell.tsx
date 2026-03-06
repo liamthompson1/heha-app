@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import OrbField, { type Orb, SUBTLE_ORBS } from "./OrbField";
 import BackLink from "./BackLink";
-import AuthStatus from "./AuthStatus";
+
 import LogoHeader from "./LogoHeader";
 
 interface PageShellProps {
@@ -39,7 +39,6 @@ export default function PageShell({
       <OrbField orbs={orbs} />
       <LogoHeader />
       {backHref && <BackLink href={backHref} />}
-      <AuthStatus />
       <main
         className={clsx(
           "page-enter relative z-10 w-full px-6 sm:px-10",
