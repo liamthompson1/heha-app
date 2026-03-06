@@ -105,12 +105,13 @@ const PEOPLE_CHIPS: ChipOption[] = [
 ];
 
 const UK_ORIGIN_CHIPS: ChipOption[] = [
-  { icon: "🏙", label: "London", value: "London" },
-  { icon: "🏙", label: "Manchester", value: "Manchester" },
-  { icon: "🏙", label: "Birmingham", value: "Birmingham" },
-  { icon: "🏙", label: "Edinburgh", value: "Edinburgh" },
-  { icon: "🏙", label: "Bristol", value: "Bristol" },
-  { icon: "🏙", label: "Glasgow", value: "Glasgow" },
+  { icon: "✈️", label: "Gatwick", value: "London Gatwick" },
+  { icon: "✈️", label: "Heathrow", value: "London Heathrow" },
+  { icon: "✈️", label: "Manchester", value: "Manchester Airport" },
+  { icon: "✈️", label: "Birmingham", value: "Birmingham Airport" },
+  { icon: "✈️", label: "Edinburgh", value: "Edinburgh Airport" },
+  { icon: "✈️", label: "Bristol", value: "Bristol Airport" },
+  { icon: "🚫", label: "Not flying", value: "Not flying" },
 ];
 
 interface PendingImage {
