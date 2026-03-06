@@ -54,7 +54,7 @@ function groupTripsByTimeframe(trips: TripRow[]): TripGroup[] {
   return groups;
 }
 
-function TripScrollRow({ group, staggerOffset }: { group: TripGroup; staggerOffset: number }) {
+function TripScrollRow({ group, staggerOffset, priorityCount }: { group: TripGroup; staggerOffset: number; priorityCount: number }) {
   return (
     <section className="mb-12">
       <div className="flex items-baseline justify-between mb-5 px-1">
@@ -71,6 +71,7 @@ function TripScrollRow({ group, staggerOffset }: { group: TripGroup; staggerOffs
             key={trip.id}
             trip={trip}
             size="standard"
+            priority={i < priorityCount}
             className={`page-enter stagger-${Math.min(i + staggerOffset, 6)} trip-scroll-card`}
           />
         ))}
@@ -83,13 +84,16 @@ export default function BentoTripGrid({ trips }: BentoTripGridProps) {
   const groups = groupTripsByTimeframe(trips);
 
   let staggerOffset = 1;
+  let priorityBudget = 4; // Eager-load first 4 card images (above the fold)
   return (
     <div>
       {groups.map((group) => {
         const offset = staggerOffset;
         staggerOffset += Math.min(group.trips.length, 3);
+        const pCount = Math.min(group.trips.length, priorityBudget);
+        priorityBudget -= pCount;
         return (
-          <TripScrollRow key={group.label} group={group} staggerOffset={offset} />
+          <TripScrollRow key={group.label} group={group} staggerOffset={offset} priorityCount={pCount} />
         );
       })}
     </div>

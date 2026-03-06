@@ -12,9 +12,11 @@ interface TripCardProps {
   trip: TripRow;
   size: TripCardSize;
   className?: string;
+  /** Load image eagerly (for above-the-fold cards) */
+  priority?: boolean;
 }
 
-export default function TripCard({ trip, size, className }: TripCardProps) {
+export default function TripCard({ trip, size, className, priority }: TripCardProps) {
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">(
     "loading"
   );
@@ -46,8 +48,9 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
         src={imgSrc}
         alt=""
         className="trip-card-img"
-        loading="lazy"
+        loading={priority ? "eager" : "lazy"}
         decoding="async"
+        fetchPriority={priority ? "high" : undefined}
         onLoad={(e) => {
           const img = e.target as HTMLImageElement;
           if (img.naturalWidth === 0) {

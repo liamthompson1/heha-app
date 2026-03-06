@@ -24,12 +24,14 @@ function getGreeting(): string {
   return "Good evening";
 }
 
-function Dashboard() {
+interface DashboardProps {
+  trips: TripRow[] | null;
+  loading: boolean;
+  error: string;
+}
+
+function Dashboard({ trips, loading, error }: DashboardProps) {
   const router = useRouter();
-  const { data: trips, loading, error } = useCachedFetch<TripRow[]>(
-    "/api/trips",
-    { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
-  );
 
   // Prefetch first few trip detail pages and warm caches
   useEffect(() => {
@@ -158,7 +160,22 @@ function Dashboard() {
 export default function Home() {
   const session = useSession();
 
-  if (session.loading && session.authenticated) {
+  // Fetch trips in parallel with session — API validates auth via cookie.
+  // Start immediately when session is loading (likely authenticated) or confirmed authenticated.
+  const shouldFetchTrips = session.loading || session.authenticated;
+  const { data: trips, loading: tripsLoading, error: tripsError } = useCachedFetch<TripRow[]>(
+    shouldFetchTrips ? "/api/trips" : null,
+    { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
+  );
+
+  // User confirmed unauthenticated and no cached trips
+  if (!session.loading && !session.authenticated) {
+    // Fall through to landing page below
+  } else if (session.authenticated || trips) {
+    // Session confirmed or trips already arrived — show dashboard
+    return <Dashboard trips={trips} loading={tripsLoading} error={tripsError} />;
+  } else if (session.loading) {
+    // Still loading session + trips in parallel — show skeleton
     return (
       <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20">
         <OrbField orbs={SUBTLE_ORBS} />
@@ -167,7 +184,6 @@ export default function Home() {
           <div className="glass-panel rounded-2xl h-12 w-56 mb-12" />
           <div className="prismatic-line w-full mb-12" style={{ opacity: 0.3 }} />
           <div>
-            {/* First section skeleton */}
             <section className="mb-12">
               <div className="flex items-baseline justify-between mb-5 px-1">
                 <div className="glass-panel rounded-lg h-6 w-28" />
@@ -182,29 +198,10 @@ export default function Home() {
                 </div>
               </div>
             </section>
-            {/* Second section skeleton */}
-            <section className="mb-12">
-              <div className="flex items-baseline justify-between mb-5 px-1">
-                <div className="glass-panel rounded-lg h-6 w-36" />
-                <div className="glass-panel rounded-lg h-4 w-14" />
-              </div>
-              <div className="trip-scroll-row">
-                <div className="trip-scroll-card trip-card trip-card-standard">
-                  <div className="trip-card-skeleton" />
-                </div>
-                <div className="trip-scroll-card trip-card trip-card-standard">
-                  <div className="trip-card-skeleton" />
-                </div>
-              </div>
-            </section>
           </div>
         </div>
       </div>
     );
-  }
-
-  if (session.authenticated) {
-    return <Dashboard />;
   }
 
   return (
