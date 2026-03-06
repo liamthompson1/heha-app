@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -163,10 +163,34 @@ export default function Home() {
   // Fetch trips in parallel with session — API validates auth via cookie.
   // Start immediately when session is loading (likely authenticated) or confirmed authenticated.
   const shouldFetchTrips = session.loading || session.authenticated;
-  const { data: trips, loading: tripsLoading, error: tripsError } = useCachedFetch<TripRow[]>(
+  const { data: trips, loading: tripsLoading, error: tripsError, mutate: mutateTrips } = useCachedFetch<TripRow[]>(
     shouldFetchTrips ? "/api/trips" : null,
     { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
   );
+
+  // Auto-retry once when authenticated user has empty trips (Traveller API may be slow)
+  const retriedRef = useRef(false);
+  useEffect(() => {
+    if (
+      session.authenticated &&
+      !tripsLoading &&
+      (!trips || trips.length === 0) &&
+      !retriedRef.current
+    ) {
+      retriedRef.current = true;
+      const timer = setTimeout(() => {
+        cache.del("/api/trips");
+        fetch("/api/trips")
+          .then((r) => r.json())
+          .then((data) => {
+            const fresh = (data as { trips?: TripRow[] }).trips ?? [];
+            if (fresh.length > 0) mutateTrips(fresh);
+          })
+          .catch(() => {});
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [session.authenticated, tripsLoading, trips, mutateTrips]);
 
   // User confirmed unauthenticated and no cached trips
   if (!session.loading && !session.authenticated) {

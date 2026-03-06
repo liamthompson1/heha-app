@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth/use-session";
+import * as cache from "@/lib/cache";
 import PageShell from "@/components/PageShell";
 import GlassCard from "@/components/GlassCard";
 import GlassButton from "@/components/GlassButton";
@@ -67,6 +68,8 @@ export default function AuthEntryPage() {
         return;
       }
 
+      cache.del("/api/auth/session");
+      cache.del("/api/trips");
       router.push("/");
     } catch {
       setError("Something went wrong. Please try again.");
