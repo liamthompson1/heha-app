@@ -8,10 +8,11 @@ interface TripHeroProps {
   tripType?: string;
   tripId: string;
   imageUrl?: string | null;
+  isHxTrip?: boolean;
   onDestinationChange?: (name: string) => void;
 }
 
-export default function TripHero({ destination, dateRange, tripType, tripId, imageUrl, onDestinationChange }: TripHeroProps) {
+export default function TripHero({ destination, dateRange, tripType, tripId, imageUrl, isHxTrip, onDestinationChange }: TripHeroProps) {
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">("loading");
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(destination);
@@ -55,6 +56,9 @@ export default function TripHero({ destination, dateRange, tripType, tripId, ima
         style={{ display: imgState === "error" ? "none" : "block" }}
       />
       <div className="trip-hero-overlay" />
+      {isHxTrip && (
+        <img src="/hx-sandcastle.png" alt="Holiday Extras" className="hx-badge hx-badge-hero" />
+      )}
       <div className="trip-hero-content">
         {tripType && (
           <p className="text-xs font-medium uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.5)" }}>

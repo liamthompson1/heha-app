@@ -61,6 +61,11 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
       {/* Overlay gradient for text readability */}
       <div className="trip-card-overlay" />
 
+      {/* HX badge */}
+      {trip.traveller_trip_id && (
+        <img src="/hx-sandcastle.png" alt="Holiday Extras" className="hx-badge" />
+      )}
+
       {/* Content */}
       <div className="trip-card-content">
         <h3

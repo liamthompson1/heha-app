@@ -180,6 +180,7 @@ export default function TripDetailPage() {
         tripType={trip.trip.trip_type}
         tripId={trip.id}
         imageUrl={trip.image_url}
+        isHxTrip={!!trip.traveller_trip_id}
         onDestinationChange={handleDestinationChange}
       />
 

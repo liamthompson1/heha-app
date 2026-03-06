@@ -2099,6 +2099,26 @@ body {
   background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
 }
 
+/* HX badge — top-right corner of trip cards and hero */
+.hx-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  z-index: 3;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+
+.hx-badge-hero {
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+}
+
 .trip-hero-content {
   position: absolute;
   bottom: 0;
