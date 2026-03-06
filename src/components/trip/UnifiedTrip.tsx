@@ -52,6 +52,51 @@ const DESTINATION_CHIPS: ChipOption[] = [
   { icon: "🇹🇷", label: "Turkey", value: "Turkey" },
 ];
 
+const CITY_CHIPS: Record<string, ChipOption[]> = {
+  Spain: [
+    { icon: "🏙", label: "Barcelona", value: "Barcelona, Spain" },
+    { icon: "🏙", label: "Madrid", value: "Madrid, Spain" },
+    { icon: "☀️", label: "Costa del Sol", value: "Costa del Sol, Spain" },
+    { icon: "🏝", label: "Mallorca", value: "Mallorca, Spain" },
+    { icon: "🏝", label: "Tenerife", value: "Tenerife, Spain" },
+    { icon: "🎉", label: "Ibiza", value: "Ibiza, Spain" },
+  ],
+  Portugal: [
+    { icon: "🏙", label: "Lisbon", value: "Lisbon, Portugal" },
+    { icon: "🏙", label: "Porto", value: "Porto, Portugal" },
+    { icon: "☀️", label: "Algarve", value: "Algarve, Portugal" },
+    { icon: "🏝", label: "Madeira", value: "Madeira, Portugal" },
+  ],
+  France: [
+    { icon: "🗼", label: "Paris", value: "Paris, France" },
+    { icon: "☀️", label: "Nice", value: "Nice, France" },
+    { icon: "🏙", label: "Lyon", value: "Lyon, France" },
+    { icon: "🏙", label: "Marseille", value: "Marseille, France" },
+  ],
+  Italy: [
+    { icon: "🏙", label: "Rome", value: "Rome, Italy" },
+    { icon: "🏙", label: "Milan", value: "Milan, Italy" },
+    { icon: "🏙", label: "Florence", value: "Florence, Italy" },
+    { icon: "☀️", label: "Amalfi Coast", value: "Amalfi Coast, Italy" },
+    { icon: "🏝", label: "Sicily", value: "Sicily, Italy" },
+    { icon: "🚤", label: "Venice", value: "Venice, Italy" },
+  ],
+  Greece: [
+    { icon: "🏙", label: "Athens", value: "Athens, Greece" },
+    { icon: "🏝", label: "Santorini", value: "Santorini, Greece" },
+    { icon: "🏝", label: "Crete", value: "Crete, Greece" },
+    { icon: "🏝", label: "Corfu", value: "Corfu, Greece" },
+    { icon: "🏝", label: "Rhodes", value: "Rhodes, Greece" },
+    { icon: "🏝", label: "Mykonos", value: "Mykonos, Greece" },
+  ],
+  Turkey: [
+    { icon: "🏙", label: "Istanbul", value: "Istanbul, Turkey" },
+    { icon: "☀️", label: "Antalya", value: "Antalya, Turkey" },
+    { icon: "🏙", label: "Bodrum", value: "Bodrum, Turkey" },
+    { icon: "🎈", label: "Cappadocia", value: "Cappadocia, Turkey" },
+  ],
+};
+
 const PEOPLE_CHIPS: ChipOption[] = [
   { icon: "🧑", label: "Just me", value: "Just me" },
   { icon: "👫", label: "Couple", value: "2 of us, a couple" },
@@ -119,10 +164,21 @@ function getDateChips(): ChipOption[] {
   return chips;
 }
 
+/** Country names we have city chips for */
+const COUNTRY_NAMES = new Set(Object.keys(CITY_CHIPS));
+
 /** Get suggestion chips based on which field is next needed */
-function getNextChips(tripData: TripData): ChipOption[] | null {
+function getNextChips(tripData: TripData, history: ChatMessage[]): ChipOption[] | null {
   if (!tripData.reason) return REASON_CHIPS;
-  if (!tripData.journey_locations?.travelling_to) return DESTINATION_CHIPS;
+  if (!tripData.journey_locations?.travelling_to) {
+    // Check if user already picked a country — show city chips instead
+    const lastUserMsg = [...history].reverse().find((m) => m.role === "user");
+    if (lastUserMsg) {
+      const text = lastUserMsg.content.trim();
+      if (COUNTRY_NAMES.has(text)) return CITY_CHIPS[text];
+    }
+    return DESTINATION_CHIPS;
+  }
   if (!tripData.dates?.start_date) return getDateChips();
   if (!tripData.people_travelling?.length) return PEOPLE_CHIPS;
   if (!tripData.journey_locations?.travelling_from) return UK_ORIGIN_CHIPS;
@@ -703,7 +759,7 @@ export default function UnifiedTrip({
   // ————————————————————————————————————————
   // Determine which suggestion chips to show
   // ————————————————————————————————————————
-  const chips = !thinking ? getNextChips(tripData) : null;
+  const chips = !thinking ? getNextChips(tripData, history) : null;
 
   // Get voice status text for the mic tooltip
   const micLabel = conversationActive
