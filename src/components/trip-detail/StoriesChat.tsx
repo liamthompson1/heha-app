@@ -177,7 +177,7 @@ export default function StoriesChat({
       {/* Message overlay — only visible when there are messages */}
       {messages.length > 0 && (
         <div className="stories-chat-overlay">
-          <div className="stories-chat-messages glass-panel">
+          <div className="stories-chat-messages">
             <button
               className="stories-chat-close"
               onClick={() => setMessages([])}

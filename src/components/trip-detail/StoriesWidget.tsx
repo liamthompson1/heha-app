@@ -293,13 +293,16 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       </div>
 
       {data.modelId && (
-        <StoriesChat
-          key={navStack.join("/")}
-          tripId={tripId}
-          modelId={data.modelId}
-          variables={data.variables}
-          storyText={data.text}
-        />
+        <>
+          <StoriesChat
+            key={navStack.join("/")}
+            tripId={tripId}
+            modelId={data.modelId}
+            variables={data.variables}
+            storyText={data.text}
+          />
+          <div className="stories-chat-spacer" />
+        </>
       )}
     </div>
   );

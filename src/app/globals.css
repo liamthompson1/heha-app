@@ -2701,11 +2701,21 @@ body {
   max-width: 640px;
   z-index: 40;
 }
+.stories-chat-floating .unified-input-bar {
+  background: rgba(20, 20, 22, 0.92);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+}
 @media (min-width: 640px) {
   .stories-chat-floating {
     bottom: calc(24px + env(safe-area-inset-bottom));
     width: calc(100% - 48px);
   }
+}
+
+/* Bottom padding so page content doesn't hide behind floating input */
+.stories-chat-spacer {
+  height: calc(72px + env(safe-area-inset-bottom));
 }
 
 .stories-chat-overlay {
@@ -2733,6 +2743,12 @@ body {
   gap: 8px;
   padding: 16px;
   position: relative;
+  background: rgba(20, 20, 22, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--glass-radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .stories-chat-close {

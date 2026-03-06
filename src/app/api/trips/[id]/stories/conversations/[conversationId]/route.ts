@@ -35,7 +35,7 @@ export async function POST(
   const sessionData = await getSession(
     request.cookies.get(getSessionCookieName())?.value
   );
-  const userHash = sessionData?.userHash ?? null;
+  const userHash = sessionData?.userHash?.slice(0, 8) ?? null;
 
   const apiKey = process.env.HX_STORIES_API_KEY;
   if (!apiKey) {
