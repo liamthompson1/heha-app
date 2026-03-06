@@ -128,6 +128,12 @@ export default function StoriesChat({
     if (!mountedRef.current) return;
     setVoiceState("speaking");
 
+    // Strip markdown so TTS reads only display text
+    const spoken = text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // [label](url) → label
+      .replace(/\*\*(.+?)\*\*/g, "$1")          // **bold** → bold
+      .replace(/\*(.+?)\*/g, "$1");              // *italic* → italic
+
     const controller = new AbortController();
     abortRef.current = controller;
 
@@ -135,7 +141,7 @@ export default function StoriesChat({
       const res = await fetch("/api/agent/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: spoken }),
         signal: controller.signal,
       });
 
