@@ -2690,6 +2690,123 @@ body {
   pointer-events: none;
 }
 
+/* Stories Chat */
+.stories-chat-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: rgba(46, 205, 193, 0.08);
+  border: 1px solid rgba(46, 205, 193, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
+}
+.stories-chat-toggle:hover {
+  background: rgba(46, 205, 193, 0.14);
+  transform: translateY(-1px);
+}
+
+.stories-chat-container {
+  margin-top: 16px;
+  border-radius: var(--glass-radius);
+  overflow: hidden;
+}
+
+.stories-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.stories-chat-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.stories-chat-close:hover {
+  color: var(--text-primary);
+}
+
+.stories-chat-messages {
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+  overflow-y: auto;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.stories-chat-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--glass-border);
+}
+.stories-chat-input .glass-input {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.stories-chat-send {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--teal);
+  color: #000;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.stories-chat-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Navigation chips for childResources */
+.stories-nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.stories-nav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: rgba(46, 205, 193, 0.08);
+  border: 1px solid rgba(46, 205, 193, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
+}
+.stories-nav-chip:hover {
+  background: rgba(46, 205, 193, 0.14);
+  transform: translateY(-1px);
+}
+
 /* ————————————————————————————————————————
    Flight Cards
    ———————————————————————————————————————— */

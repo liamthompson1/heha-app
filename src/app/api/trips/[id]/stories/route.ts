@@ -83,7 +83,11 @@ export async function GET(
     }
 
     const data = JSON.parse(responseText);
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+      headers: {
+        "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
+      },
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error("[Stories API] Error:", message);

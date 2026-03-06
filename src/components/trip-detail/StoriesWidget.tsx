@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import StoriesChat from "./StoriesChat";
 
 interface StoriesResponse {
   text: string;
+  title?: string;
   childResources?: Record<string, string>;
+  parentResources?: Record<string, string>;
   variables?: Record<string, string>;
+  modelId?: string | null;
 }
 
 interface Section {
@@ -82,6 +86,25 @@ function processHtml(html: string): string {
   result = out;
 
   return result;
+}
+
+/** Extract subPath and query params from a resource path like "trips/{id}/{subPath}?params" */
+function parseResourcePath(resourcePath: string): {
+  subPath: string;
+  params: Record<string, string>;
+} {
+  const match = resourcePath.match(/trips\/[^/]+\/(.+?)(?:\?(.*))?$/);
+  if (!match) return { subPath: "", params: {} };
+
+  const subPath = match[1];
+  const params: Record<string, string> = {};
+  if (match[2]) {
+    const sp = new URLSearchParams(match[2]);
+    sp.forEach((value, key) => {
+      params[key] = value;
+    });
+  }
+  return { subPath, params };
 }
 
 export default function StoriesWidget({ tripId }: { tripId: string }) {
@@ -161,8 +184,46 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
     [fetchStories]
   );
 
+  const handleChildResourceClick = useCallback(
+    (resourcePath: string) => {
+      const { subPath, params } = parseResourcePath(resourcePath);
+      if (!subPath) return;
+
+      // Merge params into accumulated
+      Object.assign(accumulatedParams.current, params);
+
+      setTransitioning(true);
+      setNavStack((prev) => [...prev, subPath]);
+      fetchStories(subPath, { ...accumulatedParams.current }).then(() =>
+        setTransitioning(false)
+      );
+      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [fetchStories]
+  );
+
   const handleBack = useCallback(() => {
     setTransitioning(true);
+
+    // Use parentResources if available
+    if (data?.parentResources) {
+      const parentEntries = Object.entries(data.parentResources);
+      if (parentEntries.length > 0) {
+        const [, resourcePath] = parentEntries[0];
+        const { subPath, params } = parseResourcePath(resourcePath);
+        Object.assign(accumulatedParams.current, params);
+
+        const newStack = navStack.slice(0, -1);
+        setNavStack(newStack);
+        fetchStories(subPath || undefined, { ...accumulatedParams.current }).then(
+          () => setTransitioning(false)
+        );
+        containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+
+    // Fall back to navStack
     const newStack = navStack.slice(0, -1);
     setNavStack(newStack);
     const prevPath = newStack[newStack.length - 1];
@@ -170,7 +231,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       setTransitioning(false)
     );
     containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [navStack, fetchStories]);
+  }, [navStack, fetchStories, data?.parentResources]);
 
   if (loading && !data) {
     return (
@@ -192,6 +253,11 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
   const sections = parseStoriesHtml(data.text);
   if (sections.length === 0) return null;
 
+  const headerTitle = data.title || "Your Trip";
+  const childEntries = data.childResources
+    ? Object.entries(data.childResources)
+    : [];
+
   return (
     <div className="widget-section" ref={containerRef} onClick={handleNavClick}>
       <div className="widget-header">
@@ -205,7 +271,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
           </button>
         )}
         <span style={{ fontSize: "1.25rem" }}>&#127796;</span>
-        <h2 className="widget-title">Your Trip</h2>
+        <h2 className="widget-title">{headerTitle}</h2>
         {loading && (
           <span
             className="text-xs"
@@ -232,6 +298,33 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
             />
           </div>
         ))}
+
+        {childEntries.length > 0 && (
+          <div className="stories-nav-buttons">
+            {childEntries.map(([label, path]) => (
+              <button
+                key={label}
+                className="stories-nav-chip"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleChildResourceClick(path);
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {data.modelId !== undefined && (
+          <StoriesChat
+            key={navStack.join("/")}
+            tripId={tripId}
+            modelId={data.modelId}
+            variables={data.variables}
+            storyText={data.text}
+          />
+        )}
       </div>
     </div>
   );

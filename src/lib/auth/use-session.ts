@@ -7,6 +7,7 @@ interface SessionState {
   authenticated: boolean;
   email: string | null;
   userId: string | null;
+  userHash: string | null;
   loading: boolean;
 }
 
@@ -20,7 +21,7 @@ export function useSession(): SessionState {
   const [state, setState] = useState<SessionState>(
     cached
       ? { ...cached, loading: false }
-      : { authenticated: false, email: null, userId: null, loading: true }
+      : { authenticated: false, email: null, userId: null, userHash: null, loading: true }
   );
 
   useEffect(() => {
@@ -34,13 +35,14 @@ export function useSession(): SessionState {
           authenticated: !!data.authenticated,
           email: data.email ?? null,
           userId: data.userId ?? null,
+          userHash: data.userHash ?? null,
         };
         cache.set(CACHE_KEY, session);
         setState({ ...session, loading: false });
       })
       .catch(() => {
         if (cancelled) return;
-        setState({ authenticated: false, email: null, userId: null, loading: false });
+        setState({ authenticated: false, email: null, userId: null, userHash: null, loading: false });
       });
 
     return () => {
