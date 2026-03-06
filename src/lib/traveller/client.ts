@@ -297,19 +297,46 @@ export async function deleteTripFromTravellerApi(
 
 // --- Mapping helper: Traveller API Trip → local TripRow shape ---
 
+/** Normalize full ISO datetime to YYYY-MM-DD */
+function toDateOnly(iso: string): string {
+  return iso.includes("T") ? iso.split("T")[0] : iso;
+}
+
 export function mapTravellerTripToLocal(
   travellerTrip: TravellerTrip,
   userId: string
 ): Omit<TripRow, "id" | "created_at"> {
-  // Use the trip name or destination IATA as the destination display name
-  const destination = travellerTrip.name || travellerTrip.destinationIATA || "Unknown";
+  // Extract destination city from route name like "Gatwick to Amsterdam Schiphol"
+  let destination = travellerTrip.name || "";
+  if (destination.toLowerCase().includes(" to ")) {
+    destination = destination.split(/ to /i).pop()!.trim();
+  }
+  destination = destination || travellerTrip.destinationIATA || "Unknown";
+
+  const startDate = toDateOnly(travellerTrip.from);
+  const endDate = toDateOnly(travellerTrip.to ?? travellerTrip.from);
+
+  // Build flight skeletons from IATA codes if both are available
+  const flights: { departure_airport: string; arrival_airport: string; departure_date?: string }[] = [];
+  if (travellerTrip.departureIATA && travellerTrip.destinationIATA) {
+    flights.push({
+      departure_airport: travellerTrip.departureIATA,
+      arrival_airport: travellerTrip.destinationIATA,
+      departure_date: startDate,
+    });
+    flights.push({
+      departure_airport: travellerTrip.destinationIATA,
+      arrival_airport: travellerTrip.departureIATA,
+      departure_date: endDate,
+    });
+  }
 
   return {
     user_id: userId,
     trip: {
       destination,
-      start_date: travellerTrip.from,
-      end_date: travellerTrip.to ?? travellerTrip.from,
+      start_date: startDate,
+      end_date: endDate,
     },
     people_travelling: travellerTrip.travellers?.travellerCount
       ? Array.from({ length: travellerTrip.travellers.travellerCount }, (_, i) => ({
@@ -317,7 +344,7 @@ export function mapTravellerTripToLocal(
         }))
       : [{ name: "Traveller 1" }],
     preferences: {},
-    flights_if_known: [],
+    flights_if_known: flights,
     journey_locations: {
       origin: travellerTrip.outboundOriginPostCode,
     },

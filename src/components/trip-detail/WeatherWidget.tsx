@@ -25,8 +25,17 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
 
   const hasDates = !!(startDate && endDate);
 
-  const weatherUrl = hasDates && destination
-    ? `/api/weather?destination=${encodeURIComponent(destination)}&start=${startDate}&end=${endDate}`
+  // Extract city from route-style names like "Gatwick to Amsterdam Schiphol"
+  let weatherDest = destination;
+  if (weatherDest?.toLowerCase().includes(" to ")) {
+    weatherDest = weatherDest.split(/ to /i).pop()!.trim();
+  }
+  // Normalize dates: strip time portion if full ISO datetime
+  const normStart = startDate?.includes("T") ? startDate.split("T")[0] : startDate;
+  const normEnd = endDate?.includes("T") ? endDate.split("T")[0] : endDate;
+
+  const weatherUrl = hasDates && weatherDest
+    ? `/api/weather?destination=${encodeURIComponent(weatherDest)}&start=${normStart}&end=${normEnd}`
     : null;
 
   const { data: weather, loading } = useCachedFetch<WeatherData>(
@@ -50,7 +59,8 @@ export default function WeatherWidget({ destination, startDate, endDate, tripId 
   const isPreview = weather?.preview ?? false;
 
   const dayName = (dateStr: string) => {
-    const d = new Date(dateStr + "T12:00:00");
+    const dateOnly = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr;
+    const d = new Date(dateOnly + "T12:00:00");
     return d.toLocaleDateString("en-GB", { weekday: "short" });
   };
 

@@ -7,9 +7,11 @@ function ordinal(n: number): string {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-/** Format a single ISO date string (YYYY-MM-DD) as "Mon 1st Jan '26" */
+/** Format a single ISO date string (YYYY-MM-DD or full ISO datetime) as "Mon 1st Jan '26" */
 export function formatDate(iso: string): string {
-  const d = new Date(iso + "T12:00:00"); // noon to avoid timezone shifts
+  // Normalize: strip time portion if present (e.g. "2026-03-15T00:00:00.000Z" → "2026-03-15")
+  const dateOnly = iso.includes("T") ? iso.split("T")[0] : iso;
+  const d = new Date(dateOnly + "T12:00:00"); // noon to avoid timezone shifts
   const day = DAYS[d.getDay()];
   const date = ordinal(d.getDate());
   const month = MONTHS[d.getMonth()];
@@ -30,8 +32,10 @@ export function formatDateRange(startIso?: string, endIso?: string): string {
   if (startIso && !endIso) return formatDate(startIso);
   if (!startIso && endIso) return formatDate(endIso);
 
-  const s = new Date(startIso! + "T12:00:00");
-  const e = new Date(endIso! + "T12:00:00");
+  const sDate = startIso!.includes("T") ? startIso!.split("T")[0] : startIso!;
+  const eDate = endIso!.includes("T") ? endIso!.split("T")[0] : endIso!;
+  const s = new Date(sDate + "T12:00:00");
+  const e = new Date(eDate + "T12:00:00");
 
   const sYear = s.getFullYear();
   const eYear = e.getFullYear();
