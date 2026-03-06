@@ -2702,9 +2702,7 @@ body {
   z-index: 40;
 }
 .stories-chat-floating .unified-input-bar {
-  background: rgba(20, 20, 22, 0.92);
-  backdrop-filter: blur(40px) saturate(150%);
-  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  background: rgb(20, 20, 22);
 }
 @media (min-width: 640px) {
   .stories-chat-floating {
@@ -2742,13 +2740,21 @@ body {
   overflow-y: auto;
   gap: 8px;
   padding: 16px;
+  padding-top: 36px;
   position: relative;
-  background: rgba(20, 20, 22, 0.95);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: rgb(20, 20, 22);
   border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: var(--glass-radius);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.stories-agent-text a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.stories-agent-text a:hover {
+  opacity: 0.8;
 }
 
 .stories-chat-close {

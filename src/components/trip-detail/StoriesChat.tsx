@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 interface StoriesChatProps {
@@ -13,6 +13,27 @@ interface StoriesChatProps {
 interface ChatMessage {
   role: "user" | "agent";
   text: string;
+}
+
+/** Lightweight markdown → HTML for agent messages */
+function renderMarkdown(text: string): string {
+  let html = text
+    // Escape HTML entities
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    // Bold
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    // Italic
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    // Links [text](url)
+    .replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2" class="stories-nav-link">$1</a>'
+    )
+    // Line breaks
+    .replace(/\n/g, "<br>");
+  return html;
 }
 
 export default function StoriesChat({
@@ -28,9 +49,19 @@ export default function StoriesChat({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Whether to show thinking dots: streaming and last message is empty agent message
+  const showThinking = useMemo(
+    () =>
+      streaming &&
+      messages.length > 0 &&
+      messages[messages.length - 1].role === "agent" &&
+      messages[messages.length - 1].text === "",
+    [streaming, messages]
+  );
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, showThinking]);
 
   const createConversation = useCallback(async (): Promise<string | null> => {
     try {
@@ -172,30 +203,44 @@ export default function StoriesChat({
     storyText,
   ]);
 
+  // Filter out empty agent messages for display (they only exist as streaming placeholders)
+  const visibleMessages = messages.filter(
+    (msg) => !(msg.role === "agent" && msg.text === "")
+  );
+
   return createPortal(
     <>
-      {/* Message overlay — only visible when there are messages */}
-      {messages.length > 0 && (
+      {/* Message overlay — only visible when there are messages or thinking */}
+      {(visibleMessages.length > 0 || showThinking) && (
         <div className="stories-chat-overlay">
           <div className="stories-chat-messages">
             <button
               className="stories-chat-close"
-              onClick={() => setMessages([])}
+              onClick={() => { setMessages([]); setStreaming(false); }}
               aria-label="Clear chat"
             >
               &times;
             </button>
-            {messages.map((msg, i) => (
+            {visibleMessages.map((msg, i) => (
               <div
                 key={i}
                 className={`chat-bubble ${
                   msg.role === "user" ? "chat-bubble-user" : "chat-bubble-agent"
                 }`}
               >
-                {msg.text}
+                {msg.role === "agent" ? (
+                  <span
+                    className="stories-agent-text"
+                    dangerouslySetInnerHTML={{
+                      __html: renderMarkdown(msg.text),
+                    }}
+                  />
+                ) : (
+                  msg.text
+                )}
               </div>
             ))}
-            {streaming && messages[messages.length - 1]?.text === "" && (
+            {showThinking && (
               <div className="chat-bubble chat-bubble-agent">
                 <span className="thinking-dots">
                   <span />
