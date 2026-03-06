@@ -10,17 +10,38 @@ interface TripHeroProps {
   imageUrl?: string | null;
   isHxTrip?: boolean;
   onDestinationChange?: (name: string) => void;
+  onImageRegenerated?: (newUrl: string) => void;
 }
 
-export default function TripHero({ destination, dateRange, tripType, tripId, imageUrl, isHxTrip, onDestinationChange }: TripHeroProps) {
+export default function TripHero({
+  destination,
+  dateRange,
+  tripType,
+  tripId,
+  imageUrl,
+  isHxTrip,
+  onDestinationChange,
+  onImageRegenerated,
+}: TripHeroProps) {
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">("loading");
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(destination);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Regen state
+  const [showRegenUI, setShowRegenUI] = useState(false);
+  const [regenInstructions, setRegenInstructions] = useState("");
+  const [regenerating, setRegenerating] = useState(false);
+  const [imgVersion, setImgVersion] = useState(0);
+  const regenInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (editing) inputRef.current?.focus();
   }, [editing]);
+
+  useEffect(() => {
+    if (showRegenUI) regenInputRef.current?.focus();
+  }, [showRegenUI]);
 
   const save = useCallback(() => {
     const trimmed = draft.trim();
@@ -32,13 +53,44 @@ export default function TripHero({ destination, dateRange, tripType, tripId, ima
     setEditing(false);
   }, [draft, destination, onDestinationChange]);
 
+  const handleRegenerate = useCallback(
+    async (instructions?: string) => {
+      setRegenerating(true);
+      setShowRegenUI(false);
+      setImgState("loading");
+      try {
+        const res = await fetch(`/api/trips/${tripId}/image`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            instructions: instructions || undefined,
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.imageUrl) {
+            setImgVersion((v) => v + 1);
+            onImageRegenerated?.(data.imageUrl);
+          }
+        }
+      } catch {
+        // Silent fail
+      } finally {
+        setRegenerating(false);
+        setRegenInstructions("");
+      }
+    },
+    [tripId, onImageRegenerated]
+  );
+
   // Use persisted image if available, otherwise generate via trip-specific endpoint
-  const imgSrc = imageUrl || `/api/trips/${tripId}/image`;
+  const baseSrc = imageUrl || `/api/trips/${tripId}/image`;
+  const imgSrc = imgVersion > 0 ? `${baseSrc}${baseSrc.includes("?") ? "&" : "?"}v=${imgVersion}` : baseSrc;
 
   return (
     <div className="trip-hero">
-      {imgState === "loading" && <div className="trip-hero-skeleton" />}
-      {imgState === "error" && <div className="trip-hero-fallback" />}
+      {(imgState === "loading" || regenerating) && <div className="trip-hero-skeleton" />}
+      {imgState === "error" && !regenerating && <div className="trip-hero-fallback" />}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc}
@@ -54,9 +106,66 @@ export default function TripHero({ destination, dateRange, tripType, tripId, ima
           }
         }}
         onError={() => setImgState("error")}
-        style={{ display: imgState === "error" ? "none" : "block" }}
+        style={{ display: imgState === "error" || regenerating ? "none" : "block" }}
       />
       <div className="trip-hero-overlay" />
+
+      {/* Regen button */}
+      <button
+        className="trip-hero-regen-btn"
+        onClick={() => setShowRegenUI(true)}
+        title="Regenerate image"
+        aria-label="Regenerate image"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z" />
+        </svg>
+      </button>
+
+      {/* Regen panel */}
+      {showRegenUI && (
+        <div className="trip-hero-regen-panel">
+          <input
+            ref={regenInputRef}
+            type="text"
+            className="trip-hero-regen-input"
+            placeholder="e.g. sunset beach, snowy mountains…"
+            value={regenInstructions}
+            onChange={(e) => setRegenInstructions(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleRegenerate(regenInstructions);
+              if (e.key === "Escape") {
+                setShowRegenUI(false);
+                setRegenInstructions("");
+              }
+            }}
+          />
+          <div className="trip-hero-regen-actions">
+            <button
+              className="trip-hero-regen-go"
+              onClick={() => handleRegenerate(regenInstructions)}
+            >
+              Generate
+            </button>
+            <button
+              className="trip-hero-regen-surprise"
+              onClick={() => handleRegenerate()}
+            >
+              Surprise me
+            </button>
+            <button
+              className="trip-hero-regen-cancel"
+              onClick={() => {
+                setShowRegenUI(false);
+                setRegenInstructions("");
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {isHxTrip && (
         <img src="/hx-sandcastle.png" alt="Holiday Extras" className="hx-badge hx-badge-hero" />
       )}

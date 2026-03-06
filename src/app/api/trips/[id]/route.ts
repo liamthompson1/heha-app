@@ -54,9 +54,10 @@ export async function PUT(
   if (body.anything_else_we_should_know !== undefined)
     updates.anything_else_we_should_know = body.anything_else_we_should_know;
 
-  // Clear cached content if destination changed (will be regenerated)
+  // Clear cached content and image if destination changed (will be regenerated)
   if (body.trip?.destination) {
     updates.trip_content = null;
+    updates.image_url = null;
   }
 
   const { data, error } = await supabase

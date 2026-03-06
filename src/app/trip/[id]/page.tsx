@@ -62,6 +62,11 @@ export default function TripDetailPage() {
     if (trip) fetchContent(trip);
   }, [trip, fetchContent]);
 
+  const handleImageRegenerated = useCallback((newUrl: string) => {
+    if (!trip) return;
+    setTrip({ ...trip, image_url: newUrl });
+  }, [trip, setTrip]);
+
   const handleDestinationChange = useCallback(async (name: string) => {
     if (!trip) return;
     const prev = trip;
@@ -182,6 +187,7 @@ export default function TripDetailPage() {
         imageUrl={trip.image_url}
         isHxTrip={!!trip.traveller_trip_id}
         onDestinationChange={handleDestinationChange}
+        onImageRegenerated={handleImageRegenerated}
       />
 
       {/* Main content */}
