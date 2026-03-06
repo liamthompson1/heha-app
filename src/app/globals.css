@@ -2747,37 +2747,16 @@ body {
   padding: 12px 16px;
 }
 
-.stories-chat-input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.stories-chat-input-wrap {
   padding: 12px 16px;
   border-top: 1px solid var(--glass-border);
 }
-.stories-chat-input .glass-input {
-  flex: 1;
+.stories-chat-input-wrap .unified-input-bar {
+  box-shadow: none;
+}
+.stories-chat-input-wrap .unified-input-bar .glass-input {
+  padding: 10px 14px;
   font-size: 0.875rem;
-}
-
-.stories-chat-send {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: var(--teal);
-  color: #000;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.15s;
-  flex-shrink: 0;
-}
-.stories-chat-send:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 /* Navigation chips for childResources */

@@ -88,12 +88,25 @@ function processHtml(html: string): string {
   return result;
 }
 
+/** Substitute {varName} placeholders in a resource path using a variables map */
+function resolveTemplate(
+  template: string,
+  variables: Record<string, string> | undefined
+): string {
+  if (!variables) return template;
+  return template.replace(/\{(\w+)\}/g, (_, key: string) => variables[key] ?? `{${key}}`);
+}
+
 /** Extract subPath and query params from a resource path like "trips/{id}/{subPath}?params" */
-function parseResourcePath(resourcePath: string): {
+function parseResourcePath(
+  resourcePath: string,
+  variables?: Record<string, string>
+): {
   subPath: string;
   params: Record<string, string>;
 } {
-  const match = resourcePath.match(/trips\/[^/]+\/(.+?)(?:\?(.*))?$/);
+  const resolved = resolveTemplate(resourcePath, variables);
+  const match = resolved.match(/trips\/[^/]+\/(.+?)(?:\?(.*))?$/);
   if (!match) return { subPath: "", params: {} };
 
   const subPath = match[1];
@@ -186,7 +199,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
 
   const handleChildResourceClick = useCallback(
     (resourcePath: string) => {
-      const { subPath, params } = parseResourcePath(resourcePath);
+      const { subPath, params } = parseResourcePath(resourcePath, data?.variables);
       if (!subPath) return;
 
       // Merge params into accumulated
@@ -199,7 +212,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       );
       containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     },
-    [fetchStories]
+    [fetchStories, data?.variables]
   );
 
   const handleBack = useCallback(() => {
@@ -210,7 +223,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       const parentEntries = Object.entries(data.parentResources);
       if (parentEntries.length > 0) {
         const [, resourcePath] = parentEntries[0];
-        const { subPath, params } = parseResourcePath(resourcePath);
+        const { subPath, params } = parseResourcePath(resourcePath, data?.variables);
         Object.assign(accumulatedParams.current, params);
 
         const newStack = navStack.slice(0, -1);
@@ -231,7 +244,7 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
       setTransitioning(false)
     );
     containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [navStack, fetchStories, data?.parentResources]);
+  }, [navStack, fetchStories, data?.parentResources, data?.variables]);
 
   if (loading && !data) {
     return (
@@ -301,16 +314,16 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
 
         {childEntries.length > 0 && (
           <div className="stories-nav-buttons">
-            {childEntries.map(([label, path]) => (
+            {childEntries.map(([resourcePath, name]) => (
               <button
-                key={label}
+                key={resourcePath}
                 className="stories-nav-chip"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleChildResourceClick(path);
+                  handleChildResourceClick(resourcePath);
                 }}
               >
-                {label}
+                {name}
               </button>
             ))}
           </div>

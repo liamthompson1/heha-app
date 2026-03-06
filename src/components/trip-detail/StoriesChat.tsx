@@ -51,12 +51,17 @@ export default function StoriesChat({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ modelId, variables }),
       });
-      if (!res.ok) return null;
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        console.error("[StoriesChat] Create conversation failed:", res.status, errBody);
+        return null;
+      }
       const data = await res.json();
       const id = data.conversationId;
       setConversationId(id);
       return id;
-    } catch {
+    } catch (err) {
+      console.error("[StoriesChat] Create conversation error:", err);
       return null;
     }
   }, [tripId, modelId, variables]);
@@ -237,30 +242,44 @@ export default function StoriesChat({
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="stories-chat-input">
-        <input
-          ref={inputRef}
-          className="glass-input"
-          type="text"
-          placeholder="Ask a question..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              sendMessage();
-            }
-          }}
-          disabled={streaming}
-        />
-        <button
-          className="stories-chat-send"
-          onClick={sendMessage}
-          disabled={streaming || !input.trim()}
-          aria-label="Send message"
-        >
-          &#8593;
-        </button>
+      <div className="stories-chat-input-wrap">
+        <div className="unified-input-bar">
+          <input
+            ref={inputRef}
+            className="glass-input flex-1"
+            type="text"
+            placeholder="Ask a question..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            disabled={streaming}
+          />
+          <button
+            className="send-icon-btn"
+            onClick={sendMessage}
+            disabled={streaming || !input.trim()}
+            aria-label="Send"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );
