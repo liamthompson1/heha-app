@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface StoriesChatProps {
   tripId: string;
@@ -171,7 +172,7 @@ export default function StoriesChat({
     storyText,
   ]);
 
-  return (
+  return createPortal(
     <>
       {/* Message overlay — only visible when there are messages */}
       {messages.length > 0 && (
@@ -248,6 +249,7 @@ export default function StoriesChat({
           </button>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
