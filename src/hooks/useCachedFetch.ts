@@ -5,6 +5,8 @@ import * as cache from "@/lib/cache";
 
 interface UseCachedFetchOptions<T> {
   transform?: (raw: unknown) => T | null;
+  /** Max age in ms before cache is considered stale. Default 2 min. */
+  maxAge?: number;
 }
 
 interface UseCachedFetchResult<T> {
@@ -20,11 +22,14 @@ export function useCachedFetch<T>(
 ): UseCachedFetchResult<T> {
   const transformRef = useRef(options?.transform);
   transformRef.current = options?.transform;
+  const maxAge = options?.maxAge ?? cache.DEFAULT_MAX_AGE_MS;
 
   const cached = url ? cache.get<T>(url) : undefined;
+  const isFresh = url ? !!cache.getFresh<T>(url, maxAge) : false;
 
   const [data, setData] = useState<T | null>(cached ?? null);
-  const [loading, setLoading] = useState(cached === undefined && url !== null);
+  // If we have a fresh cache hit, don't show loading at all
+  const [loading, setLoading] = useState(!isFresh && cached === undefined && url !== null);
   const [error, setError] = useState("");
 
   const mutate = useCallback(
@@ -43,6 +48,21 @@ export function useCachedFetch<T>(
     if (!url) {
       setLoading(false);
       return;
+    }
+
+    // If cache is fresh, skip the network request entirely
+    const freshData = cache.getFresh<T>(url, maxAge);
+    if (freshData !== undefined) {
+      setData(freshData);
+      setLoading(false);
+      return;
+    }
+
+    // If we have stale data, show it immediately but still fetch
+    const staleData = cache.get<T>(url);
+    if (staleData !== undefined) {
+      setData(staleData);
+      setLoading(false); // Don't show loading — we have data to display
     }
 
     let cancelled = false;
@@ -76,7 +96,10 @@ export function useCachedFetch<T>(
       })
       .catch((err) => {
         if (cancelled) return;
-        setError(err.message || "Fetch failed");
+        // Only show error if we don't have stale data to display
+        if (!staleData) {
+          setError(err.message || "Fetch failed");
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -85,7 +108,7 @@ export function useCachedFetch<T>(
     return () => {
       cancelled = true;
     };
-  }, [url]);
+  }, [url, maxAge]);
 
   return { data, loading, error, mutate };
 }

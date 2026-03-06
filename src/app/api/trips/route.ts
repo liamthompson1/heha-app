@@ -85,7 +85,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ trips });
+    return NextResponse.json({ trips }, {
+      headers: { "Cache-Control": "private, max-age=30, stale-while-revalidate=300" },
+    });
   } catch (err) {
     console.error("GET /api/trips crashed:", err);
     const message = err instanceof Error ? err.message : "Unknown error";

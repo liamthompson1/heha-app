@@ -46,6 +46,8 @@ export default function TripCard({ trip, size, className }: TripCardProps) {
         src={imgSrc}
         alt=""
         className="trip-card-img"
+        loading="lazy"
+        decoding="async"
         onLoad={(e) => {
           const img = e.target as HTMLImageElement;
           if (img.naturalWidth === 0) {

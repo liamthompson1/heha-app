@@ -19,7 +19,9 @@ export async function GET(
     return NextResponse.json({ error: "Trip not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ trip: data });
+  return NextResponse.json({ trip: data }, {
+    headers: { "Cache-Control": "private, max-age=60, stale-while-revalidate=300" },
+  });
 }
 
 export async function PUT(

@@ -19,9 +19,12 @@ export async function GET(
     return new NextResponse(null, { status: 404 });
   }
 
-  // If image already stored, redirect to it
+  // If image already stored, redirect to it with long cache
   if (trip.image_url) {
-    return NextResponse.redirect(trip.image_url, 302);
+    return NextResponse.redirect(trip.image_url, {
+      status: 302,
+      headers: { "Cache-Control": "public, max-age=86400, immutable" },
+    });
   }
 
   // Generate image via Gemini

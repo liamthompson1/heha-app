@@ -1,6 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { WeatherDay } from "@/types/trip-content";
 
+// Server-side geocode cache — avoids re-geocoding the same destination
+const geoCache = new Map<string, { lat: number; lon: number; ts: number }>();
+const GEO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+async function geocode(destination: string): Promise<{ lat: number; lon: number } | null> {
+  const key = destination.toLowerCase().trim();
+  const cached = geoCache.get(key);
+  if (cached && Date.now() - cached.ts < GEO_CACHE_TTL) {
+    return { lat: cached.lat, lon: cached.lon };
+  }
+
+  // Try Open-Meteo geocoding
+  const geoRes = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(destination)}&count=1`
+  );
+  const geoData = await geoRes.json();
+
+  if (geoData.results && geoData.results.length > 0) {
+    const { latitude, longitude } = geoData.results[0];
+    geoCache.set(key, { lat: latitude, lon: longitude, ts: Date.now() });
+    return { lat: latitude, lon: longitude };
+  }
+
+  // Fallback: Nominatim
+  const nomRes = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destination)}&format=json&limit=1`,
+    { headers: { "User-Agent": "heha-app/1.0" } }
+  );
+  const nomData = await nomRes.json();
+
+  if (nomData && nomData.length > 0) {
+    const lat = parseFloat(nomData[0].lat);
+    const lon = parseFloat(nomData[0].lon);
+    geoCache.set(key, { lat, lon, ts: Date.now() });
+    return { lat, lon };
+  }
+
+  return null;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const destination = searchParams.get("destination");
@@ -24,37 +64,16 @@ export async function GET(request: NextRequest) {
   const isPreview = daysOut > 16;
 
   try {
-    // Step 1: Geocode destination (Open-Meteo, fallback to Nominatim for abbreviations)
-    let latitude: number;
-    let longitude: number;
-
-    const geoRes = await fetch(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(destination)}&count=1`
-    );
-    const geoData = await geoRes.json();
-
-    if (geoData.results && geoData.results.length > 0) {
-      latitude = geoData.results[0].latitude;
-      longitude = geoData.results[0].longitude;
-    } else {
-      // Fallback: Nominatim handles abbreviations and colloquial names
-      const nomRes = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destination)}&format=json&limit=1`,
-        { headers: { "User-Agent": "heha-app/1.0" } }
-      );
-      const nomData = await nomRes.json();
-
-      if (!nomData || nomData.length === 0) {
-        return NextResponse.json({
-          available: false,
-          reason: "location_not_found",
-          days: [],
-        });
-      }
-
-      latitude = parseFloat(nomData[0].lat);
-      longitude = parseFloat(nomData[0].lon);
+    // Step 1: Geocode destination (cached, with fallback)
+    const geo = await geocode(destination);
+    if (!geo) {
+      return NextResponse.json({
+        available: false,
+        reason: "location_not_found",
+        days: [],
+      });
     }
+    const { lat: latitude, lon: longitude } = geo;
 
     let fetchStart: string;
     let fetchEnd: string;
@@ -104,7 +123,9 @@ export async function GET(request: NextRequest) {
       })
     );
 
-    return NextResponse.json({ available: true, days, preview: isPreview });
+    return NextResponse.json({ available: true, days, preview: isPreview }, {
+      headers: { "Cache-Control": "public, max-age=1800, stale-while-revalidate=3600" },
+    });
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch weather data" },

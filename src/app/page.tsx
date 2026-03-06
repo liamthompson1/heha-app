@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth/use-session";
 import { useCachedFetch } from "@/hooks/useCachedFetch";
+import * as cache from "@/lib/cache";
 import OrbField, { LANDING_ORBS, SUBTLE_ORBS } from "@/components/OrbField";
 import AuthStatus from "@/components/AuthStatus";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -22,10 +25,42 @@ function getGreeting(): string {
 }
 
 function Dashboard() {
+  const router = useRouter();
   const { data: trips, loading, error } = useCachedFetch<TripRow[]>(
     "/api/trips",
     { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
   );
+
+  // Prefetch first few trip detail pages and warm caches
+  useEffect(() => {
+    if (!trips || trips.length === 0) return;
+
+    const first4 = trips.slice(0, 4);
+    for (const trip of first4) {
+      // Prefetch Next.js route (page JS bundle)
+      router.prefetch(`/trip/${trip.id}`);
+
+      // Warm API cache for trip detail data
+      const url = `/api/trips/${trip.id}`;
+      if (!cache.get(url)) {
+        fetch(url)
+          .then((r) => r.json())
+          .then((data) => {
+            const tripData = (data as { trip?: TripRow }).trip ?? null;
+            if (tripData) cache.set(url, tripData);
+          })
+          .catch(() => {});
+      }
+
+      // Prefetch trip image into browser cache
+      const imgSrc = trip.image_url || `/api/trips/${trip.id}/image`;
+      const link = document.createElement("link");
+      link.rel = "prefetch";
+      link.as = "image";
+      link.href = imgSrc;
+      document.head.appendChild(link);
+    }
+  }, [trips, router]);
 
   return (
     <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20 pb-28">

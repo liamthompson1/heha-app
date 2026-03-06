@@ -36,7 +36,9 @@ export async function POST(
   if (existing?.generated_at && existing?.destination === destination) {
     const age = Date.now() - new Date(existing.generated_at).getTime();
     if (age < CACHE_MAX_AGE_MS) {
-      return NextResponse.json({ content: existing, cached: true });
+      return NextResponse.json({ content: existing, cached: true }, {
+        headers: { "Cache-Control": "private, max-age=3600, stale-while-revalidate=86400" },
+      });
     }
   }
 

@@ -44,6 +44,7 @@ export default function TripHero({ destination, dateRange, tripType, tripId, ima
         src={imgSrc}
         alt={destination}
         className="trip-hero-img"
+        fetchPriority="high"
         onLoad={(e) => {
           const img = e.target as HTMLImageElement;
           if (img.naturalWidth === 0) {
