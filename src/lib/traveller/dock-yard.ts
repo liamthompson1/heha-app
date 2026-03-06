@@ -17,7 +17,7 @@ export async function createHxTripViaDockYard(
   const outboundRef = input.flights_if_known?.[0]?.flight_reference || "";
   const inboundRef = input.flights_if_known?.[1]?.flight_reference || "";
 
-  const params = new URLSearchParams({
+  const formBody = new URLSearchParams({
     outboundFlightReference: outboundRef,
     inboundFlightReference: inboundRef,
     productTypePreferences: "",
@@ -27,25 +27,33 @@ export async function createHxTripViaDockYard(
     agent: "VOUC1",
   });
 
-  const url = `${DOCK_YARD_URL}?${params.toString()}`;
-  console.log("[HX Dock-Yard] Creating trip:", url);
+  console.log("[HX Dock-Yard] Creating trip at:", DOCK_YARD_URL);
+  console.log("[HX Dock-Yard] Outbound ref:", outboundRef ? outboundRef.slice(0, 40) + "..." : "(empty)");
+  console.log("[HX Dock-Yard] Inbound ref:", inboundRef ? inboundRef.slice(0, 40) + "..." : "(empty)");
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(DOCK_YARD_URL, {
       method: "POST",
       headers: {
         Cookie: `auth_session=${authSessionCookie}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      body: formBody.toString(),
       redirect: "manual",
     });
 
-    // The dock-yard typically redirects with the trip ID in the Location header
-    const location = response.headers.get("location");
-    let tripId: string | null = null;
+    const location = response.headers.get("location") || "";
+    console.log("[HX Dock-Yard] Response:", response.status, "Location:", location);
 
+    // Check for error redirect (e.g. /?formTargetError=1)
+    if (location.includes("formTargetError") || location.includes("error")) {
+      console.error("[HX Dock-Yard] Error redirect:", location);
+      return { synced: false, trip_id: null, error: `Dock-yard error redirect: ${location}` };
+    }
+
+    // Extract trip ID from redirect URL (e.g. /trips/abc-123)
+    let tripId: string | null = null;
     if (location) {
-      // Extract trip ID from redirect URL (e.g. /trips/abc-123)
       const match = location.match(/\/trips\/([^/?]+)/);
       tripId = match?.[1] ?? null;
     }
@@ -54,7 +62,6 @@ export async function createHxTripViaDockYard(
     if (!tripId && response.ok) {
       try {
         const text = await response.text();
-        // Try to extract trip ID from response body
         const bodyMatch = text.match(/["']?(?:trip_?id|tripId)["']?\s*[:=]\s*["']?([a-zA-Z0-9-]+)["']?/);
         tripId = bodyMatch?.[1] ?? null;
       } catch {
@@ -67,7 +74,7 @@ export async function createHxTripViaDockYard(
       return { synced: true, trip_id: tripId, error: null };
     }
 
-    // Accept 2xx or 3xx as success even without extractable trip ID
+    // Accept 2xx or 3xx with a /trips/ redirect as success
     if (response.status >= 200 && response.status < 400) {
       console.log("[HX Dock-Yard] Request accepted (status", response.status, ") but no trip ID extracted");
       return { synced: true, trip_id: null, error: null };
