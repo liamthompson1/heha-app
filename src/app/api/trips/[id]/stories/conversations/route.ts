@@ -71,7 +71,7 @@ export async function POST(
         responseText.substring(0, 500)
       );
       return NextResponse.json(
-        { error: "Failed to create conversation" },
+        { error: "Failed to create conversation", detail: responseText.substring(0, 500), upstream: res.status },
         { status: res.status }
       );
     }

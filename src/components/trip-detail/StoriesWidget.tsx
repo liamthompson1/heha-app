@@ -197,24 +197,6 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
     [fetchStories]
   );
 
-  const handleChildResourceClick = useCallback(
-    (resourcePath: string) => {
-      const { subPath, params } = parseResourcePath(resourcePath, data?.variables);
-      if (!subPath) return;
-
-      // Merge params into accumulated
-      Object.assign(accumulatedParams.current, params);
-
-      setTransitioning(true);
-      setNavStack((prev) => [...prev, subPath]);
-      fetchStories(subPath, { ...accumulatedParams.current }).then(() =>
-        setTransitioning(false)
-      );
-      containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    },
-    [fetchStories, data?.variables]
-  );
-
   const handleBack = useCallback(() => {
     setTransitioning(true);
 
@@ -267,9 +249,6 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
   if (sections.length === 0) return null;
 
   const headerTitle = data.title || "Your Trip";
-  const childEntries = data.childResources
-    ? Object.entries(data.childResources)
-    : [];
 
   return (
     <div className="widget-section" ref={containerRef} onClick={handleNavClick}>
@@ -311,34 +290,17 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
             />
           </div>
         ))}
-
-        {childEntries.length > 0 && (
-          <div className="stories-nav-buttons">
-            {childEntries.map(([resourcePath, name]) => (
-              <button
-                key={resourcePath}
-                className="stories-nav-chip"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleChildResourceClick(resourcePath);
-                }}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {data.modelId !== undefined && (
-          <StoriesChat
-            key={navStack.join("/")}
-            tripId={tripId}
-            modelId={data.modelId}
-            variables={data.variables}
-            storyText={data.text}
-          />
-        )}
       </div>
+
+      {data.modelId && (
+        <StoriesChat
+          key={navStack.join("/")}
+          tripId={tripId}
+          modelId={data.modelId}
+          variables={data.variables}
+          storyText={data.text}
+        />
+      )}
     </div>
   );
 }

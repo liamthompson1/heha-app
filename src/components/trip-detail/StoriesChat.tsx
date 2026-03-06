@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
 interface StoriesChatProps {
   tripId: string;
-  modelId: string | null;
+  modelId: string;
   variables?: Record<string, string>;
   storyText: string;
 }
@@ -20,7 +20,6 @@ export default function StoriesChat({
   variables,
   storyText,
 }: StoriesChatProps) {
-  const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -32,19 +31,7 @@ export default function StoriesChat({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    if (expanded) {
-      inputRef.current?.focus();
-    }
-  }, [expanded]);
-
   const createConversation = useCallback(async (): Promise<string | null> => {
-    // Anthropic fallback doesn't need a real conversation
-    if (modelId === null) {
-      setConversationId("fallback");
-      return "fallback";
-    }
-
     try {
       const res = await fetch(`/api/trips/${tripId}/stories/conversations`, {
         method: "POST",
@@ -83,7 +70,7 @@ export default function StoriesChat({
       if (!convId) {
         setMessages((prev) => [
           ...prev,
-          { role: "agent", text: "Failed to start conversation. Please try again." },
+          { role: "agent", text: "Unable to connect. Check the console for details." },
         ]);
         setStreaming(false);
         return;
@@ -94,14 +81,6 @@ export default function StoriesChat({
     setMessages((prev) => [...prev, { role: "agent", text: "" }]);
 
     try {
-      const bodyMessages =
-        modelId === null
-          ? updatedMessages.map((m) => ({
-              role: m.role === "user" ? "user" : "assistant",
-              text: m.text,
-            }))
-          : [{ text }];
-
       const res = await fetch(
         `/api/trips/${tripId}/stories/conversations/${convId}`,
         {
@@ -109,7 +88,7 @@ export default function StoriesChat({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             modelId,
-            messages: bodyMessages,
+            messages: [{ text }],
             variables,
             storyText,
           }),
@@ -117,6 +96,8 @@ export default function StoriesChat({
       );
 
       if (!res.ok || !res.body) {
+        const errText = await res.text().catch(() => "");
+        console.error("[StoriesChat] Stream failed:", res.status, errText);
         setMessages((prev) => {
           const copy = [...prev];
           copy[copy.length - 1] = {
@@ -190,65 +171,51 @@ export default function StoriesChat({
     storyText,
   ]);
 
-  if (!expanded) {
-    return (
-      <button
-        className="stories-chat-toggle"
-        onClick={() => setExpanded(true)}
-      >
-        Ask about this
-      </button>
-    );
-  }
-
   return (
-    <div className="stories-chat-container glass-panel">
-      <div className="stories-chat-header">
-        <span
-          className="text-sm font-semibold"
-          style={{ color: "var(--text-primary)" }}
-        >
-          Ask about this
-        </span>
-        <button
-          className="stories-chat-close"
-          onClick={() => setExpanded(false)}
-          aria-label="Close chat"
-        >
-          &times;
-        </button>
-      </div>
-
-      <div className="stories-chat-messages">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`chat-bubble ${
-              msg.role === "user" ? "chat-bubble-user" : "chat-bubble-agent"
-            }`}
-          >
-            {msg.text}
+    <>
+      {/* Message overlay — only visible when there are messages */}
+      {messages.length > 0 && (
+        <div className="stories-chat-overlay">
+          <div className="stories-chat-messages glass-panel">
+            <button
+              className="stories-chat-close"
+              onClick={() => setMessages([])}
+              aria-label="Clear chat"
+            >
+              &times;
+            </button>
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`chat-bubble ${
+                  msg.role === "user" ? "chat-bubble-user" : "chat-bubble-agent"
+                }`}
+              >
+                {msg.text}
+              </div>
+            ))}
+            {streaming && messages[messages.length - 1]?.text === "" && (
+              <div className="chat-bubble chat-bubble-agent">
+                <span className="thinking-dots">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
-        ))}
-        {streaming && messages[messages.length - 1]?.text === "" && (
-          <div className="chat-bubble chat-bubble-agent">
-            <span className="thinking-dots">
-              <span />
-              <span />
-              <span />
-            </span>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+        </div>
+      )}
 
-      <div className="stories-chat-input-wrap">
+      {/* Floating input at bottom of page */}
+      <div className="stories-chat-floating">
         <div className="unified-input-bar">
           <input
             ref={inputRef}
             className="glass-input flex-1"
             type="text"
-            placeholder="Ask a question..."
+            placeholder="Ask about this..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -281,6 +248,6 @@ export default function StoriesChat({
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
