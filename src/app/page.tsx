@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -28,10 +28,22 @@ interface DashboardProps {
   trips: TripRow[] | null;
   loading: boolean;
   error: string;
+  isHxUser: boolean;
+  onImportHx: () => Promise<void>;
 }
 
-function Dashboard({ trips, loading, error }: DashboardProps) {
+function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardProps) {
   const router = useRouter();
+  const [importing, setImporting] = useState(false);
+
+  async function handleImport() {
+    setImporting(true);
+    try {
+      await onImportHx();
+    } finally {
+      setImporting(false);
+    }
+  }
 
   // Prefetch first few trip detail pages and warm caches
   useEffect(() => {
@@ -77,6 +89,20 @@ function Dashboard({ trips, loading, error }: DashboardProps) {
         </h1>
 
         <div className="page-enter stagger-2 prismatic-line w-full mt-12 mb-12" />
+
+        {/* HX import button */}
+        {isHxUser && !loading && (
+          <div className="page-enter stagger-3 mb-8">
+            <button
+              onClick={handleImport}
+              disabled={importing}
+              className="glass-panel px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {importing ? "Importing\u2026" : "Import Holiday Extras Trips"}
+            </button>
+          </div>
+        )}
 
         {/* Loading state */}
         {loading && (
@@ -168,6 +194,15 @@ export default function Home() {
     { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
   );
 
+  // Manual HX import: clear cache, re-fetch, update state
+  const handleImportHx = useCallback(async () => {
+    cache.del("/api/trips");
+    const res = await fetch("/api/trips");
+    const data = await res.json();
+    const fresh = (data as { trips?: TripRow[] }).trips ?? [];
+    mutateTrips(fresh);
+  }, [mutateTrips]);
+
   // Auto-retry once when authenticated user has empty trips (Traveller API may be slow)
   const retriedRef = useRef(false);
   useEffect(() => {
@@ -197,7 +232,7 @@ export default function Home() {
     // Fall through to landing page below
   } else if (session.authenticated || trips) {
     // Session confirmed or trips already arrived — show dashboard
-    return <Dashboard trips={trips} loading={tripsLoading} error={tripsError} />;
+    return <Dashboard trips={trips} loading={tripsLoading} error={tripsError} isHxUser={session.isHxUser} onImportHx={handleImportHx} />;
   } else if (session.loading) {
     // Still loading session + trips in parallel — show skeleton
     return (
