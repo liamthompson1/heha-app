@@ -30,18 +30,24 @@ export interface TravellerTrip {
 }
 
 /**
- * Read the HX auth cookies from a request.
- * The gateway authenticates via the auth_session cookie, not a Bearer header.
+ * Read the HX auth token from request cookies.
+ * Checks multiple cookie sources in priority order:
+ *  1. auth_session — original HX cookie (if browser somehow has it)
+ *  2. hx_auth_session — auth_session value extracted and stored by our OTP flow
+ *  3. hx_bearer_token — firebaseToken from OTP response
  * Returns null if not present (guest user).
  */
 export function getTravellerAuthToken(
   getCookie: (name: string) => string | undefined
 ): string | null {
-  return getCookie("auth_session") ?? getCookie("hx_bearer_token") ?? null;
+  return getCookie("auth_session") ?? getCookie("hx_auth_session") ?? getCookie("hx_bearer_token") ?? null;
 }
 
-function getTravellerApiUrl(): string | undefined {
-  return process.env.HX_TRAVELLER_API_URL || process.env.TRAVELLER_API_URL;
+function getTravellerApiUrls(): string[] {
+  const urls: string[] = [];
+  if (process.env.HX_TRAVELLER_API_URL) urls.push(process.env.HX_TRAVELLER_API_URL);
+  if (process.env.TRAVELLER_API_URL) urls.push(process.env.TRAVELLER_API_URL);
+  return urls;
 }
 
 async function graphqlRequest(
@@ -49,26 +55,53 @@ async function graphqlRequest(
   variables: Record<string, unknown>,
   authToken: string
 ): Promise<{ data?: Record<string, unknown>; errors?: { message: string }[] }> {
-  const url = getTravellerApiUrl();
-  if (!url) {
+  const urls = getTravellerApiUrls();
+  if (urls.length === 0) {
     throw new Error("TRAVELLER_API_URL not configured");
   }
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `auth_session=${authToken}`,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+  let lastError: Error | null = null;
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`HTTP ${response.status}: ${text}`);
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+          Cookie: `auth_session=${authToken}`,
+        },
+        body: JSON.stringify({ query, variables }),
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        lastError = new Error(`HTTP ${response.status} from ${url}: ${text.slice(0, 200)}`);
+        console.warn(`[Traveller API] ${url} returned ${response.status}, trying next...`);
+        continue;
+      }
+
+      const json = await response.json();
+
+      // If we get auth errors in the GraphQL response and have another URL, try it
+      if (json.errors?.length && urls.indexOf(url) < urls.length - 1) {
+        const msg = json.errors[0].message?.toLowerCase() ?? "";
+        if (msg.includes("auth") || msg.includes("unauth") || msg.includes("forbidden") || msg.includes("not logged in")) {
+          console.warn(`[Traveller API] ${url} auth error: ${json.errors[0].message}, trying next...`);
+          lastError = new Error(json.errors[0].message);
+          continue;
+        }
+      }
+
+      return json;
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      console.warn(`[Traveller API] ${url} failed: ${lastError.message}, trying next...`);
+      continue;
+    }
   }
 
-  return response.json();
+  throw lastError ?? new Error("All Traveller API URLs failed");
 }
 
 // --- Introspection ---
@@ -97,8 +130,7 @@ export async function syncTripToTravellerApi(
   input: CreateTripInput,
   authSessionCookie: string
 ): Promise<TravellerResult> {
-  const url = getTravellerApiUrl();
-  if (!url) {
+  if (getTravellerApiUrls().length === 0) {
     return { synced: false, trip_id: null, error: "TRAVELLER_API_URL not configured" };
   }
 
@@ -214,8 +246,7 @@ export async function updateTripInTravellerApi(
   localUpdates: Record<string, unknown>,
   authSessionCookie: string
 ): Promise<TravellerResult> {
-  const url = getTravellerApiUrl();
-  if (!url) {
+  if (getTravellerApiUrls().length === 0) {
     return { synced: false, trip_id: null, error: "TRAVELLER_API_URL not configured" };
   }
 
@@ -264,8 +295,7 @@ export async function deleteTripFromTravellerApi(
   tripId: string,
   authSessionCookie: string
 ): Promise<TravellerResult> {
-  const url = getTravellerApiUrl();
-  if (!url) {
+  if (getTravellerApiUrls().length === 0) {
     return { synced: false, trip_id: null, error: "TRAVELLER_API_URL not configured" };
   }
 

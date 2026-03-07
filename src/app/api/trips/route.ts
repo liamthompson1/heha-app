@@ -41,17 +41,27 @@ export async function GET(request: NextRequest) {
     const authToken = getTravellerAuthToken(
       (name) => request.cookies.get(name)?.value
     );
-    console.log("[Trips] hx_bearer_token present:", !!authToken, "token length:", authToken?.length ?? 0);
+
+    // Track HX sync status for the client
+    let hxSync: { attempted: boolean; imported: number; error: string | null } = {
+      attempted: false,
+      imported: 0,
+      error: null,
+    };
+
+    console.log("[Trips] HX auth token present:", !!authToken, "token length:", authToken?.length ?? 0);
     if (authToken) {
+      hxSync.attempted = true;
       try {
-        console.log("[Trips] Fetching traveller trips from:", process.env.HX_TRAVELLER_API_URL || process.env.TRAVELLER_API_URL || "NO URL SET");
+        console.log("[Trips] Fetching traveller trips...");
         const { trips: travellerTrips, error: travellerError } =
           await fetchTravellerTrips(authToken);
 
         console.log("[Trips] Traveller API returned:", travellerTrips.length, "trips, error:", travellerError);
 
         if (travellerError) {
-          console.warn("[Traveller API] Failed to fetch trips, using local only:", travellerError);
+          console.warn("[Traveller API] Failed to fetch trips:", travellerError);
+          hxSync.error = travellerError;
         } else if (travellerTrips.length > 0) {
           // Build a set of traveller_trip_ids already known locally
           const knownTravellerIds = new Set(
@@ -74,18 +84,21 @@ export async function GET(request: NextRequest) {
 
             if (insertError) {
               console.error("[Traveller API] Failed to import trips:", insertError);
+              hxSync.error = `DB insert failed: ${insertError.message}`;
             } else if (inserted) {
               trips = [...inserted, ...trips];
+              hxSync.imported = inserted.length;
             }
           }
         }
       } catch (err) {
-        // Never break the dashboard if the Traveller API is unreachable
-        console.warn("[Traveller API] Unexpected error during trip merge:", err);
+        const message = err instanceof Error ? err.message : "Unknown error";
+        console.warn("[Traveller API] Unexpected error during trip merge:", message);
+        hxSync.error = message;
       }
     }
 
-    return NextResponse.json({ trips }, {
+    return NextResponse.json({ trips, hxSync }, {
       headers: { "Cache-Control": "private, max-age=60, stale-while-revalidate=600" },
     });
   } catch (err) {

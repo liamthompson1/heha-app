@@ -35,6 +35,7 @@ export async function createHxTripViaDockYard(
     const response = await fetch(DOCK_YARD_URL, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${authSessionCookie}`,
         Cookie: `auth_session=${authSessionCookie}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },

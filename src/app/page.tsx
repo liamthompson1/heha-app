@@ -29,17 +29,28 @@ interface DashboardProps {
   loading: boolean;
   error: string;
   isHxUser: boolean;
-  onImportHx: () => Promise<void>;
+  onImportHx: () => Promise<{ imported: number; error: string | null }>;
 }
 
 function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardProps) {
   const router = useRouter();
   const [importing, setImporting] = useState(false);
+  const [importStatus, setImportStatus] = useState<string | null>(null);
 
   async function handleImport() {
     setImporting(true);
+    setImportStatus(null);
     try {
-      await onImportHx();
+      const result = await onImportHx();
+      if (result.error) {
+        setImportStatus(`Sync error: ${result.error}`);
+      } else if (result.imported > 0) {
+        setImportStatus(`Imported ${result.imported} trip${result.imported > 1 ? "s" : ""}`);
+      } else {
+        setImportStatus("No new trips to import");
+      }
+    } catch {
+      setImportStatus("Failed to connect to Holiday Extras");
     } finally {
       setImporting(false);
     }
@@ -92,7 +103,7 @@ function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardPro
 
         {/* HX import button */}
         {isHxUser && !loading && (
-          <div className="page-enter stagger-3 mb-8">
+          <div className="page-enter stagger-3 mb-8 flex items-center gap-3">
             <button
               onClick={handleImport}
               disabled={importing}
@@ -101,6 +112,14 @@ function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardPro
             >
               {importing ? "Importing\u2026" : "Import Holiday Extras Trips"}
             </button>
+            {importStatus && (
+              <span
+                className="text-xs animate-in fade-in"
+                style={{ color: importStatus.startsWith("Sync error") || importStatus.startsWith("Failed") ? "var(--red, #f87171)" : "var(--text-tertiary)" }}
+              >
+                {importStatus}
+              </span>
+            )}
           </div>
         )}
 
@@ -194,13 +213,14 @@ export default function Home() {
     { transform: (raw) => (raw as { trips?: TripRow[] }).trips ?? [] }
   );
 
-  // Manual HX import: clear cache, re-fetch, update state
+  // Manual HX import: clear cache, re-fetch, update state, return result
   const handleImportHx = useCallback(async () => {
     cache.del("/api/trips");
     const res = await fetch("/api/trips");
-    const data = await res.json();
-    const fresh = (data as { trips?: TripRow[] }).trips ?? [];
+    const data = await res.json() as { trips?: TripRow[]; hxSync?: { imported: number; error: string | null } };
+    const fresh = data.trips ?? [];
     mutateTrips(fresh);
+    return { imported: data.hxSync?.imported ?? 0, error: data.hxSync?.error ?? null };
   }, [mutateTrips]);
 
   // Auto-retry once when authenticated user has empty trips (Traveller API may be slow)

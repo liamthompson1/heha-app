@@ -63,12 +63,30 @@ export async function POST(request: Request) {
       maxAge: cookieOpts.maxAge,
     })
 
-    // Forward HX auth cookies to the browser
+    // Extract auth_session value from HX Set-Cookie headers.
+    // We can't forward HX's cookies directly (browser rejects cross-domain Set-Cookie),
+    // so we parse the value and store it in our own cookie.
+    let hxAuthSession: string | null = null
     for (const setCookie of cookies) {
-      response.headers.append('Set-Cookie', setCookie)
+      const match = setCookie.match(/^auth_session=([^;]+)/)
+      if (match) {
+        hxAuthSession = match[1]
+        break
+      }
+    }
+    console.log("[Auth] OTP verify - auth_session from HX cookies:", !!hxAuthSession, "cookie count:", cookies.length)
+
+    if (hxAuthSession) {
+      response.cookies.set('hx_auth_session', hxAuthSession, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7,
+      })
     }
 
-    // Store the firebaseToken so the Traveller API can authenticate server-side requests
+    // Store the firebaseToken as a fallback auth mechanism
     console.log("[Auth] OTP verify - firebaseToken present:", !!data.firebaseToken, "length:", data.firebaseToken?.length ?? 0)
     if (data.firebaseToken) {
       response.cookies.set('hx_bearer_token', data.firebaseToken, {
@@ -76,7 +94,7 @@ export async function POST(request: Request) {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24 * 7,
       })
     }
 
