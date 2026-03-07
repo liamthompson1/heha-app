@@ -59,5 +59,15 @@ export async function POST(request: Request) {
     maxAge: cookieOpts.maxAge,
   })
 
+  // Clear any stale HX auth cookies from a previous login —
+  // guest users must not inherit another account's HX trips.
+  for (const name of ['hx_bearer_token', 'hx_auth_session', 'auth_session', 'hx_user_id']) {
+    response.cookies.set(name, '', {
+      httpOnly: true,
+      path: '/',
+      maxAge: 0,
+    })
+  }
+
   return response
 }

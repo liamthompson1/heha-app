@@ -42,6 +42,12 @@ export async function GET(request: NextRequest) {
       (name) => request.cookies.get(name)?.value
     );
 
+    // Safety: only use HX token if it belongs to the current user.
+    // Prevents cross-account trip leakage when a different user logs in
+    // but stale HX cookies from a previous login remain.
+    const hxUserId = request.cookies.get("hx_user_id")?.value;
+    const hxTokenMatchesUser = !hxUserId || hxUserId === userId;
+
     // Track HX sync status for the client
     let hxSync: { attempted: boolean; imported: number; error: string | null } = {
       attempted: false,
@@ -49,8 +55,8 @@ export async function GET(request: NextRequest) {
       error: null,
     };
 
-    console.log("[Trips] HX auth token present:", !!authToken, "token length:", authToken?.length ?? 0);
-    if (authToken) {
+    console.log("[Trips] HX auth token present:", !!authToken, "hx_user_id matches:", hxTokenMatchesUser);
+    if (authToken && hxTokenMatchesUser) {
       hxSync.attempted = true;
       try {
         console.log("[Trips] Fetching traveller trips...");

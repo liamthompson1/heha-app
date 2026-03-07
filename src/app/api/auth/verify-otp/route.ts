@@ -98,6 +98,16 @@ export async function POST(request: Request) {
       })
     }
 
+    // Tag which user these HX cookies belong to, so GET /api/trips
+    // can verify the token matches the current session.
+    response.cookies.set('hx_user_id', userHash, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    })
+
     return response
   } catch (error) {
     const message = error instanceof Error ? error.message : 'OTP verification failed'
