@@ -101,28 +101,6 @@ function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardPro
 
         <div className="page-enter stagger-2 prismatic-line w-full mt-12 mb-12" />
 
-        {/* HX import button */}
-        {isHxUser && !loading && (
-          <div className="page-enter stagger-3 mb-8 flex items-center gap-3">
-            <button
-              onClick={handleImport}
-              disabled={importing}
-              className="glass-panel px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              {importing ? "Importing\u2026" : "Import Holiday Extras Trips"}
-            </button>
-            {importStatus && (
-              <span
-                className="text-xs animate-in fade-in"
-                style={{ color: importStatus.startsWith("Sync error") || importStatus.startsWith("Failed") ? "var(--red, #f87171)" : "var(--text-tertiary)" }}
-              >
-                {importStatus}
-              </span>
-            )}
-          </div>
-        )}
-
         {/* Loading state */}
         {loading && (
           <div className="animate-pulse">
@@ -194,6 +172,37 @@ function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardPro
         {/* Bento grid */}
         {!loading && !error && trips && trips.length > 0 && (
           <BentoTripGrid trips={trips} />
+        )}
+
+        {/* HX sync button */}
+        {isHxUser && !loading && (
+          <div className="mt-12 flex flex-col items-center gap-2">
+            <button
+              onClick={handleImport}
+              disabled={importing}
+              className="glass-panel px-5 py-2.5 rounded-xl text-sm font-medium transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 flex items-center gap-2"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {importing ? "Syncing\u2026" : "Sync with"}
+              {!importing && (
+                <Image
+                  src="/holiday-extras-logo.png"
+                  alt="Holiday Extras"
+                  width={120}
+                  height={24}
+                  className="inline-block h-[1.2em] w-auto"
+                />
+              )}
+            </button>
+            {importStatus && (
+              <span
+                className="text-xs"
+                style={{ color: importStatus.startsWith("Sync error") || importStatus.startsWith("Failed") ? "var(--red, #f87171)" : "var(--text-tertiary)" }}
+              >
+                {importStatus}
+              </span>
+            )}
+          </div>
         )}
       </main>
 
