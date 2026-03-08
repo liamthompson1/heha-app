@@ -28,8 +28,12 @@ export async function GET(
     );
   }
 
-  // The Stories API authenticates via the auth_session cookie sent as auth_token
-  const authSession = request.cookies.get("auth_session")?.value;
+  // The Stories API authenticates via the auth_session cookie sent as auth_token.
+  // Check all cookie sources: auth_session, hx_auth_session (from OTP flow), hx_bearer_token.
+  const authSession =
+    request.cookies.get("auth_session")?.value ??
+    request.cookies.get("hx_auth_session")?.value ??
+    request.cookies.get("hx_bearer_token")?.value;
   if (!authSession) {
     return NextResponse.json(
       { error: "Not authenticated with HX" },

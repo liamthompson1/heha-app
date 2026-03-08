@@ -25,7 +25,10 @@ export async function POST(
     });
   }
 
-  const authSession = request.cookies.get("auth_session")?.value;
+  const authSession =
+    request.cookies.get("auth_session")?.value ??
+    request.cookies.get("hx_auth_session")?.value ??
+    request.cookies.get("hx_bearer_token")?.value;
   if (!authSession) {
     return new Response(JSON.stringify({ error: "Not authenticated" }), {
       status: 401,

@@ -22,7 +22,10 @@ export async function POST(
     return NextResponse.json({ error: "Trip not found" }, { status: 404 });
   }
 
-  const authSession = request.cookies.get("auth_session")?.value;
+  const authSession =
+    request.cookies.get("auth_session")?.value ??
+    request.cookies.get("hx_auth_session")?.value ??
+    request.cookies.get("hx_bearer_token")?.value;
   if (!authSession) {
     return NextResponse.json(
       { error: "Not authenticated with HX" },
