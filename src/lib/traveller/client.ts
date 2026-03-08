@@ -325,6 +325,68 @@ export async function deleteTripFromTravellerApi(
   }
 }
 
+// --- Airport → City name mapping ---
+
+const IATA_TO_CITY: Record<string, string> = {
+  AMS: "Amsterdam", CDG: "Paris", ORY: "Paris",
+  BCN: "Barcelona", MAD: "Madrid",
+  FCO: "Rome", CIA: "Rome",
+  LIS: "Lisbon", ATH: "Athens",
+  IST: "Istanbul", DUB: "Dublin",
+  ARN: "Stockholm", CPH: "Copenhagen", OSL: "Oslo", HEL: "Helsinki",
+  VIE: "Vienna", PRG: "Prague", BUD: "Budapest", WAW: "Warsaw",
+  ZRH: "Zurich", GVA: "Geneva",
+  BER: "Berlin", MUC: "Munich", FRA: "Frankfurt",
+  NCE: "Nice", MRS: "Marseille", LYS: "Lyon",
+  MXP: "Milan", LIN: "Milan", VCE: "Venice", NAP: "Naples",
+  AGP: "Malaga", ALC: "Alicante", PMI: "Palma de Mallorca",
+  TFS: "Tenerife", LPA: "Gran Canaria", ACE: "Lanzarote", FUE: "Fuerteventura",
+  FAO: "Faro", SPU: "Split", DBV: "Dubrovnik",
+  SKG: "Thessaloniki", HER: "Heraklion", CFU: "Corfu", RHO: "Rhodes",
+  AYT: "Antalya", DLM: "Dalaman", BJV: "Bodrum",
+  SSH: "Sharm El Sheikh", HRG: "Hurghada",
+  JFK: "New York", EWR: "New York", LGA: "New York",
+  LAX: "Los Angeles", SFO: "San Francisco", LAS: "Las Vegas",
+  MIA: "Miami", MCO: "Orlando", ORD: "Chicago",
+  BKK: "Bangkok", SIN: "Singapore", HKG: "Hong Kong",
+  DXB: "Dubai", DOH: "Doha", AUH: "Abu Dhabi",
+  CUN: "Cancun", PUJ: "Punta Cana", MBJ: "Montego Bay",
+  NRT: "Tokyo", HND: "Tokyo", ICN: "Seoul",
+  DEL: "Delhi", BOM: "Mumbai", CMB: "Colombo", MLE: "Maldives",
+  LHR: "London", LGW: "London", STN: "London", LTN: "London",
+  MAN: "Manchester", BHX: "Birmingham", EDI: "Edinburgh", GLA: "Glasgow",
+  BRS: "Bristol", EMA: "East Midlands", LBA: "Leeds",
+  NCL: "Newcastle", BFS: "Belfast",
+};
+
+const AIRPORT_SUFFIXES = [
+  "International Airport", "International", "Airport",
+  "Schiphol", "Arlanda", "McCarran", "Harry Reid",
+  "Côte d'Azur", "Cote d'Azur", "Barajas", "El Prat",
+  "Fiumicino", "Ciampino", "Marco Polo", "Malpensa", "Linate",
+  "Charles de Gaulle", "Orly",
+  "Ben Gurion", "Atatürk", "Ataturk", "Sabiha Gökçen", "Sabiha Gokcen",
+  "Humberto Delgado", "Keflavík", "Keflavik",
+  "Gatwick", "Heathrow", "Stansted", "Luton",
+  "Narita", "Haneda",
+];
+
+function airportToCity(name: string, iata?: string): string {
+  // 1. Try IATA lookup first
+  if (iata && IATA_TO_CITY[iata.toUpperCase()]) {
+    return IATA_TO_CITY[iata.toUpperCase()];
+  }
+
+  // 2. Strip known airport suffixes
+  let cleaned = name;
+  for (const suffix of AIRPORT_SUFFIXES) {
+    const re = new RegExp(`\\s+${suffix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i");
+    cleaned = cleaned.replace(re, "");
+  }
+
+  return cleaned.trim() || name;
+}
+
 // --- Mapping helper: Traveller API Trip → local TripRow shape ---
 
 /** Normalize full ISO datetime to YYYY-MM-DD */
@@ -342,6 +404,7 @@ export function mapTravellerTripToLocal(
     destination = destination.split(/ to /i).pop()!.trim();
   }
   destination = destination || travellerTrip.destinationIATA || "Unknown";
+  destination = airportToCity(destination, travellerTrip.destinationIATA);
 
   const startDate = toDateOnly(travellerTrip.from);
   const endDate = toDateOnly(travellerTrip.to ?? travellerTrip.from);

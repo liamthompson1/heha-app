@@ -9,6 +9,7 @@ interface GeminiInlineData {
 }
 
 let cached: GeminiInlineData[] | null = null;
+let exampleCached: GeminiInlineData[] | null = null;
 
 export function getBirdImageParts(): GeminiInlineData[] {
   if (cached) return cached;
@@ -25,4 +26,21 @@ export function getBirdImageParts(): GeminiInlineData[] {
   });
 
   return cached;
+}
+
+export function getExampleImageParts(): GeminiInlineData[] {
+  if (exampleCached) return exampleCached;
+
+  const dir = path.join(process.cwd(), "public", "bird");
+  exampleCached = [1, 2, 3, 4, 5, 6].map((i) => {
+    const buf = fs.readFileSync(path.join(dir, `example-${i}.png`));
+    return {
+      inlineData: {
+        mimeType: "image/png",
+        data: buf.toString("base64"),
+      },
+    };
+  });
+
+  return exampleCached;
 }

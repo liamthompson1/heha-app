@@ -1,5 +1,5 @@
 import { getSupabaseClient } from "@/lib/supabase/client";
-import { getBirdImageParts } from "@/lib/bird-images";
+import { getBirdImageParts, getExampleImageParts } from "@/lib/bird-images";
 
 interface GenerateImageOptions {
   tripId: string;
@@ -23,6 +23,7 @@ export async function generateTripImage(
   if (!apiKey) throw new Error("GEMINI_API_KEY not set");
 
   const birdParts = getBirdImageParts();
+  const exampleParts = getExampleImageParts();
 
   const tripContext = tripType
     ? ` for a ${tripType.toLowerCase()} trip`
@@ -46,8 +47,10 @@ export async function generateTripImage(
         contents: [
           {
             parts: [
-              { text: "Reference images of the HEHA! parrot mascot:" },
+              { text: "Reference images of the HEHA! parrot mascot character:" },
               ...birdParts,
+              { text: "Examples of the style, quality, and composition we want — the parrot in real travel scenes:" },
+              ...exampleParts,
               { text: prompt },
             ],
           },
