@@ -33,41 +33,55 @@ export async function generateTripImage(
     ? `\nAdditional instructions: ${customInstructions}`
     : "";
 
-  const lightingOptions = [
-    "Warm golden hour sunlight, strong rim light, long soft shadows, glowing feather edges, soft atmospheric haze.",
-    "Cool blue hour twilight, ambient city glow, practical lights in background, gentle edge light, subtle neon reflections in sunglasses.",
-    "Bright Mediterranean midday sun, crisp shadows, ultra-clear sky, sparkling reflections, commercial luxury travel photography look.",
-    "Soft alpine overcast, diffused cloud lighting, snow bounce light illuminating underside of wings, cool cinematic tones.",
-    "Filtered jungle sunlight, volumetric light rays through foliage, dappled shadows, humid atmosphere haze.",
-    "Dramatic sunset backlight, glowing feather rim, subtle lens flare, heroic sky gradient.",
-    "Soft editorial overcast, even natural light, low contrast, texture-focused premium lifestyle photography.",
-    "Grand indoor architectural light, diffused top light through glass ceiling, warm highlights, cool ambient shadows, subtle dust particles.",
-    "Tropical poolside reflected light, bright sun with water bounce reflections dancing on feathers, relaxed luxury mood.",
-    "Storm break lighting, dark clouds with a directional beam illuminating the parrot, epic high-contrast atmosphere.",
-  ];
-  const lighting = lightingOptions[Math.floor(Math.random() * lightingOptions.length)];
-
   const prompt = `Generate a cinematic, ultra-detailed travel photograph of ${destination}${tripContext}.
 
-Naturally integrate the exact colorful rainbow parrot character into the environment (perched on a railing, sitting on luggage, relaxing by a pool, standing on a cliff edge, riding a ski lift, etc.). The parrot must be realistically small (true-to-life parrot scale — not oversized), physically believable within the scene.
+Use the attached rainbow parrot images ONLY as character design reference (color gradient, feather texture, crest shape, sunglasses style).
+Do NOT replicate the reference pose, framing, or composition.
+
+The parrot must appear in a completely new, natural, context-aware pose that fits the environment (for example: casually perched on a railing, gripping a suitcase handle, adjusting sunglasses, leaning slightly forward, mid-step on cobblestones, balancing on a ski lift bar, interacting subtly with surroundings).
+
+Avoid symmetrical wings-spread studio poses unless the scene naturally requires flight.
+Avoid centered character-sheet composition.
+Avoid black or empty backgrounds.
+The pose should feel candid, spontaneous, and captured mid-moment like a real travel photograph.
+
+Scale:
+The parrot must be realistically small (true-to-life parrot size), physically believable within the environment — not oversized, not mascot scale.
 
 Character details:
-Vibrant rainbow feathers with a smooth red → orange → yellow → green → blue → purple gradient, dimensional feather layering, detailed micro-texture, subtle natural sheen. Rainbow crest. Wearing glossy yellow sunglasses that accurately reflect the surrounding environment. Confident, joyful, adventurous expression.
+Vibrant rainbow feather gradient (red → orange → yellow → green → blue → purple), dimensional layered feathers with realistic micro-texture and subtle natural sheen.
+Rainbow crest.
+Glossy yellow sunglasses with accurate reflections from the surrounding environment.
+Confident, joyful, adventurous expression.
 
 Style:
-High-end animated realism (Pixar / DreamWorks quality), physically based rendering, ultra-clean global illumination, natural shadow physics, premium travel campaign aesthetic.
+High-end animated realism (Pixar / DreamWorks-level quality), physically based rendering, ultra-clean global illumination, natural shadow physics, premium travel campaign aesthetic.
 
 Camera:
 Wide-angle lens (24–35mm), shallow depth of field, creamy cinematic bokeh, sharp focus on the parrot, dynamic perspective, travel editorial composition.
 
 Motion realism:
-Subtle environmental motion (moving train, drifting snow, rippling water, walking pedestrians, palm leaves swaying) while keeping the parrot tack sharp.
+Subtle environmental movement (walking pedestrians, rippling water, drifting snow, moving train, swaying palm leaves) while keeping the parrot tack sharp.
 
 Color grading:
-High dynamic range, vibrant but natural tones, cinematic contrast, no oversaturation.
+High dynamic range, vibrant but natural tones, cinematic contrast, realistic light falloff, no oversaturation.
 
-Lighting:
-${lighting}
+Lighting (choose one depending on mood):
+
+• Warm golden hour sunlight with strong rim light and soft atmospheric haze
+• Cool blue hour twilight with ambient city glow and subtle reflections
+• Bright Mediterranean midday sun with crisp shadows and sparkling highlights
+• Soft alpine overcast with snow bounce light and cool cinematic tones
+• Filtered jungle sunlight with volumetric light rays through foliage
+• Dramatic sunset backlight with glowing feather edges and subtle lens flare
+• Soft editorial overcast with even natural light and texture focus
+• Grand indoor architectural light with diffused skylight and warm highlights
+• Tropical poolside reflected light with shimmering water highlights
+• Storm-break lighting with directional sun beam and high-contrast atmosphere
+
+CRITICAL:
+The pose must be unique and different from the reference images.
+Integrate the parrot naturally into the scene as if it truly belongs there.
 
 No text, no logos, no watermarks.${customSuffix}`;
 
