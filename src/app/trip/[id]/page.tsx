@@ -23,30 +23,8 @@ export default function TripDetailPage() {
     { transform: (raw) => (raw as { trip?: TripRow }).trip ?? null }
   );
   const notFound = !loading && !trip;
-  const [hasInsurance, setHasInsurance] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
-
-  // Detect insurance via insurancejson Stories endpoint (returns JSON in the text field)
-  useEffect(() => {
-    if (!trip?.traveller_trip_id) return;
-    (async () => {
-      try {
-        const res = await fetch(`/api/trips/${trip.id}/stories?path=insurancejson`);
-        if (!res.ok) return;
-        const envelope = await res.json();
-        // Stories API returns { text: "<json string>", ... } — parse the text field
-        if (!envelope.text) return;
-        const ins = JSON.parse(envelope.text);
-        const hasBooked =
-          (ins.annualPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled) ||
-          (ins.singleTripPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled);
-        if (hasBooked) setHasInsurance(true);
-      } catch {
-        // Silent fail
-      }
-    })();
-  }, [trip?.traveller_trip_id, trip?.id]);
 
   const handleImageRegenerated = useCallback((newUrl: string) => {
     if (!trip) return;
@@ -184,15 +162,18 @@ export default function TripDetailPage() {
           />
         </ScrollReveal>
 
-        {/* Insurance */}
-        {hasInsurance && (
+        {/* Trip Protection */}
+        {trip.traveller_trip_id && (
           <ScrollReveal delay={150}>
             <div className="widget-section">
+              <div className="widget-header">
+                <span style={{ fontSize: "1.25rem" }}>🛡️</span>
+                <h2 className="widget-title">Trip Protection</h2>
+              </div>
               <Link href={`/trip/${trip.id}/insurance`} className="missing-info-card">
-                <span className="missing-info-icon">🛡️</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "1rem", marginBottom: 4 }}>
-                    Protect your {trip.trip.destination || "trip"} trip
+                    {trip.trip.destination || "Travel"} Insurance
                   </div>
                   <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
                     View policies, upload documents &amp; manage your cover
