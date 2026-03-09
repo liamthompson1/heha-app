@@ -199,7 +199,7 @@ export default function TripDetailPage() {
                       ? "Annual Travel Insurance"
                       : coverType === "single"
                         ? "Single Trip Insurance"
-                        : `${trip.trip.destination || "Travel"} Insurance`}
+                        : `Get covered for your trip to ${trip.trip.destination || "your destination"}`}
                   </div>
                   <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
                     {coverType
