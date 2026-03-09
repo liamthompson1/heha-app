@@ -2298,6 +2298,7 @@ body {
 
 .widget-section {
   margin-bottom: 48px;
+  overflow: hidden;
 }
 
 .widget-header {
@@ -2711,6 +2712,8 @@ body {
   font-size: 0.875rem;
   line-height: 1.6;
   color: var(--text-secondary);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .stories-html-content h3 {
@@ -2751,6 +2754,7 @@ body {
 .stories-html-content img {
   border-radius: 12px;
   margin: 0.5em 0;
+  max-width: 100%;
   height: auto;
 }
 

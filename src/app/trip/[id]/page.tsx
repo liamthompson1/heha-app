@@ -164,7 +164,7 @@ export default function TripDetailPage() {
       />
 
       {/* Main content */}
-      <div className="max-w-5xl mx-auto px-6 pt-12 pb-16">
+      <div className="max-w-5xl mx-auto px-6 pt-12 pb-16" style={{ width: "100%", overflowX: "hidden" }}>
         {/* Flights */}
         <ScrollReveal>
           <FlightWidget
