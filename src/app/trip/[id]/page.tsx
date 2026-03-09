@@ -202,7 +202,7 @@ export default function TripDetailPage() {
                   </div>
                   <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
                     {coverType
-                      ? `You have ${coverType === "annual" ? "annual" : "single trip"} cover — view &amp; manage your policy`
+                      ? `You have ${coverType === "annual" ? "annual" : "single trip"} cover — view & manage your policy`
                       : "View policies, upload documents & manage your cover"}
                   </div>
                 </div>

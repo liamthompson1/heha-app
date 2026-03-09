@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import type { InsurancePolicy } from "@/types/insurance";
-import { formatDate } from "@/lib/format-date";
+import { formatDate as formatIsoDate } from "@/lib/format-date";
+
+/** If the date is already human-readable (not ISO), return as-is */
+function formatDate(date: string): string {
+  if (/^\d{4}-\d{2}/.test(date)) return formatIsoDate(date);
+  return date;
+}
 
 const STATUS_COLORS: Record<InsurancePolicy["status"], string> = {
   active: "var(--teal)",
