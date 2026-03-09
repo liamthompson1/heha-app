@@ -64,6 +64,27 @@ export default function TripDetailPage() {
     if (trip) fetchContent(trip);
   }, [trip, fetchContent]);
 
+  // Detect insurance availability via trip JSON productTypes
+  useEffect(() => {
+    if (!trip?.traveller_trip_id) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/trips/${trip.id}/stories?path=json`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const productTypes = data?.trip?.productTypes;
+        if (Array.isArray(productTypes)) {
+          const hasIns = productTypes.some(
+            (pt: { productType: string }) => pt.productType?.toLowerCase() === "insurance"
+          );
+          if (hasIns) setHasInsurance(true);
+        }
+      } catch {
+        // Silent fail
+      }
+    })();
+  }, [trip?.traveller_trip_id, trip?.id]);
+
   const handleImageRegenerated = useCallback((newUrl: string) => {
     if (!trip) return;
     setTrip({ ...trip, image_url: newUrl });
@@ -216,7 +237,7 @@ export default function TripDetailPage() {
         {/* HX Stories content */}
         {trip.traveller_trip_id && (
           <ScrollReveal delay={150}>
-            <StoriesWidget tripId={trip.id} onInsuranceDetected={() => setHasInsurance(true)} />
+            <StoriesWidget tripId={trip.id} />
           </ScrollReveal>
         )}
 

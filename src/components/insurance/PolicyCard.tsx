@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { InsurancePolicy } from "@/types/insurance";
 import { formatDate } from "@/lib/format-date";
-import GlassButton from "@/components/GlassButton";
 
 const STATUS_COLORS: Record<InsurancePolicy["status"], string> = {
   active: "var(--teal)",
@@ -12,11 +11,12 @@ const STATUS_COLORS: Record<InsurancePolicy["status"], string> = {
   claimed: "var(--coral)",
 };
 
-const currencyFmt = new Intl.NumberFormat("en-GB", {
-  style: "currency",
-  currency: "GBP",
-  maximumFractionDigits: 0,
-});
+const TYPE_LABELS: Record<InsurancePolicy["type"], string> = {
+  annual: "Annual",
+  comprehensive: "Single Trip",
+  medical: "Medical",
+  cancellation: "Cancellation",
+};
 
 interface PolicyCardProps {
   policy: InsurancePolicy;
@@ -52,6 +52,12 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
             >
               {policy.status}
             </span>
+            <span
+              className="insurance-status-badge"
+              style={{ background: "rgba(255,255,255,0.08)", color: "var(--text-secondary)" }}
+            >
+              {TYPE_LABELS[policy.type] ?? policy.type}
+            </span>
           </div>
           <div
             className="mt-1"
@@ -59,6 +65,14 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
           >
             {policy.provider} &middot; {policy.policy_number}
           </div>
+          {policy.destination && (
+            <div
+              className="mt-1"
+              style={{ fontSize: "0.8rem", color: "var(--text-tertiary)" }}
+            >
+              {policy.destination}
+            </div>
+          )}
           <div
             className="mt-1"
             style={{ fontSize: "0.8rem", color: "var(--text-tertiary)" }}
@@ -77,67 +91,48 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
 
       {expanded && (
         <div className="insurance-policy-details">
-          {policy.coverage_amount > 0 && (
-            <div
-              style={{
-                fontSize: "2rem",
-                fontWeight: 800,
-                color: "var(--teal)",
-                marginBottom: 16,
-              }}
-            >
-              {currencyFmt.format(policy.coverage_amount / 100)}
-              <span
-                style={{
-                  fontSize: "0.85rem",
-                  fontWeight: 400,
-                  color: "var(--text-tertiary)",
-                  marginLeft: 8,
-                }}
-              >
-                total cover
-              </span>
-            </div>
-          )}
-
-          <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
-            {policy.benefits.map((b, i) => (
-              <li
-                key={i}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "6px 0",
-                  fontSize: "0.9rem",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                <span>{b.icon}</span>
-                <span>{b.text}</span>
-              </li>
-            ))}
-          </ul>
-
-          {policy.excess > 0 && (
-            <div
-              style={{
-                fontSize: "0.85rem",
-                color: "var(--text-tertiary)",
-                marginBottom: 20,
-              }}
-            >
-              Excess: {currencyFmt.format(policy.excess / 100)}
-            </div>
+          {policy.benefits.length > 0 && (
+            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
+              {policy.benefits.map((b, i) => (
+                <li
+                  key={i}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "6px 0",
+                    fontSize: "0.9rem",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  <span>{b.icon}</span>
+                  <span>{b.text}</span>
+                </li>
+              ))}
+            </ul>
           )}
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <GlassButton variant="teal" size="sm" onClick={() => {}}>
-              View Policy
-            </GlassButton>
-            <GlassButton variant="ghost" size="sm" onClick={() => {}}>
-              Download Certificate
-            </GlassButton>
+            {policy.links?.view && (
+              <a
+                href={policy.links.view}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-button glass-button-teal glass-button-sm"
+              >
+                View Policy
+              </a>
+            )}
+            {policy.links?.amend && (
+              <a
+                href={policy.links.amend}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-button glass-button-sm"
+              >
+                Amend Policy
+              </a>
+            )}
           </div>
         </div>
       )}

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import type { TripRow } from "@/types/trip";
 import type { InsurancePolicy } from "@/types/insurance";
 import type { ParsedInsuranceData } from "@/lib/insurance-parser";
@@ -15,54 +14,28 @@ interface InsuranceHubProps {
 }
 
 export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps) {
-  const [showFullDetails, setShowFullDetails] = useState(false);
+  // Build InsurancePolicy[] from parsed data
+  const policies: InsurancePolicy[] = (insuranceData?.policies ?? []).map((p) => ({
+    id: p.bookingRef,
+    type: p.policyType === "annual" ? "annual" : "comprehensive",
+    name: p.policyType === "annual" ? "Annual Travel Insurance" : "Single Trip Insurance",
+    status: "active",
+    provider: "Holiday Extras",
+    policy_number: p.bookingRef,
+    coverage_amount: 0,
+    excess: 0,
+    start_date: p.startDate,
+    end_date: p.endDate,
+    benefits: [],
+    documents: [],
+    links: p.links,
+    destination: p.destination,
+  }));
 
-  // Build policy from parsed data
-  const policies: InsurancePolicy[] = insuranceData
-    ? [
-        {
-          id: "stories-policy",
-          type: "comprehensive",
-          name: insuranceData.policyName,
-          status: "active",
-          provider: insuranceData.provider,
-          policy_number: insuranceData.policyNumber ?? "\u2014",
-          coverage_amount: 0,
-          excess: 0,
-          start_date: trip.trip.start_date,
-          end_date: trip.trip.end_date,
-          benefits: insuranceData.benefits,
-          documents: [],
-        },
-      ]
-    : [];
+  const purchaseOption = insuranceData?.purchaseOption ?? null;
 
   return (
     <div className="max-w-5xl mx-auto px-6 pt-8 pb-16">
-      {/* Coverage Summary Cards */}
-      {insuranceData && insuranceData.benefits.length > 0 && (
-        <ScrollReveal>
-          <div className="insurance-summary-row">
-            {insuranceData.benefits.map((b, i) => (
-              <div key={i} className="insurance-summary-card glass-panel">
-                <span style={{ fontSize: "1.5rem" }}>{b.icon}</span>
-                <span
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "var(--text-secondary)",
-                    marginTop: 6,
-                    textAlign: "center",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {b.text}
-                </span>
-              </div>
-            ))}
-          </div>
-        </ScrollReveal>
-      )}
-
       {/* Active Policies */}
       <ScrollReveal delay={100}>
         <div className="widget-section">
@@ -77,6 +50,30 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
                 <PolicyCard key={policy.id} policy={policy} />
               ))}
             </div>
+          ) : purchaseOption ? (
+            <a
+              href={purchaseOption.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-panel"
+              style={{
+                display: "block",
+                padding: "32px 24px",
+                borderRadius: "var(--glass-radius)",
+                textAlign: "center",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              <span style={{ fontSize: "2rem", display: "block", marginBottom: 12 }}>{"\u{1F6E1}\uFE0F"}</span>
+              <p style={{ color: "var(--text-primary)", fontSize: "1.1rem", fontWeight: 700, margin: "0 0 6px 0" }}>
+                Get Travel Insurance
+                {purchaseOption.price ? ` from ${purchaseOption.currency === "GBP" ? "\u00A3" : purchaseOption.currency}${purchaseOption.price}` : ""}
+              </p>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", margin: 0 }}>
+                Protect your {trip.trip.destination || "trip"} holiday with Holiday Extras
+              </p>
+            </a>
           ) : (
             <div
               className="glass-panel"
@@ -95,44 +92,26 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
         </div>
       </ScrollReveal>
 
-      {/* Full Details — raw HTML from stories */}
-      {insuranceData?.rawHtml && (
+      {/* Quick Actions — only when there are policies */}
+      {policies.length > 0 && policies[0].links && (
         <ScrollReveal delay={150}>
-          <div className="widget-section">
-            <button
-              onClick={() => setShowFullDetails((v) => !v)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "var(--text-primary)",
-                fontWeight: 600,
-                fontSize: "0.95rem",
-                padding: 0,
-              }}
+          <div className="insurance-actions-row">
+            <a
+              href={policies[0].links.view}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-button glass-button-teal glass-button-sm"
             >
-              <span style={{ fontSize: "1.1rem" }}>{"\u{1F4C3}"}</span>
-              Full Details
-              <span
-                style={{
-                  transition: "transform 0.3s var(--ease-spring)",
-                  transform: showFullDetails ? "rotate(180deg)" : "rotate(0deg)",
-                  color: "var(--text-tertiary)",
-                }}
-              >
-                {"\u25BE"}
-              </span>
-            </button>
-
-            {showFullDetails && (
-              <div
-                className="insurance-full-details stories-html-content"
-                dangerouslySetInnerHTML={{ __html: insuranceData.rawHtml }}
-              />
-            )}
+              View Policy
+            </a>
+            <a
+              href={policies[0].links.amend}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-button glass-button-sm"
+            >
+              Amend Policy
+            </a>
           </div>
         </ScrollReveal>
       )}
@@ -147,23 +126,6 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
           <DocumentVault documents={[]} />
         </div>
       </ScrollReveal>
-
-      {/* Quick Actions */}
-      {insuranceData && (
-        <ScrollReveal delay={250}>
-          <div className="insurance-actions-row">
-            <GlassButton variant="teal" size="sm" onClick={() => {}}>
-              View Policy
-            </GlassButton>
-            <GlassButton variant="ghost" size="sm" onClick={() => {}}>
-              Download Certificate
-            </GlassButton>
-            <GlassButton variant="ghost" size="sm" onClick={() => {}}>
-              Make a Claim
-            </GlassButton>
-          </div>
-        </ScrollReveal>
-      )}
 
       {/* Help Footer */}
       <ScrollReveal delay={300}>

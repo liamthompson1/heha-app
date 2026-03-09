@@ -8,9 +8,8 @@ import GlassButton from "@/components/GlassButton";
 import InsuranceHub from "@/components/insurance/InsuranceHub";
 import InsuranceBanner from "@/components/insurance/InsuranceBanner";
 import type { TripRow } from "@/types/trip";
-import { parseStoriesHtml, INSURANCE_KEYWORDS } from "@/lib/stories-parser";
-import { parseInsuranceHtml } from "@/lib/insurance-parser";
-import type { ParsedInsuranceData } from "@/lib/insurance-parser";
+import { parseInsuranceJson } from "@/lib/insurance-parser";
+import type { ParsedInsuranceData, InsuranceJsonResponse, InsuranceProductType } from "@/lib/insurance-parser";
 
 export default function InsurancePage() {
   const { id } = useParams<{ id: string }>();
@@ -21,22 +20,29 @@ export default function InsurancePage() {
   const notFound = !loading && !trip;
   const [insuranceData, setInsuranceData] = useState<ParsedInsuranceData | null>(null);
 
-  // Fetch stories and parse insurance section
+  // Fetch insurancejson + trip json in parallel
   useEffect(() => {
     if (!trip?.traveller_trip_id) return;
 
     (async () => {
       try {
-        const res = await fetch(`/api/trips/${trip.id}/stories`);
-        if (!res.ok) return;
-        const json = await res.json();
-        if (!json.text) return;
+        const [insuranceRes, tripRes] = await Promise.all([
+          fetch(`/api/trips/${trip.id}/stories?path=insurancejson`),
+          fetch(`/api/trips/${trip.id}/stories?path=json`),
+        ]);
 
-        const sections = parseStoriesHtml(json.text);
-        const match = sections.find((s) => INSURANCE_KEYWORDS.test(s.title));
-        if (match) {
-          setInsuranceData(parseInsuranceHtml(match.html));
+        let insuranceJson: InsuranceJsonResponse = { annualPolicies: [], singleTripPolicies: [] };
+        let productTypes: InsuranceProductType[] | undefined;
+
+        if (insuranceRes.ok) {
+          insuranceJson = await insuranceRes.json();
         }
+        if (tripRes.ok) {
+          const tripData = await tripRes.json();
+          productTypes = tripData?.trip?.productTypes;
+        }
+
+        setInsuranceData(parseInsuranceJson(insuranceJson, productTypes));
       } catch {
         // Silent fail — insurance data is an enhancement
       }

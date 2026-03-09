@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import StoriesChat from "./StoriesChat";
-import { parseStoriesHtml, INSURANCE_KEYWORDS } from "@/lib/stories-parser";
+import { parseStoriesHtml } from "@/lib/stories-parser";
 
 interface StoriesResponse {
   text: string;
@@ -103,10 +103,9 @@ function parseResourcePath(
 
 interface StoriesWidgetProps {
   tripId: string;
-  onInsuranceDetected?: (insuranceHtml: string) => void;
 }
 
-export default function StoriesWidget({ tripId, onInsuranceDetected }: StoriesWidgetProps) {
+export default function StoriesWidget({ tripId }: StoriesWidgetProps) {
   const [data, setData] = useState<StoriesResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [navStack, setNavStack] = useState<string[]>([]);
@@ -218,17 +217,6 @@ export default function StoriesWidget({ tripId, onInsuranceDetected }: StoriesWi
     () => (data?.text ? parseStoriesHtml(data.text) : []),
     [data?.text]
   );
-
-  // Detect insurance section and notify parent
-  const insuranceNotified = useRef(false);
-  useEffect(() => {
-    if (insuranceNotified.current || !onInsuranceDetected) return;
-    const match = sections.find((s) => INSURANCE_KEYWORDS.test(s.title));
-    if (match) {
-      insuranceNotified.current = true;
-      onInsuranceDetected(match.html);
-    }
-  }, [sections, onInsuranceDetected]);
 
   if (loading && !data) {
     return (

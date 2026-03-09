@@ -17,7 +17,7 @@ export interface InsuranceDocument {
 
 export interface InsurancePolicy {
   id: string;
-  type: "comprehensive" | "medical" | "cancellation";
+  type: "comprehensive" | "medical" | "cancellation" | "annual";
   name: string;
   status: "active" | "pending" | "expired" | "claimed";
   provider: string;
@@ -28,5 +28,7 @@ export interface InsurancePolicy {
   end_date: string;
   benefits: InsuranceBenefit[];
   documents: InsuranceDocument[];
+  links?: { view: string; cancel: string; amend: string };
+  destination?: string;
 }
 
