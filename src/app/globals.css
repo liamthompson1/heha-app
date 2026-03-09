@@ -3451,8 +3451,8 @@ body {
   margin-bottom: 8px;
 }
 
-/* Stack container — iMessage-style card stack */
-.doc-stack-container {
+/* Stack wrapper */
+.doc-stack-wrap {
   position: relative;
   width: 100%;
   max-width: 340px;
@@ -3463,17 +3463,27 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
-.doc-stack-container:active {
+.doc-stack-wrap:active {
   cursor: grabbing;
 }
 
-/* Card in stack */
+/* Behind cards — empty shells for the peek/depth effect */
+.doc-stack-behind {
+  position: absolute;
+  inset: 16px 0 8px;
+  border-radius: var(--glass-radius);
+  pointer-events: none;
+  transform-origin: center bottom;
+}
+
+/* Active card */
 .doc-stack-card {
+  position: relative;
   border-radius: var(--glass-radius);
   overflow: hidden;
   cursor: pointer;
-  transform-origin: center bottom;
-  will-change: transform, opacity;
+  transform-origin: center center;
+  will-change: transform;
   width: 100%;
 }
 

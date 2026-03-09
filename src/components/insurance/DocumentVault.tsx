@@ -34,13 +34,12 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
   const [viewingDoc, setViewingDoc] = useState<StoredDocument | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Unified pointer (touch + mouse) swipe state
+  // Swipe state (pointer events for touch + mouse)
   const dragging = useRef(false);
   const startX = useRef(0);
   const [dragDelta, setDragDelta] = useState(0);
   const didDrag = useRef(false);
 
-  // Load documents from API
   useEffect(() => {
     (async () => {
       try {
@@ -49,9 +48,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
           const data = await res.json();
           setDocs(data.documents ?? []);
         }
-      } catch {
-        // Silent fail
-      }
+      } catch { /* silent */ }
     })();
   }, [tripId]);
 
@@ -68,9 +65,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
         const { document } = await res.json();
         setDocs((prev) => [...prev, document]);
       }
-    } catch {
-      // Silent fail
-    } finally {
+    } catch { /* silent */ } finally {
       setUploading(false);
     }
   }, [tripId]);
@@ -79,7 +74,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     files.forEach((f) => uploadFile(f));
   }, [uploadFile]);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleFileDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     addFiles(Array.from(e.dataTransfer.files));
@@ -87,7 +82,9 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
 
   const handleDelete = useCallback(async (e: React.MouseEvent, docId: string) => {
     e.stopPropagation();
+    const wasLast = activeIndex >= docs.length - 1 && activeIndex > 0;
     setDocs((prev) => prev.filter((d) => d.id !== docId));
+    if (wasLast) setActiveIndex((i) => i - 1);
     try {
       await fetch(`/api/trips/${tripId}/documents`, {
         method: "DELETE",
@@ -96,31 +93,30 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
       });
     } catch {
       const res = await fetch(`/api/trips/${tripId}/documents`);
-      if (res.ok) {
-        const data = await res.json();
-        setDocs(data.documents ?? []);
-      }
+      if (res.ok) setDocs((await res.json()).documents ?? []);
     }
-  }, [tripId]);
+  }, [tripId, activeIndex, docs.length]);
 
   const goTo = useCallback((idx: number) => {
     if (idx >= 0 && idx < docs.length) setActiveIndex(idx);
   }, [docs.length]);
 
-  // Pointer down (touch + mouse)
+  // Pointer handlers
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     dragging.current = true;
     didDrag.current = false;
     startX.current = e.clientX;
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
   }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragging.current) return;
     const delta = e.clientX - startX.current;
     if (Math.abs(delta) > 5) didDrag.current = true;
-    setDragDelta(delta);
-  }, []);
+    // Resist at edges
+    const atEdge = (delta > 0 && activeIndex === 0) || (delta < 0 && activeIndex === docs.length - 1);
+    setDragDelta(atEdge ? delta * 0.2 : delta);
+  }, [activeIndex, docs.length]);
 
   const onPointerUp = useCallback(() => {
     if (!dragging.current) return;
@@ -134,68 +130,16 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     setDragDelta(0);
   }, [dragDelta, activeIndex, docs.length]);
 
-  // Compute card style for iMessage-like stack
-  const getCardStyle = (index: number): React.CSSProperties => {
-    const offset = index - activeIndex;
-    const absDelta = Math.abs(dragDelta);
-    const dragProgress = Math.min(absDelta / 200, 1);
-    const dragDir = dragDelta < 0 ? 1 : -1; // 1 = going forward, -1 = going back
-
-    if (offset === 0) {
-      // Active card: follows the drag
-      return {
-        zIndex: 10,
-        transform: dragDelta
-          ? `translateX(${dragDelta}px) rotate(${dragDelta * 0.02}deg)`
-          : "translateX(0) rotate(0deg)",
-        transition: dragDelta ? "none" : "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
-        opacity: 1,
-      };
-    }
-
-    // Cards behind: stacked with decreasing scale and increasing offset
-    const stackOffset = Math.abs(offset);
-    if (stackOffset > 3) return { display: "none" };
-
-    const baseScale = 1 - stackOffset * 0.05;
-    const baseY = stackOffset * 8;
-    const baseRotate = offset > 0 ? stackOffset * 2 : -stackOffset * 2;
-
-    // If dragging toward this card, it should emerge from the stack
-    const isNext = offset === dragDir;
-    let scale = baseScale;
-    let y = baseY;
-    let rotate = baseRotate;
-    let opacity = 1 - stackOffset * 0.15;
-
-    if (isNext && dragDelta) {
-      scale = baseScale + (1 - baseScale) * dragProgress;
-      y = baseY * (1 - dragProgress);
-      rotate = baseRotate * (1 - dragProgress);
-      opacity = opacity + (1 - opacity) * dragProgress;
-    }
-
-    return {
-      zIndex: 10 - stackOffset,
-      transform: `translateY(${y}px) scale(${scale}) rotate(${rotate}deg)`,
-      transition: dragDelta ? "none" : "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
-      opacity,
-      pointerEvents: "none" as const,
-    };
-  };
-
-  const viewerDoc = viewingDoc
-    ? {
-        id: viewingDoc.id,
-        name: viewingDoc.name,
-        type: viewingDoc.type,
-        category: viewingDoc.category as "policy" | "claim" | "receipt",
-        uploaded_at: viewingDoc.uploaded_at,
-        size_bytes: viewingDoc.size_bytes,
-        status: viewingDoc.status,
-        objectUrl: viewingDoc.url,
-      }
-    : null;
+  const viewerDoc = viewingDoc ? {
+    id: viewingDoc.id,
+    name: viewingDoc.name,
+    type: viewingDoc.type,
+    category: viewingDoc.category as "policy" | "claim" | "receipt",
+    uploaded_at: viewingDoc.uploaded_at,
+    size_bytes: viewingDoc.size_bytes,
+    status: viewingDoc.status,
+    objectUrl: viewingDoc.url,
+  } : null;
 
   const fileInput = (
     <input
@@ -217,7 +161,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
         className={`doc-vault-upload ${dragOver ? "doc-vault-upload-active" : ""}`}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
-        onDrop={handleDrop}
+        onDrop={handleFileDrop}
         onClick={() => inputRef.current?.click()}
       >
         {fileInput}
@@ -232,83 +176,87 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     );
   }
 
+  const current = docs[activeIndex];
+  const behindCount = Math.min(docs.length - 1, 2); // max 2 behind cards
+
   return (
     <div>
       {fileInput}
 
-      {/* iMessage-style card stack */}
       <div
-        className="doc-stack-container"
+        className="doc-stack-wrap"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         style={{ touchAction: "pan-y" }}
       >
-        {docs.map((doc, i) => {
-          const style = getCardStyle(i);
-          if (style.display === "none") return null;
+        {/* Behind cards — just empty styled shells for the peek effect */}
+        {behindCount >= 2 && (
+          <div
+            className="doc-stack-behind glass-panel"
+            style={{
+              transform: "translateY(-6px) scale(0.92)",
+              opacity: 0.3,
+            }}
+          />
+        )}
+        {behindCount >= 1 && (
+          <div
+            className="doc-stack-behind glass-panel"
+            style={{
+              transform: "translateY(-3px) scale(0.96)",
+              opacity: 0.5,
+            }}
+          />
+        )}
 
-          return (
-            <div
-              key={doc.id}
-              className="doc-stack-card glass-panel"
-              style={{
-                ...style,
-                position: i === activeIndex ? "relative" : "absolute",
-                top: i === activeIndex ? undefined : 0,
-                left: i === activeIndex ? undefined : 0,
-                right: i === activeIndex ? undefined : 0,
-              }}
-              onClick={() => {
-                if (!didDrag.current && i === activeIndex) setViewingDoc(doc);
-              }}
+        {/* Active card */}
+        <div
+          className="doc-stack-card glass-panel"
+          style={{
+            transform: dragDelta
+              ? `translateX(${dragDelta}px) rotate(${dragDelta * 0.015}deg)`
+              : undefined,
+            transition: dragDelta ? "none" : "transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+          }}
+          onClick={() => {
+            if (!didDrag.current) setViewingDoc(current);
+          }}
+        >
+          <div className="doc-stack-preview">
+            {current.type === "image" ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={current.url} alt={current.name} className="doc-stack-img" />
+            ) : (
+              <PdfThumbnail url={current.url} alt={current.name} />
+            )}
+
+            <span className="doc-stack-badge">✓ {current.status}</span>
+
+            <button
+              className="doc-vault-delete"
+              onClick={(e) => handleDelete(e, current.id)}
+              aria-label={`Delete ${current.name}`}
             >
-              <div className="doc-stack-preview">
-                {doc.type === "image" ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={doc.url} alt={doc.name} className="doc-stack-img" />
-                ) : (
-                  <PdfThumbnail url={doc.url} alt={doc.name} />
-                )}
+              ✕
+            </button>
+          </div>
 
-                <span className="doc-stack-badge">✓ {doc.status}</span>
-
-                {i === activeIndex && (
-                  <button
-                    className="doc-vault-delete"
-                    onClick={(e) => {
-                      handleDelete(e, doc.id);
-                      if (activeIndex >= docs.length - 1 && activeIndex > 0) {
-                        setActiveIndex(activeIndex - 1);
-                      }
-                    }}
-                    aria-label={`Delete ${doc.name}`}
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-
-              <div className="doc-stack-info">
-                <div className="doc-stack-name">{doc.name}</div>
-                <div className="doc-stack-meta">{formatSize(doc.size_bytes)}</div>
-                <button
-                  className="doc-stack-arrow"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (i === activeIndex) setViewingDoc(doc);
-                  }}
-                >
-                  →
-                </button>
-              </div>
-            </div>
-          );
-        })}
+          <div className="doc-stack-info">
+            <div className="doc-stack-name">{current.name}</div>
+            <div className="doc-stack-meta">{formatSize(current.size_bytes)}</div>
+            <button
+              className="doc-stack-arrow"
+              onClick={(e) => { e.stopPropagation(); setViewingDoc(current); }}
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Navigation: dots + add */}
+      {/* Dots + add */}
       <div className="doc-stack-nav">
         <div className="doc-vault-dots">
           {docs.map((_, i) => (
@@ -324,7 +272,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
         >
-          {uploading ? "⏳" : "+"} {uploading ? "Uploading…" : "Add document"}
+          {uploading ? "⏳ Uploading…" : "+ Add document"}
         </button>
       </div>
 
