@@ -6,8 +6,9 @@ import { useCachedFetch } from "@/hooks/useCachedFetch";
 import PageShell from "@/components/PageShell";
 import GlassButton from "@/components/GlassButton";
 import InsuranceHub from "@/components/insurance/InsuranceHub";
-import InsuranceBanner from "@/components/insurance/InsuranceBanner";
+import TripHero from "@/components/trip-detail/TripHero";
 import type { TripRow } from "@/types/trip";
+import { formatDateRange } from "@/lib/format-date";
 import { parseInsuranceMarkdown } from "@/lib/insurance-parser";
 import type { ParsedInsuranceData } from "@/lib/insurance-parser";
 
@@ -75,10 +76,13 @@ export default function InsurancePage() {
 
   return (
     <PageShell backHref={`/trip/${id}`} variant="full">
-      <InsuranceBanner
+      <TripHero
         destination={trip.trip.destination}
-        startDate={trip.trip.start_date}
-        endDate={trip.trip.end_date}
+        dateRange={formatDateRange(trip.trip.start_date, trip.trip.end_date)}
+        tripType={trip.trip.trip_type}
+        tripId={trip.id}
+        imageUrl={trip.image_url}
+        isHxTrip={!!trip.traveller_trip_id}
       />
       <InsuranceHub trip={trip} insuranceData={insuranceData} />
     </PageShell>
