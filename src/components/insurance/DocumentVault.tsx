@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import DocumentViewer from "./DocumentViewer";
+import PdfThumbnail from "./PdfThumbnail";
 
 interface StoredDocument {
   id: string;
@@ -32,6 +33,12 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
   const [uploading, setUploading] = useState(false);
   const [viewingDoc, setViewingDoc] = useState<StoredDocument | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Touch swipe state
+  const touchStartX = useRef(0);
+  const touchDeltaX = useRef(0);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const swiping = useRef(false);
 
   // Load documents from API
   useEffect(() => {
@@ -88,7 +95,6 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
         body: JSON.stringify({ docId }),
       });
     } catch {
-      // Reload on failure
       const res = await fetch(`/api/trips/${tripId}/documents`);
       if (res.ok) {
         const data = await res.json();
@@ -97,9 +103,34 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     }
   }, [tripId]);
 
-  const goTo = (idx: number) => {
+  const goTo = useCallback((idx: number) => {
     if (idx >= 0 && idx < docs.length) setActiveIndex(idx);
-  };
+  }, [docs.length]);
+
+  // Touch handlers for swipe
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+    swiping.current = true;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!swiping.current) return;
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+    setSwipeOffset(touchDeltaX.current);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    swiping.current = false;
+    const threshold = 60;
+    if (touchDeltaX.current < -threshold && activeIndex < docs.length - 1) {
+      setActiveIndex(activeIndex + 1);
+    } else if (touchDeltaX.current > threshold && activeIndex > 0) {
+      setActiveIndex(activeIndex - 1);
+    }
+    setSwipeOffset(0);
+    touchDeltaX.current = 0;
+  }, [activeIndex, docs.length]);
 
   // Map StoredDocument to DocumentViewer-compatible shape
   const viewerDoc = viewingDoc
@@ -156,8 +187,13 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     <div>
       {fileInput}
 
-      {/* Stacked card */}
-      <div className="doc-stack-container">
+      {/* Stacked card with swipe */}
+      <div
+        className="doc-stack-container"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Background cards for stack effect */}
         {docs.length > 2 && (
           <div className="doc-stack-bg doc-stack-bg-2 glass-panel" />
@@ -169,7 +205,13 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
         {/* Active card */}
         <div
           className="doc-stack-card glass-panel"
-          onClick={() => setViewingDoc(current)}
+          style={{
+            transform: swipeOffset ? `translateX(${swipeOffset}px) rotate(${swipeOffset * 0.03}deg)` : undefined,
+            transition: swipeOffset ? "none" : "transform 0.3s var(--ease-spring)",
+          }}
+          onClick={() => {
+            if (Math.abs(touchDeltaX.current) < 10) setViewingDoc(current);
+          }}
         >
           {/* Preview */}
           <div className="doc-stack-preview">
@@ -181,10 +223,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
                 className="doc-stack-img"
               />
             ) : (
-              <div className="doc-stack-placeholder">
-                <span style={{ fontSize: "3rem" }}>📑</span>
-                <span style={{ fontSize: "0.85rem", marginTop: 8 }}>PDF Document</span>
-              </div>
+              <PdfThumbnail url={current.url} alt={current.name} />
             )}
 
             {/* Status badge top-left */}
@@ -244,7 +283,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
         </button>
       </div>
 
-      {/* Swipe hint */}
+      {/* Arrow navigation */}
       {docs.length > 1 && (
         <div className="doc-stack-swipe">
           <button
