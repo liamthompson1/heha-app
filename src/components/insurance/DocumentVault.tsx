@@ -2,26 +2,19 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { InsuranceDocument } from "@/types/insurance";
-import { formatDate } from "@/lib/format-date";
 import DocumentViewer from "./DocumentViewer";
-
-const CATEGORY_LABELS: Record<InsuranceDocument["category"], { emoji: string; label: string }> = {
-  policy: { emoji: "\u{1F4CB}", label: "Policy Documents" },
-  claim: { emoji: "\u{1F4DD}", label: "Claims" },
-  receipt: { emoji: "\u{1F9FE}", label: "Receipts" },
-};
-
-const STATUS_COLORS: Record<InsuranceDocument["status"], string> = {
-  verified: "var(--teal)",
-  pending: "var(--gold)",
-  rejected: "var(--coral)",
-};
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+const STATUS_COLORS: Record<InsuranceDocument["status"], string> = {
+  verified: "var(--teal)",
+  pending: "var(--gold)",
+  rejected: "var(--coral)",
+};
 
 interface DocumentVaultProps {
   documents: InsuranceDocument[];
@@ -31,7 +24,9 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
   const [docs, setDocs] = useState(documents);
   const [dragOver, setDragOver] = useState(false);
   const [viewingDoc, setViewingDoc] = useState<InsuranceDocument | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Clean up all object URLs on unmount
   useEffect(() => {
@@ -46,8 +41,7 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    const files = Array.from(e.dataTransfer.files);
-    addFiles(files);
+    addFiles(Array.from(e.dataTransfer.files));
   }, []);
 
   const addFiles = (files: File[]) => {
@@ -65,7 +59,8 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
     setDocs((prev) => [...prev, ...newDocs]);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
     setDocs((prev) => {
       const doc = prev.find((d) => d.id === id);
       if (doc?.objectUrl) URL.revokeObjectURL(doc.objectUrl);
@@ -73,25 +68,21 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
     });
   };
 
-  // Group documents by category
-  const grouped = docs.reduce(
-    (acc, doc) => {
-      if (!acc[doc.category]) acc[doc.category] = [];
-      acc[doc.category].push(doc);
-      return acc;
-    },
-    {} as Record<string, InsuranceDocument[]>
-  );
+  // Track scroll position to update active dot
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || docs.length === 0) return;
+    const cardWidth = el.firstElementChild?.clientWidth ?? 280;
+    const gap = 16;
+    const idx = Math.round(el.scrollLeft / (cardWidth + gap));
+    setActiveIndex(Math.min(idx, docs.length - 1));
+  }, [docs.length]);
 
-  return (
-    <div>
-      {/* Upload zone */}
+  if (docs.length === 0) {
+    return (
       <div
-        className={`insurance-upload-zone ${dragOver ? "insurance-upload-zone-active" : ""}`}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragOver(true);
-        }}
+        className={`doc-vault-upload ${dragOver ? "doc-vault-upload-active" : ""}`}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         onClick={() => inputRef.current?.click()}
@@ -107,110 +98,118 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
             e.target.value = "";
           }}
         />
-        <div style={{ fontSize: "2rem", marginBottom: 8 }}>{"\u{1F4C4}"}</div>
+        <span className="doc-vault-upload-icon">📄</span>
         <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-primary)" }}>
-          Drop files here or click to upload
+          Drop files here or tap to upload
         </div>
         <div style={{ fontSize: "0.8rem", color: "var(--text-tertiary)", marginTop: 4 }}>
           PDF, JPG, or PNG — up to 10 MB
         </div>
       </div>
+    );
+  }
 
-      {/* Document groups */}
-      {(Object.keys(CATEGORY_LABELS) as InsuranceDocument["category"][]).map((cat) => {
-        const group = grouped[cat];
-        if (!group || group.length === 0) return null;
-        const { emoji, label } = CATEGORY_LABELS[cat];
+  return (
+    <div>
+      {/* Swipeable card carousel */}
+      <div
+        className="doc-vault-carousel"
+        ref={scrollRef}
+        onScroll={handleScroll}
+      >
+        {docs.map((doc) => (
+          <div
+            key={doc.id}
+            className="doc-vault-card glass-panel"
+            onClick={() => { if (doc.objectUrl) setViewingDoc(doc); }}
+          >
+            {/* Preview area */}
+            <div className="doc-vault-card-preview">
+              {doc.objectUrl && doc.type === "image" ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={doc.objectUrl}
+                  alt={doc.name}
+                  className="doc-vault-card-img"
+                />
+              ) : (
+                <div className="doc-vault-card-placeholder">
+                  <span style={{ fontSize: "2.5rem" }}>
+                    {doc.type === "pdf" ? "📑" : "🖼️"}
+                  </span>
+                </div>
+              )}
 
-        return (
-          <div key={cat} style={{ marginTop: 20 }}>
-            <div
-              style={{
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                color: "var(--text-secondary)",
-                marginBottom: 10,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <span>{emoji}</span> {label}
+              {/* Status badge */}
+              <span
+                className="doc-vault-badge"
+                style={{
+                  background: `${STATUS_COLORS[doc.status]}20`,
+                  color: STATUS_COLORS[doc.status],
+                  borderColor: `${STATUS_COLORS[doc.status]}40`,
+                }}
+              >
+                {doc.status}
+              </span>
+
+              {/* Delete button */}
+              <button
+                className="doc-vault-delete"
+                onClick={(e) => handleDelete(e, doc.id)}
+                aria-label={`Delete ${doc.name}`}
+              >
+                ✕
+              </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {group.map((doc) => (
-                <div
-                  key={doc.id}
-                  className="insurance-doc-row"
-                  style={{ cursor: doc.objectUrl ? "pointer" : undefined }}
-                  onClick={() => {
-                    if (doc.objectUrl) setViewingDoc(doc);
-                  }}
-                >
-                  <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>
-                    {doc.type === "pdf" ? "\u{1F4D1}" : "\u{1F5BC}\uFE0F"}
-                  </span>
-
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontSize: "0.9rem",
-                        fontWeight: 600,
-                        color: "var(--text-primary)",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {doc.name}
-                    </div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--text-tertiary)", marginTop: 2 }}>
-                      {formatSize(doc.size_bytes)} &middot; {formatDate(doc.uploaded_at)}
-                    </div>
-                  </div>
-
-                  <span
-                    className="insurance-status-badge"
-                    style={{
-                      background: `${STATUS_COLORS[doc.status]}20`,
-                      color: STATUS_COLORS[doc.status],
-                      flexShrink: 0,
-                    }}
-                  >
-                    {doc.status}
-                  </span>
-
-                  <button
-                    className="insurance-doc-action"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(doc.id);
-                    }}
-                    aria-label={`Delete ${doc.name}`}
-                  >
-                    {"\u2715"}
-                  </button>
-                </div>
-              ))}
+            {/* Info area */}
+            <div className="doc-vault-card-info">
+              <div className="doc-vault-card-name">{doc.name}</div>
+              <div className="doc-vault-card-meta">{formatSize(doc.size_bytes)}</div>
+              {doc.objectUrl && (
+                <div className="doc-vault-card-arrow">→</div>
+              )}
             </div>
           </div>
-        );
-      })}
+        ))}
 
-      {docs.length === 0 && (
+        {/* Add more card */}
         <div
-          className="glass-panel"
-          style={{
-            padding: "32px 24px",
-            borderRadius: "var(--glass-radius)",
-            textAlign: "center",
-            marginTop: 16,
-          }}
+          className="doc-vault-card doc-vault-card-add glass-panel"
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
         >
-          <p style={{ color: "var(--text-tertiary)", fontSize: "0.9rem" }}>
-            No documents uploaded yet
-          </p>
+          <input
+            ref={inputRef}
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png"
+            multiple
+            style={{ display: "none" }}
+            onChange={(e) => {
+              if (e.target.files) addFiles(Array.from(e.target.files));
+              e.target.value = "";
+            }}
+          />
+          <div className="doc-vault-card-preview doc-vault-card-placeholder">
+            <span style={{ fontSize: "2rem" }}>+</span>
+            <span style={{ fontSize: "0.85rem", color: "var(--text-tertiary)", marginTop: 4 }}>
+              Add document
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination dots */}
+      {docs.length > 1 && (
+        <div className="doc-vault-dots">
+          {docs.map((_, i) => (
+            <span
+              key={i}
+              className={`doc-vault-dot ${i === activeIndex ? "doc-vault-dot-active" : ""}`}
+            />
+          ))}
         </div>
       )}
 
