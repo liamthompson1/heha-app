@@ -214,21 +214,6 @@ export default function StoriesWidget({ tripId, onInsuranceDetected }: StoriesWi
     containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [navStack, fetchStories, data?.parentResources, data?.variables]);
 
-  if (loading && !data) {
-    return (
-      <div className="widget-section animate-pulse">
-        <div className="flex items-center gap-3 mb-5">
-          <div
-            className="w-6 h-6 rounded-full"
-            style={{ background: "rgba(255,255,255,0.06)" }}
-          />
-          <div className="glass-panel rounded-xl h-6 w-36" />
-        </div>
-        <div className="glass-panel rounded-2xl h-32" />
-      </div>
-    );
-  }
-
   const sections = useMemo(
     () => (data?.text ? parseStoriesHtml(data.text) : []),
     [data?.text]
@@ -244,6 +229,21 @@ export default function StoriesWidget({ tripId, onInsuranceDetected }: StoriesWi
       onInsuranceDetected(match.html);
     }
   }, [sections, onInsuranceDetected]);
+
+  if (loading && !data) {
+    return (
+      <div className="widget-section animate-pulse">
+        <div className="flex items-center gap-3 mb-5">
+          <div
+            className="w-6 h-6 rounded-full"
+            style={{ background: "rgba(255,255,255,0.06)" }}
+          />
+          <div className="glass-panel rounded-xl h-6 w-36" />
+        </div>
+        <div className="glass-panel rounded-2xl h-32" />
+      </div>
+    );
+  }
 
   if (!data?.text) return null;
   if (sections.length === 0) return null;
