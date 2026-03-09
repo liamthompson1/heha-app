@@ -3451,7 +3451,7 @@ body {
   margin-bottom: 8px;
 }
 
-/* Stack container */
+/* Stack container — iMessage-style card stack */
 .doc-stack-container {
   position: relative;
   width: 100%;
@@ -3459,39 +3459,22 @@ body {
   margin: 0 auto;
   padding-top: 16px;
   padding-bottom: 8px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.doc-stack-container:active {
+  cursor: grabbing;
 }
 
-/* Background cards for depth illusion */
-.doc-stack-bg {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  border-radius: var(--glass-radius);
-  pointer-events: none;
-}
-.doc-stack-bg-2 {
-  width: 88%;
-  height: 92%;
-  transform: translateX(-50%) rotate(3.5deg);
-  opacity: 0.3;
-}
-.doc-stack-bg-1 {
-  width: 94%;
-  height: 96%;
-  transform: translateX(-50%) rotate(1.8deg);
-  opacity: 0.5;
-}
-
-/* Active card */
+/* Card in stack */
 .doc-stack-card {
-  position: relative;
   border-radius: var(--glass-radius);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s var(--ease-spring);
-}
-.doc-stack-card:hover {
-  transform: translateY(-2px);
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+  width: 100%;
 }
 
 .doc-stack-preview {
@@ -3654,37 +3637,6 @@ body {
 }
 
 /* Swipe navigation */
-.doc-stack-swipe {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 10px;
-}
-
-.doc-stack-swipe-btn {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 50%;
-  color: var(--text-secondary);
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.2s var(--ease-standard);
-}
-.doc-stack-swipe-btn:hover:not(:disabled) {
-  border-color: var(--glass-border-hover);
-  color: var(--text-primary);
-}
-.doc-stack-swipe-btn:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
 .insurance-help-footer {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));

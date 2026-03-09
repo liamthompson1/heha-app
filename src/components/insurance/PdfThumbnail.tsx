@@ -14,13 +14,29 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
 
   useEffect(() => {
     let cancelled = false;
+    let objectUrl: string | null = null;
 
     (async () => {
       try {
-        const pdfjsLib = await import("pdfjs-dist");
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+        // Fetch PDF — try direct URL first, fall back to proxying if CORS blocks it
+        let arrayBuffer: ArrayBuffer;
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          arrayBuffer = await response.arrayBuffer();
+        } catch {
+          // Proxy through our API to avoid CORS
+          const proxyUrl = `/api/proxy-file?url=${encodeURIComponent(url)}`;
+          const response = await fetch(proxyUrl);
+          if (!response.ok) throw new Error("Proxy fetch failed");
+          arrayBuffer = await response.arrayBuffer();
+        }
+        if (cancelled) return;
 
-        const pdf = await pdfjsLib.getDocument(url).promise;
+        const pdfjsLib = await import("pdfjs-dist");
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+
+        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
         if (cancelled) return;
 
         const page = await pdf.getPage(1);
@@ -29,7 +45,7 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Render at 2x for sharpness, fitting the container
+        // Render at 2x for sharpness
         const containerWidth = canvas.parentElement?.clientWidth ?? 340;
         const scale = (containerWidth * 2) / page.getViewport({ scale: 1 }).width;
         const viewport = page.getViewport({ scale });
@@ -42,7 +58,8 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
 
         await page.render({ canvasContext: ctx, viewport, canvas } as Parameters<typeof page.render>[0]).promise;
         if (!cancelled) setLoading(false);
-      } catch {
+      } catch (err) {
+        console.error("[PdfThumbnail]", err);
         if (!cancelled) {
           setError(true);
           setLoading(false);
@@ -50,7 +67,10 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
   }, [url]);
 
   if (error) {

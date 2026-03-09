@@ -34,11 +34,11 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
   const [viewingDoc, setViewingDoc] = useState<StoredDocument | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Touch swipe state
-  const touchStartX = useRef(0);
-  const touchDeltaX = useRef(0);
-  const [swipeOffset, setSwipeOffset] = useState(0);
-  const swiping = useRef(false);
+  // Unified pointer (touch + mouse) swipe state
+  const dragging = useRef(false);
+  const startX = useRef(0);
+  const [dragDelta, setDragDelta] = useState(0);
+  const didDrag = useRef(false);
 
   // Load documents from API
   useEffect(() => {
@@ -107,32 +107,83 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     if (idx >= 0 && idx < docs.length) setActiveIndex(idx);
   }, [docs.length]);
 
-  // Touch handlers for swipe
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchDeltaX.current = 0;
-    swiping.current = true;
+  // Pointer down (touch + mouse)
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    dragging.current = true;
+    didDrag.current = false;
+    startX.current = e.clientX;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!swiping.current) return;
-    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
-    setSwipeOffset(touchDeltaX.current);
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragging.current) return;
+    const delta = e.clientX - startX.current;
+    if (Math.abs(delta) > 5) didDrag.current = true;
+    setDragDelta(delta);
   }, []);
 
-  const handleTouchEnd = useCallback(() => {
-    swiping.current = false;
-    const threshold = 60;
-    if (touchDeltaX.current < -threshold && activeIndex < docs.length - 1) {
+  const onPointerUp = useCallback(() => {
+    if (!dragging.current) return;
+    dragging.current = false;
+    const threshold = 50;
+    if (dragDelta < -threshold && activeIndex < docs.length - 1) {
       setActiveIndex(activeIndex + 1);
-    } else if (touchDeltaX.current > threshold && activeIndex > 0) {
+    } else if (dragDelta > threshold && activeIndex > 0) {
       setActiveIndex(activeIndex - 1);
     }
-    setSwipeOffset(0);
-    touchDeltaX.current = 0;
-  }, [activeIndex, docs.length]);
+    setDragDelta(0);
+  }, [dragDelta, activeIndex, docs.length]);
 
-  // Map StoredDocument to DocumentViewer-compatible shape
+  // Compute card style for iMessage-like stack
+  const getCardStyle = (index: number): React.CSSProperties => {
+    const offset = index - activeIndex;
+    const absDelta = Math.abs(dragDelta);
+    const dragProgress = Math.min(absDelta / 200, 1);
+    const dragDir = dragDelta < 0 ? 1 : -1; // 1 = going forward, -1 = going back
+
+    if (offset === 0) {
+      // Active card: follows the drag
+      return {
+        zIndex: 10,
+        transform: dragDelta
+          ? `translateX(${dragDelta}px) rotate(${dragDelta * 0.02}deg)`
+          : "translateX(0) rotate(0deg)",
+        transition: dragDelta ? "none" : "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+        opacity: 1,
+      };
+    }
+
+    // Cards behind: stacked with decreasing scale and increasing offset
+    const stackOffset = Math.abs(offset);
+    if (stackOffset > 3) return { display: "none" };
+
+    const baseScale = 1 - stackOffset * 0.05;
+    const baseY = stackOffset * 8;
+    const baseRotate = offset > 0 ? stackOffset * 2 : -stackOffset * 2;
+
+    // If dragging toward this card, it should emerge from the stack
+    const isNext = offset === dragDir;
+    let scale = baseScale;
+    let y = baseY;
+    let rotate = baseRotate;
+    let opacity = 1 - stackOffset * 0.15;
+
+    if (isNext && dragDelta) {
+      scale = baseScale + (1 - baseScale) * dragProgress;
+      y = baseY * (1 - dragProgress);
+      rotate = baseRotate * (1 - dragProgress);
+      opacity = opacity + (1 - opacity) * dragProgress;
+    }
+
+    return {
+      zIndex: 10 - stackOffset,
+      transform: `translateY(${y}px) scale(${scale}) rotate(${rotate}deg)`,
+      transition: dragDelta ? "none" : "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+      opacity,
+      pointerEvents: "none" as const,
+    };
+  };
+
   const viewerDoc = viewingDoc
     ? {
         id: viewingDoc.id,
@@ -181,89 +232,83 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     );
   }
 
-  const current = docs[activeIndex];
-
   return (
     <div>
       {fileInput}
 
-      {/* Stacked card with swipe */}
+      {/* iMessage-style card stack */}
       <div
         className="doc-stack-container"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        style={{ touchAction: "pan-y" }}
       >
-        {/* Background cards for stack effect */}
-        {docs.length > 2 && (
-          <div className="doc-stack-bg doc-stack-bg-2 glass-panel" />
-        )}
-        {docs.length > 1 && (
-          <div className="doc-stack-bg doc-stack-bg-1 glass-panel" />
-        )}
+        {docs.map((doc, i) => {
+          const style = getCardStyle(i);
+          if (style.display === "none") return null;
 
-        {/* Active card */}
-        <div
-          className="doc-stack-card glass-panel"
-          style={{
-            transform: swipeOffset ? `translateX(${swipeOffset}px) rotate(${swipeOffset * 0.03}deg)` : undefined,
-            transition: swipeOffset ? "none" : "transform 0.3s var(--ease-spring)",
-          }}
-          onClick={() => {
-            if (Math.abs(touchDeltaX.current) < 10) setViewingDoc(current);
-          }}
-        >
-          {/* Preview */}
-          <div className="doc-stack-preview">
-            {current.type === "image" ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={current.url}
-                alt={current.name}
-                className="doc-stack-img"
-              />
-            ) : (
-              <PdfThumbnail url={current.url} alt={current.name} />
-            )}
-
-            {/* Status badge top-left */}
-            <span className="doc-stack-badge">
-              ✓ {current.status}
-            </span>
-
-            {/* Delete top-right */}
-            <button
-              className="doc-vault-delete"
-              onClick={(e) => {
-                handleDelete(e, current.id);
-                if (activeIndex >= docs.length - 1 && activeIndex > 0) {
-                  setActiveIndex(activeIndex - 1);
-                }
+          return (
+            <div
+              key={doc.id}
+              className="doc-stack-card glass-panel"
+              style={{
+                ...style,
+                position: i === activeIndex ? "relative" : "absolute",
+                top: i === activeIndex ? undefined : 0,
+                left: i === activeIndex ? undefined : 0,
+                right: i === activeIndex ? undefined : 0,
               }}
-              aria-label={`Delete ${current.name}`}
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Info */}
-          <div className="doc-stack-info">
-            <div className="doc-stack-name">{current.name}</div>
-            <div className="doc-stack-meta">{formatSize(current.size_bytes)}</div>
-            <button
-              className="doc-stack-arrow"
-              onClick={(e) => {
-                e.stopPropagation();
-                setViewingDoc(current);
+              onClick={() => {
+                if (!didDrag.current && i === activeIndex) setViewingDoc(doc);
               }}
             >
-              →
-            </button>
-          </div>
-        </div>
+              <div className="doc-stack-preview">
+                {doc.type === "image" ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={doc.url} alt={doc.name} className="doc-stack-img" />
+                ) : (
+                  <PdfThumbnail url={doc.url} alt={doc.name} />
+                )}
+
+                <span className="doc-stack-badge">✓ {doc.status}</span>
+
+                {i === activeIndex && (
+                  <button
+                    className="doc-vault-delete"
+                    onClick={(e) => {
+                      handleDelete(e, doc.id);
+                      if (activeIndex >= docs.length - 1 && activeIndex > 0) {
+                        setActiveIndex(activeIndex - 1);
+                      }
+                    }}
+                    aria-label={`Delete ${doc.name}`}
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              <div className="doc-stack-info">
+                <div className="doc-stack-name">{doc.name}</div>
+                <div className="doc-stack-meta">{formatSize(doc.size_bytes)}</div>
+                <button
+                  className="doc-stack-arrow"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (i === activeIndex) setViewingDoc(doc);
+                  }}
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Navigation: dots + add button */}
+      {/* Navigation: dots + add */}
       <div className="doc-stack-nav">
         <div className="doc-vault-dots">
           {docs.map((_, i) => (
@@ -282,29 +327,6 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
           {uploading ? "⏳" : "+"} {uploading ? "Uploading…" : "Add document"}
         </button>
       </div>
-
-      {/* Arrow navigation */}
-      {docs.length > 1 && (
-        <div className="doc-stack-swipe">
-          <button
-            className="doc-stack-swipe-btn"
-            onClick={() => goTo(activeIndex - 1)}
-            disabled={activeIndex === 0}
-          >
-            ‹
-          </button>
-          <span style={{ fontSize: "0.8rem", color: "var(--text-tertiary)" }}>
-            {activeIndex + 1} of {docs.length}
-          </span>
-          <button
-            className="doc-stack-swipe-btn"
-            onClick={() => goTo(activeIndex + 1)}
-            disabled={activeIndex === docs.length - 1}
-          >
-            ›
-          </button>
-        </div>
-      )}
 
       {viewerDoc && (
         <DocumentViewer doc={viewerDoc} onClose={() => setViewingDoc(null)} />
