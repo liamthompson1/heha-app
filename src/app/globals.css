@@ -3368,3 +3368,134 @@ body {
     font-size: 0.75rem;
   }
 }
+
+/* ——————————————————————————————————————
+   Insurance Hub
+   —————————————————————————————————————— */
+
+.insurance-policy-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 20px 24px;
+  transition: border-color 0.3s var(--ease-standard);
+}
+
+.insurance-policy-card:hover {
+  border-color: var(--glass-border-hover);
+}
+
+.insurance-policy-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.insurance-expand-icon {
+  font-size: 1rem;
+  color: var(--text-tertiary);
+  transition: transform 0.3s var(--ease-spring);
+  flex-shrink: 0;
+}
+
+.insurance-policy-details {
+  padding-top: 20px;
+  margin-top: 16px;
+  border-top: 1px solid var(--glass-border);
+  animation: fade-in-up 0.35s var(--ease-spring) both;
+}
+
+.insurance-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.insurance-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  border: 2px dashed var(--glass-border);
+  border-radius: var(--glass-radius);
+  background: rgba(255, 255, 255, 0.015);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-standard);
+}
+
+.insurance-upload-zone:hover {
+  border-color: var(--glass-border-hover);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.insurance-upload-zone-active {
+  border-color: var(--teal) !important;
+  background: rgba(46, 205, 193, 0.04) !important;
+}
+
+.insurance-doc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius-xs);
+  transition: border-color 0.3s var(--ease-standard);
+}
+
+.insurance-doc-row:hover {
+  border-color: var(--glass-border-hover);
+}
+
+.insurance-doc-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s var(--ease-standard);
+  flex-shrink: 0;
+}
+
+.insurance-doc-action:hover {
+  color: var(--coral);
+  background: rgba(255, 99, 89, 0.1);
+}
+
+.insurance-help-footer {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 32px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

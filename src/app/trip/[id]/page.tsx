@@ -17,6 +17,7 @@ import TravelersWidget from "@/components/trip-detail/TravelersWidget";
 import TripOverviewWidget from "@/components/trip-detail/TripOverviewWidget";
 import ContentLoadingSkeleton from "@/components/trip-detail/ContentLoadingSkeleton";
 import StoriesWidget from "@/components/trip-detail/StoriesWidget";
+import Link from "next/link";
 import { formatDateRange } from "@/lib/format-date";
 
 export default function TripDetailPage() {
@@ -269,8 +270,26 @@ export default function TripDetailPage() {
           <TripOverviewWidget trip={trip} bestAreas={content?.best_areas} />
         </ScrollReveal>
 
+        {/* Insurance */}
+        <ScrollReveal delay={550}>
+          <div className="widget-section">
+            <Link href={`/trip/${trip.id}/insurance`} className="missing-info-card">
+              <span className="missing-info-icon">🛡️</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "1rem", marginBottom: 4 }}>
+                  Protect your {trip.trip.destination || "trip"} trip
+                </div>
+                <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
+                  View policies, upload documents &amp; manage your cover
+                </div>
+              </div>
+              <span className="missing-info-arrow" style={{ color: "var(--text-tertiary)" }}>→</span>
+            </Link>
+          </div>
+        </ScrollReveal>
+
         {/* Actions */}
-        <ScrollReveal delay={600}>
+        <ScrollReveal delay={650}>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center pt-8">
             <GlassButton href="/" variant="blue" size="lg">
               Back to My Trips
