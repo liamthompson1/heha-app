@@ -21,6 +21,7 @@ export default function InsurancePage() {
   const [insuranceData, setInsuranceData] = useState<ParsedInsuranceData | null>(null);
 
   // Fetch insurancejson + trip json in parallel
+  // Stories API returns { text: "<json string>", ... } — parse the text field
   useEffect(() => {
     if (!trip?.traveller_trip_id) return;
 
@@ -35,11 +36,17 @@ export default function InsurancePage() {
         let productTypes: InsuranceProductType[] | undefined;
 
         if (insuranceRes.ok) {
-          insuranceJson = await insuranceRes.json();
+          const envelope = await insuranceRes.json();
+          if (envelope.text) {
+            insuranceJson = JSON.parse(envelope.text);
+          }
         }
         if (tripRes.ok) {
-          const tripData = await tripRes.json();
-          productTypes = tripData?.trip?.productTypes;
+          const envelope = await tripRes.json();
+          if (envelope.text) {
+            const tripData = JSON.parse(envelope.text);
+            productTypes = tripData?.trip?.productTypes;
+          }
         }
 
         setInsuranceData(parseInsuranceJson(insuranceJson, productTypes));
