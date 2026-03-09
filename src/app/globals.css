@@ -3467,23 +3467,13 @@ body {
   cursor: grabbing;
 }
 
-/* Behind cards — empty shells for the peek/depth effect */
-.doc-stack-behind {
-  position: absolute;
-  inset: 16px 0 8px;
-  border-radius: var(--glass-radius);
-  pointer-events: none;
-  transform-origin: center bottom;
-}
-
-/* Active card */
+/* Card in pile */
 .doc-stack-card {
-  position: relative;
   border-radius: var(--glass-radius);
   overflow: hidden;
   cursor: pointer;
   transform-origin: center center;
-  will-change: transform;
+  will-change: transform, opacity;
   width: 100%;
 }
 

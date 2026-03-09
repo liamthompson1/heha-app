@@ -28,17 +28,33 @@ interface DocumentVaultProps {
 
 export default function DocumentVault({ tripId }: DocumentVaultProps) {
   const [docs, setDocs] = useState<StoredDocument[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
+  // order[0] is top of pile, order[1] is next, etc.
+  const [order, setOrder] = useState<number[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [viewingDoc, setViewingDoc] = useState<StoredDocument | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Swipe state (pointer events for touch + mouse)
+  // Drag state
   const dragging = useRef(false);
   const startX = useRef(0);
-  const [dragDelta, setDragDelta] = useState(0);
+  const startY = useRef(0);
+  const [delta, setDelta] = useState({ x: 0, y: 0 });
   const didDrag = useRef(false);
+
+  // Dismiss animation
+  const [dismissing, setDismissing] = useState<{ x: number; rotate: number } | null>(null);
+
+  // Sync order when docs change
+  useEffect(() => {
+    setOrder((prev) => {
+      if (prev.length === 0) return docs.map((_, i) => i);
+      // Keep existing order, append new indices
+      const existing = prev.filter((i) => i < docs.length);
+      const newIndices = docs.map((_, i) => i).filter((i) => !existing.includes(i));
+      return [...existing, ...newIndices];
+    });
+  }, [docs.length]);
 
   useEffect(() => {
     (async () => {
@@ -82,9 +98,7 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
 
   const handleDelete = useCallback(async (e: React.MouseEvent, docId: string) => {
     e.stopPropagation();
-    const wasLast = activeIndex >= docs.length - 1 && activeIndex > 0;
     setDocs((prev) => prev.filter((d) => d.id !== docId));
-    if (wasLast) setActiveIndex((i) => i - 1);
     try {
       await fetch(`/api/trips/${tripId}/documents`, {
         method: "DELETE",
@@ -95,40 +109,67 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
       const res = await fetch(`/api/trips/${tripId}/documents`);
       if (res.ok) setDocs((await res.json()).documents ?? []);
     }
-  }, [tripId, activeIndex, docs.length]);
+  }, [tripId]);
 
-  const goTo = useCallback((idx: number) => {
-    if (idx >= 0 && idx < docs.length) setActiveIndex(idx);
-  }, [docs.length]);
+  // Send top card to back of pile
+  const sendToBack = useCallback(() => {
+    setOrder((prev) => {
+      if (prev.length <= 1) return prev;
+      return [...prev.slice(1), prev[0]];
+    });
+  }, []);
+
+  // Bring last card to top
+  const bringToFront = useCallback(() => {
+    setOrder((prev) => {
+      if (prev.length <= 1) return prev;
+      return [prev[prev.length - 1], ...prev.slice(0, -1)];
+    });
+  }, []);
 
   // Pointer handlers
   const onPointerDown = useCallback((e: React.PointerEvent) => {
+    if (dismissing) return;
     dragging.current = true;
     didDrag.current = false;
     startX.current = e.clientX;
+    startY.current = e.clientY;
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  }, []);
+  }, [dismissing]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragging.current) return;
-    const delta = e.clientX - startX.current;
-    if (Math.abs(delta) > 5) didDrag.current = true;
-    // Resist at edges
-    const atEdge = (delta > 0 && activeIndex === 0) || (delta < 0 && activeIndex === docs.length - 1);
-    setDragDelta(atEdge ? delta * 0.2 : delta);
-  }, [activeIndex, docs.length]);
+    const dx = e.clientX - startX.current;
+    const dy = e.clientY - startY.current;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) didDrag.current = true;
+    setDelta({ x: dx, y: dy * 0.3 }); // dampen vertical
+  }, []);
 
   const onPointerUp = useCallback(() => {
     if (!dragging.current) return;
     dragging.current = false;
-    const threshold = 50;
-    if (dragDelta < -threshold && activeIndex < docs.length - 1) {
-      setActiveIndex(activeIndex + 1);
-    } else if (dragDelta > threshold && activeIndex > 0) {
-      setActiveIndex(activeIndex - 1);
+
+    const threshold = 80;
+    if (Math.abs(delta.x) > threshold && docs.length > 1) {
+      // Dismiss: fly off in the swipe direction
+      const flyX = delta.x > 0 ? 500 : -500;
+      const flyRotate = delta.x > 0 ? 20 : -20;
+      setDismissing({ x: flyX, rotate: flyRotate });
+      setDelta({ x: 0, y: 0 });
+
+      setTimeout(() => {
+        if (delta.x < 0) {
+          sendToBack();
+        } else {
+          bringToFront();
+        }
+        setDismissing(null);
+      }, 300);
+    } else {
+      // Snap back
+      setDelta({ x: 0, y: 0 });
     }
-    setDragDelta(0);
-  }, [dragDelta, activeIndex, docs.length]);
+  }, [delta, docs.length, sendToBack, bringToFront]);
 
   const viewerDoc = viewingDoc ? {
     id: viewingDoc.id,
@@ -176,8 +217,10 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
     );
   }
 
-  const current = docs[activeIndex];
-  const behindCount = Math.min(docs.length - 1, 2); // max 2 behind cards
+  // Render cards in reverse order (bottom of pile first, top last so it's on top in DOM)
+  const visibleOrder = order.slice(0, Math.min(order.length, 3));
+  const topIndex = order[0];
+  const topDoc = docs[topIndex];
 
   return (
     <div>
@@ -191,69 +234,105 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
         onPointerCancel={onPointerUp}
         style={{ touchAction: "pan-y" }}
       >
-        {/* Behind cards — just empty styled shells for the peek effect */}
-        {behindCount >= 2 && (
-          <div
-            className="doc-stack-behind glass-panel"
-            style={{
-              transform: "translateY(-6px) scale(0.92)",
-              opacity: 0.3,
-            }}
-          />
-        )}
-        {behindCount >= 1 && (
-          <div
-            className="doc-stack-behind glass-panel"
-            style={{
-              transform: "translateY(-3px) scale(0.96)",
-              opacity: 0.5,
-            }}
-          />
-        )}
+        {/* Render from bottom to top */}
+        {[...visibleOrder].reverse().map((docIdx, renderIdx) => {
+          const doc = docs[docIdx];
+          if (!doc) return null;
+          const pilePos = visibleOrder.indexOf(docIdx); // 0 = top, 1 = second, 2 = third
+          const isTop = pilePos === 0;
 
-        {/* Active card */}
-        <div
-          className="doc-stack-card glass-panel"
-          style={{
-            transform: dragDelta
-              ? `translateX(${dragDelta}px) rotate(${dragDelta * 0.015}deg)`
-              : undefined,
-            transition: dragDelta ? "none" : "transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
-          }}
-          onClick={() => {
-            if (!didDrag.current) setViewingDoc(current);
-          }}
-        >
-          <div className="doc-stack-preview">
-            {current.type === "image" ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={current.url} alt={current.name} className="doc-stack-img" />
-            ) : (
-              <PdfThumbnail url={current.url} alt={current.name} />
-            )}
+          // Stack transforms for behind cards
+          let transform: string;
+          let opacity: number;
+          let transition: string;
+          const spring = "0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1)";
 
-            <span className="doc-stack-badge">✓ {current.status}</span>
+          if (isTop) {
+            if (dismissing) {
+              transform = `translateX(${dismissing.x}px) rotate(${dismissing.rotate}deg)`;
+              opacity = 0;
+              transition = `transform 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.3s ease`;
+            } else if (delta.x !== 0 || delta.y !== 0) {
+              transform = `translateX(${delta.x}px) translateY(${delta.y}px) rotate(${delta.x * 0.04}deg)`;
+              opacity = 1;
+              transition = "none";
+            } else {
+              transform = "translateX(0) translateY(0) rotate(0deg)";
+              opacity = 1;
+              transition = `all ${spring}`;
+            }
+          } else {
+            // Behind cards: offset down and scale smaller
+            const scaleVal = 1 - pilePos * 0.04;
+            const yOffset = pilePos * 10;
 
-            <button
-              className="doc-vault-delete"
-              onClick={(e) => handleDelete(e, current.id)}
-              aria-label={`Delete ${current.name}`}
+            // When dragging, the next card should start emerging
+            let emergeFactor = 0;
+            if (pilePos === 1 && (delta.x !== 0 || dismissing)) {
+              emergeFactor = Math.min(Math.abs(delta.x) / 150, 1);
+            }
+            const currentScale = scaleVal + (1 - scaleVal) * emergeFactor;
+            const currentY = yOffset * (1 - emergeFactor);
+
+            transform = `translateY(${currentY}px) scale(${currentScale})`;
+            opacity = 1 - pilePos * 0.2 + emergeFactor * 0.2;
+            transition = delta.x !== 0 ? "none" : `all ${spring}`;
+          }
+
+          return (
+            <div
+              key={doc.id}
+              className="doc-stack-card glass-panel"
+              style={{
+                position: isTop ? "relative" : "absolute",
+                inset: isTop ? undefined : "0",
+                zIndex: visibleOrder.length - pilePos,
+                transform,
+                opacity,
+                transition,
+                transformOrigin: "center center",
+              }}
+              onClick={() => {
+                if (!didDrag.current && isTop) setViewingDoc(doc);
+              }}
             >
-              ✕
-            </button>
-          </div>
+              <div className="doc-stack-preview">
+                {doc.type === "image" ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={doc.url} alt={doc.name} className="doc-stack-img" />
+                ) : (
+                  <PdfThumbnail url={doc.url} alt={doc.name} />
+                )}
 
-          <div className="doc-stack-info">
-            <div className="doc-stack-name">{current.name}</div>
-            <div className="doc-stack-meta">{formatSize(current.size_bytes)}</div>
-            <button
-              className="doc-stack-arrow"
-              onClick={(e) => { e.stopPropagation(); setViewingDoc(current); }}
-            >
-              →
-            </button>
-          </div>
-        </div>
+                {isTop && (
+                  <>
+                    <span className="doc-stack-badge">✓ {doc.status}</span>
+                    <button
+                      className="doc-vault-delete"
+                      onClick={(e) => handleDelete(e, doc.id)}
+                      aria-label={`Delete ${doc.name}`}
+                    >
+                      ✕
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="doc-stack-info">
+                <div className="doc-stack-name">{doc.name}</div>
+                <div className="doc-stack-meta">{formatSize(doc.size_bytes)}</div>
+                {isTop && (
+                  <button
+                    className="doc-stack-arrow"
+                    onClick={(e) => { e.stopPropagation(); setViewingDoc(doc); }}
+                  >
+                    →
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Dots + add */}
@@ -262,8 +341,12 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
           {docs.map((_, i) => (
             <button
               key={i}
-              className={`doc-vault-dot ${i === activeIndex ? "doc-vault-dot-active" : ""}`}
-              onClick={() => goTo(i)}
+              className={`doc-vault-dot ${order[0] === i ? "doc-vault-dot-active" : ""}`}
+              onClick={() => {
+                // Rotate order so this index is on top
+                const pos = order.indexOf(i);
+                if (pos > 0) setOrder([...order.slice(pos), ...order.slice(0, pos)]);
+              }}
             />
           ))}
         </div>
