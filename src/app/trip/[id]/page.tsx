@@ -27,29 +27,44 @@ export default function TripDetailPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // Detect insurance: check both booked policies (insurancejson) and purchasable products (json)
+  // Detect insurance from main stories HTML + JSON endpoints
   useEffect(() => {
     if (!trip?.traveller_trip_id) return;
     (async () => {
       try {
+        // Fetch main stories (same data StoriesWidget renders) — most reliable source
+        const storiesRes = await fetch(`/api/trips/${trip.id}/stories`);
+        if (storiesRes.ok) {
+          const stories = await storiesRes.json();
+          if (stories.text && /insurance|travel\s*cover|protection\s*plan/i.test(stories.text)) {
+            setHasInsurance(true);
+            return;
+          }
+        }
+
+        // Fallback: check JSON endpoints
         const [insuranceRes, tripRes] = await Promise.all([
           fetch(`/api/trips/${trip.id}/stories?path=insurancejson`),
           fetch(`/api/trips/${trip.id}/stories?path=json`),
         ]);
 
-        // Check for existing booked policies
         if (insuranceRes.ok) {
           const ins = await insuranceRes.json();
-          const hasBooked =
-            (ins.annualPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled) ||
-            (ins.singleTripPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled);
-          if (hasBooked) { setHasInsurance(true); return; }
+          // Handle both raw JSON and Stories-wrapped responses
+          const data = ins.annualPolicies ? ins : (ins.text ? (() => { try { return JSON.parse(ins.text); } catch { return null; } })() : null);
+          if (data) {
+            const hasBooked =
+              (data.annualPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled) ||
+              (data.singleTripPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled);
+            if (hasBooked) { setHasInsurance(true); return; }
+          }
         }
 
-        // Check for insurance available to purchase
         if (tripRes.ok) {
-          const data = await tripRes.json();
-          const productTypes = data?.trip?.productTypes;
+          const tripData = await tripRes.json();
+          // Handle both raw and wrapped
+          const trip_ = tripData?.trip ?? (tripData.text ? (() => { try { return JSON.parse(tripData.text)?.trip; } catch { return null; } })() : null);
+          const productTypes = trip_?.productTypes;
           if (Array.isArray(productTypes)) {
             const hasIns = productTypes.some(
               (pt: { productType: string }) => pt.productType?.toLowerCase() === "insurance"
