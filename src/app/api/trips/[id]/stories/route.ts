@@ -59,7 +59,8 @@ export async function GET(
     // Build upstream URL, forwarding any extra params from the client
     const storiesUrl = new URL(STORIES_BASE);
     storiesUrl.searchParams.set("resourcePath", resourcePath);
-    // JSON endpoints (insurancejson, json) need format=json; default stories use HTML
+    // Default format: json for JSON endpoints, html otherwise.
+    // Client can override by passing ?format=markdown etc.
     const isJsonEndpoint = subPath === "insurancejson" || subPath === "json";
     storiesUrl.searchParams.set("format", isJsonEndpoint ? "json" : "html");
     storiesUrl.searchParams.set("disableFallbackOnError", "true");
