@@ -23,8 +23,30 @@ export default function TripDetailPage() {
     { transform: (raw) => (raw as { trip?: TripRow }).trip ?? null }
   );
   const notFound = !loading && !trip;
+  const [coverType, setCoverType] = useState<"annual" | "single" | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  // Fetch insurance cover type from insurancejson
+  useEffect(() => {
+    if (!trip?.traveller_trip_id) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/trips/${trip.id}/stories?path=insurancejson`);
+        if (!res.ok) return;
+        const envelope = await res.json();
+        const text = envelope.text ?? envelope;
+        const ins = typeof text === "string" ? JSON.parse(text) : text;
+        if ((ins.annualPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled)) {
+          setCoverType("annual");
+        } else if ((ins.singleTripPolicies ?? []).some((p: { cancelled: boolean }) => !p.cancelled)) {
+          setCoverType("single");
+        }
+      } catch {
+        // Silent fail
+      }
+    })();
+  }, [trip?.traveller_trip_id, trip?.id]);
 
   const handleImageRegenerated = useCallback((newUrl: string) => {
     if (!trip) return;
@@ -173,10 +195,16 @@ export default function TripDetailPage() {
               <Link href={`/trip/${trip.id}/insurance`} className="missing-info-card">
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "1rem", marginBottom: 4 }}>
-                    {trip.trip.destination || "Travel"} Insurance
+                    {coverType === "annual"
+                      ? "Annual Travel Insurance"
+                      : coverType === "single"
+                        ? "Single Trip Insurance"
+                        : `${trip.trip.destination || "Travel"} Insurance`}
                   </div>
                   <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
-                    View policies, upload documents &amp; manage your cover
+                    {coverType
+                      ? `You have ${coverType === "annual" ? "annual" : "single trip"} cover — view &amp; manage your policy`
+                      : "View policies, upload documents & manage your cover"}
                   </div>
                 </div>
                 <span className="missing-info-arrow" style={{ color: "var(--text-tertiary)" }}>→</span>
