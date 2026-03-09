@@ -3399,24 +3399,18 @@ body {
   background: none;
   border: none;
   padding: 0;
-  cursor: pointer;
   text-align: left;
   color: inherit;
   font: inherit;
 }
 
-.insurance-expand-icon {
-  font-size: 1rem;
-  color: var(--text-tertiary);
-  transition: transform 0.3s var(--ease-spring);
-  flex-shrink: 0;
-}
-
-.insurance-policy-details {
-  padding-top: 20px;
+.insurance-policy-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 16px;
   margin-top: 16px;
   border-top: 1px solid var(--glass-border);
-  animation: fade-in-up 0.35s var(--ease-spring) both;
 }
 
 .insurance-status-badge {
@@ -3430,7 +3424,7 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* --- Document Vault: card carousel --- */
+/* --- Document Vault: stacked cards --- */
 
 .doc-vault-upload {
   display: flex;
@@ -3457,49 +3451,64 @@ body {
   margin-bottom: 8px;
 }
 
-.doc-vault-carousel {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding: 4px 0 12px;
-}
-.doc-vault-carousel::-webkit-scrollbar {
-  display: none;
+/* Stack container */
+.doc-stack-container {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  padding-top: 16px;
+  padding-bottom: 8px;
 }
 
-.doc-vault-card {
-  flex: 0 0 260px;
-  scroll-snap-align: start;
+/* Background cards for depth illusion */
+.doc-stack-bg {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  border-radius: var(--glass-radius);
+  pointer-events: none;
+}
+.doc-stack-bg-2 {
+  width: 88%;
+  height: 92%;
+  transform: translateX(-50%) rotate(3.5deg);
+  opacity: 0.3;
+}
+.doc-stack-bg-1 {
+  width: 94%;
+  height: 96%;
+  transform: translateX(-50%) rotate(1.8deg);
+  opacity: 0.5;
+}
+
+/* Active card */
+.doc-stack-card {
+  position: relative;
   border-radius: var(--glass-radius);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s var(--ease-spring), border-color 0.3s var(--ease-standard);
-  display: flex;
-  flex-direction: column;
+  transition: transform 0.3s var(--ease-spring);
 }
-.doc-vault-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--glass-border-hover);
+.doc-stack-card:hover {
+  transform: translateY(-2px);
 }
 
-.doc-vault-card-preview {
+.doc-stack-preview {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 220px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.03);
 }
 
-.doc-vault-card-img {
+.doc-stack-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.doc-vault-card-placeholder {
+.doc-stack-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3509,36 +3518,37 @@ body {
   color: var(--text-tertiary);
 }
 
-.doc-vault-badge {
+.doc-stack-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
-  border: 1px solid;
+  background: rgba(46, 205, 193, 0.15);
+  color: var(--teal);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .doc-vault-delete {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   cursor: pointer;
   border-radius: 50%;
   transition: all 0.2s var(--ease-standard);
@@ -3548,31 +3558,111 @@ body {
   color: #fff;
 }
 
-.doc-vault-card-info {
-  padding: 14px 16px;
+.doc-stack-info {
+  padding: 16px 18px;
   position: relative;
 }
 
-.doc-vault-card-name {
-  font-size: 0.9rem;
+.doc-stack-name {
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-right: 36px;
+  padding-right: 44px;
 }
 
-.doc-vault-card-meta {
-  font-size: 0.75rem;
+.doc-stack-meta {
+  font-size: 0.8rem;
   color: var(--text-tertiary);
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
-.doc-vault-card-arrow {
+.doc-stack-arrow {
   position: absolute;
-  right: 14px;
+  right: 16px;
   bottom: 14px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
+}
+.doc-stack-arrow:hover {
+  border-color: var(--glass-border-hover);
+  color: var(--text-primary);
+}
+
+/* Navigation row */
+.doc-stack-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.doc-stack-add-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: color 0.2s;
+}
+.doc-stack-add-btn:hover {
+  color: var(--text-primary);
+}
+.doc-stack-add-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.doc-vault-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.doc-vault-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--glass-border);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-standard);
+}
+.doc-vault-dot-active {
+  background: var(--text-secondary);
+  width: 18px;
+  border-radius: 3px;
+}
+
+/* Swipe navigation */
+.doc-stack-swipe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.doc-stack-swipe-btn {
   width: 32px;
   height: 32px;
   display: flex;
@@ -3582,49 +3672,17 @@ body {
   border: 1px solid var(--glass-border);
   border-radius: 50%;
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
 }
-
-.doc-vault-card-add {
-  border: 2px dashed var(--glass-border);
-  background: transparent;
-}
-.doc-vault-card-add:hover {
+.doc-stack-swipe-btn:hover:not(:disabled) {
   border-color: var(--glass-border-hover);
+  color: var(--text-primary);
 }
-.doc-vault-card-add .doc-vault-card-preview {
-  height: 100%;
-  min-height: 180px;
-  background: transparent;
-}
-
-.doc-vault-dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 0 4px;
-}
-
-.doc-vault-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--glass-border);
-  transition: all 0.3s var(--ease-standard);
-}
-.doc-vault-dot-active {
-  background: var(--text-secondary);
-  width: 18px;
-  border-radius: 3px;
-}
-
-@media (max-width: 640px) {
-  .doc-vault-card {
-    flex: 0 0 220px;
-  }
-  .doc-vault-card-preview {
-    height: 150px;
-  }
+.doc-stack-swipe-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 .insurance-help-footer {

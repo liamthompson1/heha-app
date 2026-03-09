@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import type { InsurancePolicy } from "@/types/insurance";
 import { formatDate as formatIsoDate } from "@/lib/format-date";
 
@@ -29,16 +28,11 @@ interface PolicyCardProps {
 }
 
 export default function PolicyCard({ policy }: PolicyCardProps) {
-  const [expanded, setExpanded] = useState(false);
   const statusColor = STATUS_COLORS[policy.status];
 
   return (
     <div className="insurance-policy-card">
-      <button
-        className="insurance-policy-header"
-        onClick={() => setExpanded((e) => !e)}
-        aria-expanded={expanded}
-      >
+      <div className="insurance-policy-header">
         <span style={{ fontSize: "1.5rem", flexShrink: 0 }}>🛡️</span>
 
         <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
@@ -86,60 +80,31 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
             {formatDate(policy.start_date)} — {formatDate(policy.end_date)}
           </div>
         </div>
+      </div>
 
-        <span
-          className="insurance-expand-icon"
-          style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
-        >
-          ▾
-        </span>
-      </button>
-
-      {expanded && (
-        <div className="insurance-policy-details">
-          {policy.benefits.length > 0 && (
-            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
-              {policy.benefits.map((b, i) => (
-                <li
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "6px 0",
-                    fontSize: "0.9rem",
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  <span>{b.icon}</span>
-                  <span>{b.text}</span>
-                </li>
-              ))}
-            </ul>
+      {/* Action buttons */}
+      {policy.links && (
+        <div className="insurance-policy-actions">
+          {policy.links.view && (
+            <a
+              href={policy.links.view}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-button glass-button-teal glass-button-sm"
+            >
+              View Policy
+            </a>
           )}
-
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {policy.links?.view && (
-              <a
-                href={policy.links.view}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-button glass-button-teal glass-button-sm"
-              >
-                View Policy
-              </a>
-            )}
-            {policy.links?.amend && (
-              <a
-                href={policy.links.amend}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-button glass-button-sm"
-              >
-                Amend Policy
-              </a>
-            )}
-          </div>
+          {policy.links.amend && (
+            <a
+              href={policy.links.amend}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-button glass-button-sm"
+            >
+              Amend Policy
+            </a>
+          )}
         </div>
       )}
     </div>

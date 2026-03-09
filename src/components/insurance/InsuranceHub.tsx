@@ -35,7 +35,7 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
   const purchaseOption = insuranceData?.purchaseOption ?? null;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-8 pb-16">
+    <div className="max-w-5xl mx-auto px-6 pt-8 pb-16" style={{ width: "100%", overflowX: "hidden" }}>
       {/* Active Policies */}
       <ScrollReveal delay={100}>
         <div className="widget-section">
@@ -92,30 +92,6 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
         </div>
       </ScrollReveal>
 
-      {/* Quick Actions — only when there are policies */}
-      {policies.length > 0 && policies[0].links && (
-        <ScrollReveal delay={150}>
-          <div className="insurance-actions-row">
-            <a
-              href={policies[0].links.view}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-button glass-button-teal glass-button-sm"
-            >
-              View Policy
-            </a>
-            <a
-              href={policies[0].links.amend}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-button glass-button-sm"
-            >
-              Amend Policy
-            </a>
-          </div>
-        </ScrollReveal>
-      )}
-
       {/* Document Vault */}
       <ScrollReveal delay={200}>
         <div className="widget-section">
@@ -123,7 +99,7 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
             <span style={{ fontSize: "1.25rem" }}>{"\u{1F5C2}\uFE0F"}</span>
             <h2 className="widget-title">Document Vault</h2>
           </div>
-          <DocumentVault documents={[]} />
+          <DocumentVault tripId={trip.id} />
         </div>
       </ScrollReveal>
 
