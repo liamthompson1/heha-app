@@ -1,11 +1,16 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useCachedFetch } from "@/hooks/useCachedFetch";
 import PageShell from "@/components/PageShell";
 import GlassButton from "@/components/GlassButton";
 import InsuranceHub from "@/components/insurance/InsuranceHub";
+import InsuranceBanner from "@/components/insurance/InsuranceBanner";
 import type { TripRow } from "@/types/trip";
+import { parseStoriesHtml, INSURANCE_KEYWORDS } from "@/lib/stories-parser";
+import { parseInsuranceHtml } from "@/lib/insurance-parser";
+import type { ParsedInsuranceData } from "@/lib/insurance-parser";
 
 export default function InsurancePage() {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +19,29 @@ export default function InsurancePage() {
     { transform: (raw) => (raw as { trip?: TripRow }).trip ?? null }
   );
   const notFound = !loading && !trip;
+  const [insuranceData, setInsuranceData] = useState<ParsedInsuranceData | null>(null);
+
+  // Fetch stories and parse insurance section
+  useEffect(() => {
+    if (!trip?.traveller_trip_id) return;
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/trips/${trip.id}/stories`);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!json.text) return;
+
+        const sections = parseStoriesHtml(json.text);
+        const match = sections.find((s) => INSURANCE_KEYWORDS.test(s.title));
+        if (match) {
+          setInsuranceData(parseInsuranceHtml(match.html));
+        }
+      } catch {
+        // Silent fail — insurance data is an enhancement
+      }
+    })();
+  }, [trip?.traveller_trip_id, trip?.id]);
 
   if (loading) {
     return (
@@ -52,8 +80,13 @@ export default function InsurancePage() {
   }
 
   return (
-    <PageShell backHref={`/trip/${id}`}>
-      <InsuranceHub trip={trip} />
+    <PageShell backHref={`/trip/${id}`} variant="full">
+      <InsuranceBanner
+        destination={trip.trip.destination}
+        startDate={trip.trip.start_date}
+        endDate={trip.trip.end_date}
+      />
+      <InsuranceHub trip={trip} insuranceData={insuranceData} />
     </PageShell>
   );
 }

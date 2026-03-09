@@ -77,26 +77,28 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
 
       {expanded && (
         <div className="insurance-policy-details">
-          <div
-            style={{
-              fontSize: "2rem",
-              fontWeight: 800,
-              color: "var(--teal)",
-              marginBottom: 16,
-            }}
-          >
-            {currencyFmt.format(policy.coverage_amount / 100)}
-            <span
+          {policy.coverage_amount > 0 && (
+            <div
               style={{
-                fontSize: "0.85rem",
-                fontWeight: 400,
-                color: "var(--text-tertiary)",
-                marginLeft: 8,
+                fontSize: "2rem",
+                fontWeight: 800,
+                color: "var(--teal)",
+                marginBottom: 16,
               }}
             >
-              total cover
-            </span>
-          </div>
+              {currencyFmt.format(policy.coverage_amount / 100)}
+              <span
+                style={{
+                  fontSize: "0.85rem",
+                  fontWeight: 400,
+                  color: "var(--text-tertiary)",
+                  marginLeft: 8,
+                }}
+              >
+                total cover
+              </span>
+            </div>
+          )}
 
           <ul style={{ listStyle: "none", padding: 0, margin: "0 0 16px 0" }}>
             {policy.benefits.map((b, i) => (
@@ -117,15 +119,17 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
             ))}
           </ul>
 
-          <div
-            style={{
-              fontSize: "0.85rem",
-              color: "var(--text-tertiary)",
-              marginBottom: 20,
-            }}
-          >
-            Excess: {currencyFmt.format(policy.excess / 100)}
-          </div>
+          {policy.excess > 0 && (
+            <div
+              style={{
+                fontSize: "0.85rem",
+                color: "var(--text-tertiary)",
+                marginBottom: 20,
+              }}
+            >
+              Excess: {currencyFmt.format(policy.excess / 100)}
+            </div>
+          )}
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <GlassButton variant="teal" size="sm" onClick={() => {}}>

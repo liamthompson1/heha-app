@@ -30,6 +30,7 @@ export default function TripDetailPage() {
   const notFound = !loading && !trip;
   const [content, setContent] = useState<TripContent | null>(null);
   const [contentLoading, setContentLoading] = useState(false);
+  const [hasInsurance, setHasInsurance] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -215,7 +216,7 @@ export default function TripDetailPage() {
         {/* HX Stories content */}
         {trip.traveller_trip_id && (
           <ScrollReveal delay={150}>
-            <StoriesWidget tripId={trip.id} />
+            <StoriesWidget tripId={trip.id} onInsuranceDetected={() => setHasInsurance(true)} />
           </ScrollReveal>
         )}
 
@@ -270,23 +271,25 @@ export default function TripDetailPage() {
           <TripOverviewWidget trip={trip} bestAreas={content?.best_areas} />
         </ScrollReveal>
 
-        {/* Insurance */}
-        <ScrollReveal delay={550}>
-          <div className="widget-section">
-            <Link href={`/trip/${trip.id}/insurance`} className="missing-info-card">
-              <span className="missing-info-icon">🛡️</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "1rem", marginBottom: 4 }}>
-                  Protect your {trip.trip.destination || "trip"} trip
+        {/* Insurance — only shown when stories contain insurance content */}
+        {hasInsurance && (
+          <ScrollReveal delay={550}>
+            <div className="widget-section">
+              <Link href={`/trip/${trip.id}/insurance`} className="missing-info-card">
+                <span className="missing-info-icon">🛡️</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "1rem", marginBottom: 4 }}>
+                    Protect your {trip.trip.destination || "trip"} trip
+                  </div>
+                  <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
+                    View policies, upload documents &amp; manage your cover
+                  </div>
                 </div>
-                <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
-                  View policies, upload documents &amp; manage your cover
-                </div>
-              </div>
-              <span className="missing-info-arrow" style={{ color: "var(--text-tertiary)" }}>→</span>
-            </Link>
-          </div>
-        </ScrollReveal>
+                <span className="missing-info-arrow" style={{ color: "var(--text-tertiary)" }}>→</span>
+              </Link>
+            </div>
+          </ScrollReveal>
+        )}
 
         {/* Actions */}
         <ScrollReveal delay={650}>

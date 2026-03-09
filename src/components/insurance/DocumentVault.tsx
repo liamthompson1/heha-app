@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import type { InsuranceDocument } from "@/types/insurance";
 import { formatDate } from "@/lib/format-date";
+import DocumentViewer from "./DocumentViewer";
 
 const CATEGORY_LABELS: Record<InsuranceDocument["category"], { emoji: string; label: string }> = {
-  policy: { emoji: "📋", label: "Policy Documents" },
-  claim: { emoji: "📝", label: "Claims" },
-  receipt: { emoji: "🧾", label: "Receipts" },
+  policy: { emoji: "\u{1F4CB}", label: "Policy Documents" },
+  claim: { emoji: "\u{1F4DD}", label: "Claims" },
+  receipt: { emoji: "\u{1F9FE}", label: "Receipts" },
 };
 
 const STATUS_COLORS: Record<InsuranceDocument["status"], string> = {
@@ -29,7 +30,18 @@ interface DocumentVaultProps {
 export default function DocumentVault({ documents }: DocumentVaultProps) {
   const [docs, setDocs] = useState(documents);
   const [dragOver, setDragOver] = useState(false);
+  const [viewingDoc, setViewingDoc] = useState<InsuranceDocument | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Clean up all object URLs on unmount
+  useEffect(() => {
+    return () => {
+      docs.forEach((d) => {
+        if (d.objectUrl) URL.revokeObjectURL(d.objectUrl);
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -42,17 +54,23 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
     const newDocs: InsuranceDocument[] = files.map((f, i) => ({
       id: `upload-${Date.now()}-${i}`,
       name: f.name,
-      type: f.type.startsWith("image/") ? "image" : "pdf",
+      type: f.type.startsWith("image/") ? "image" as const : "pdf" as const,
       category: "receipt" as const,
       uploaded_at: new Date().toISOString().split("T")[0],
       size_bytes: f.size,
       status: "pending" as const,
+      file: f,
+      objectUrl: URL.createObjectURL(f),
     }));
     setDocs((prev) => [...prev, ...newDocs]);
   };
 
   const handleDelete = (id: string) => {
-    setDocs((prev) => prev.filter((d) => d.id !== id));
+    setDocs((prev) => {
+      const doc = prev.find((d) => d.id === id);
+      if (doc?.objectUrl) URL.revokeObjectURL(doc.objectUrl);
+      return prev.filter((d) => d.id !== id);
+    });
   };
 
   // Group documents by category
@@ -89,7 +107,7 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
             e.target.value = "";
           }}
         />
-        <div style={{ fontSize: "2rem", marginBottom: 8 }}>📄</div>
+        <div style={{ fontSize: "2rem", marginBottom: 8 }}>{"\u{1F4C4}"}</div>
         <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--text-primary)" }}>
           Drop files here or click to upload
         </div>
@@ -122,9 +140,16 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {group.map((doc) => (
-                <div key={doc.id} className="insurance-doc-row">
+                <div
+                  key={doc.id}
+                  className="insurance-doc-row"
+                  style={{ cursor: doc.objectUrl ? "pointer" : undefined }}
+                  onClick={() => {
+                    if (doc.objectUrl) setViewingDoc(doc);
+                  }}
+                >
                   <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>
-                    {doc.type === "pdf" ? "📑" : "🖼️"}
+                    {doc.type === "pdf" ? "\u{1F4D1}" : "\u{1F5BC}\uFE0F"}
                   </span>
 
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -164,7 +189,7 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
                     }}
                     aria-label={`Delete ${doc.name}`}
                   >
-                    ✕
+                    {"\u2715"}
                   </button>
                 </div>
               ))}
@@ -187,6 +212,10 @@ export default function DocumentVault({ documents }: DocumentVaultProps) {
             No documents uploaded yet
           </p>
         </div>
+      )}
+
+      {viewingDoc && (
+        <DocumentViewer doc={viewingDoc} onClose={() => setViewingDoc(null)} />
       )}
     </div>
   );

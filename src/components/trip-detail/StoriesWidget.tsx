@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import StoriesChat from "./StoriesChat";
+import { parseStoriesHtml, INSURANCE_KEYWORDS } from "@/lib/stories-parser";
 
 interface StoriesResponse {
   text: string;
@@ -10,26 +11,6 @@ interface StoriesResponse {
   parentResources?: Record<string, string>;
   variables?: Record<string, string>;
   modelId?: string | null;
-}
-
-interface Section {
-  title: string;
-  html: string;
-}
-
-function parseStoriesHtml(html: string): Section[] {
-  const parts = html.split(/<h2[^>]*>/i);
-  return parts
-    .slice(1) // skip content before first <h2>
-    .map((part) => {
-      const closeIdx = part.indexOf("</h2>");
-      if (closeIdx === -1) return null;
-      const title = part.slice(0, closeIdx).replace(/<[^>]+>/g, "").trim();
-      const body = part.slice(closeIdx + 5).trim();
-      if (!body) return null;
-      return { title, html: body };
-    })
-    .filter(Boolean) as Section[];
 }
 
 /** Regex to detect story-navigation links: any href containing trips/{id}/{subPath} */
@@ -120,7 +101,12 @@ function parseResourcePath(
   return { subPath, params };
 }
 
-export default function StoriesWidget({ tripId }: { tripId: string }) {
+interface StoriesWidgetProps {
+  tripId: string;
+  onInsuranceDetected?: (insuranceHtml: string) => void;
+}
+
+export default function StoriesWidget({ tripId, onInsuranceDetected }: StoriesWidgetProps) {
   const [data, setData] = useState<StoriesResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [navStack, setNavStack] = useState<string[]>([]);
@@ -243,9 +229,23 @@ export default function StoriesWidget({ tripId }: { tripId: string }) {
     );
   }
 
-  if (!data?.text) return null;
+  const sections = useMemo(
+    () => (data?.text ? parseStoriesHtml(data.text) : []),
+    [data?.text]
+  );
 
-  const sections = parseStoriesHtml(data.text);
+  // Detect insurance section and notify parent
+  const insuranceNotified = useRef(false);
+  useEffect(() => {
+    if (insuranceNotified.current || !onInsuranceDetected) return;
+    const match = sections.find((s) => INSURANCE_KEYWORDS.test(s.title));
+    if (match) {
+      insuranceNotified.current = true;
+      onInsuranceDetected(match.html);
+    }
+  }, [sections, onInsuranceDetected]);
+
+  if (!data?.text) return null;
   if (sections.length === 0) return null;
 
   const headerTitle = data.title || "Your Trip";
