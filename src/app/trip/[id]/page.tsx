@@ -27,21 +27,18 @@ export default function TripDetailPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // Fetch insurance cover type from Stories markdown
+  // Fetch insurance cover type from Stories insurancejson markdown
   useEffect(() => {
     if (!trip?.traveller_trip_id) return;
     (async () => {
       try {
-        const res = await fetch(`/api/trips/${trip.id}/stories?path=insurance&format=markdown`);
+        const res = await fetch(`/api/trips/${trip.id}/stories?path=insurancejson&format=markdown`);
         if (!res.ok) return;
         const envelope = await res.json();
-        const md = (envelope.text ?? "").toLowerCase();
-        if (/annual\s*(travel\s*)?insurance/i.test(md)) {
+        const md = envelope.text ?? "";
+        if (/## Annual Travel Insurance/i.test(md)) {
           setCoverType("annual");
-        } else if (/single\s*trip\s*(travel\s*)?insurance/i.test(md)) {
-          setCoverType("single");
-        } else if (/policy|cover|insurance/i.test(md)) {
-          // Has some insurance content but type unclear — default to single
+        } else if (/## Single Trip Travel Insurance/i.test(md)) {
           setCoverType("single");
         }
       } catch {

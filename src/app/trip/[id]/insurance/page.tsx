@@ -8,8 +8,8 @@ import GlassButton from "@/components/GlassButton";
 import InsuranceHub from "@/components/insurance/InsuranceHub";
 import InsuranceBanner from "@/components/insurance/InsuranceBanner";
 import type { TripRow } from "@/types/trip";
-import { parseInsuranceJson } from "@/lib/insurance-parser";
-import type { ParsedInsuranceData, InsuranceJsonResponse, InsuranceProductType } from "@/lib/insurance-parser";
+import { parseInsuranceMarkdown } from "@/lib/insurance-parser";
+import type { ParsedInsuranceData } from "@/lib/insurance-parser";
 
 export default function InsurancePage() {
   const { id } = useParams<{ id: string }>();
@@ -20,36 +20,17 @@ export default function InsurancePage() {
   const notFound = !loading && !trip;
   const [insuranceData, setInsuranceData] = useState<ParsedInsuranceData | null>(null);
 
-  // Fetch insurancejson + trip json in parallel
-  // Stories API returns { text: "<json string>", ... } — parse the text field
+  // Fetch insurance data from Stories markdown
   useEffect(() => {
     if (!trip?.traveller_trip_id) return;
 
     (async () => {
       try {
-        const [insuranceRes, tripRes] = await Promise.all([
-          fetch(`/api/trips/${trip.id}/stories?path=insurancejson`),
-          fetch(`/api/trips/${trip.id}/stories?path=json`),
-        ]);
-
-        let insuranceJson: InsuranceJsonResponse = { annualPolicies: [], singleTripPolicies: [] };
-        let productTypes: InsuranceProductType[] | undefined;
-
-        if (insuranceRes.ok) {
-          const envelope = await insuranceRes.json();
-          if (envelope.text) {
-            insuranceJson = JSON.parse(envelope.text);
-          }
-        }
-        if (tripRes.ok) {
-          const envelope = await tripRes.json();
-          if (envelope.text) {
-            const tripData = JSON.parse(envelope.text);
-            productTypes = tripData?.trip?.productTypes;
-          }
-        }
-
-        setInsuranceData(parseInsuranceJson(insuranceJson, productTypes));
+        const res = await fetch(`/api/trips/${trip.id}/stories?path=insurancejson&format=markdown`);
+        if (!res.ok) return;
+        const envelope = await res.json();
+        const md = envelope.text ?? "";
+        setInsuranceData(parseInsuranceMarkdown(md));
       } catch {
         // Silent fail — insurance data is an enhancement
       }

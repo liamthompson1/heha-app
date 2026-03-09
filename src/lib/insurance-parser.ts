@@ -87,3 +87,59 @@ export function parseInsuranceJson(
 
   return { policies, purchaseOption };
 }
+
+/** Parse the insurancejson markdown template output into structured data */
+export function parseInsuranceMarkdown(md: string): ParsedInsuranceData {
+  const policies: ParsedPolicy[] = [];
+
+  // Split into sections by ## headings
+  const sections = md.split(/^## /m).slice(1);
+
+  for (const section of sections) {
+    const headingEnd = section.indexOf("\n");
+    const heading = section.slice(0, headingEnd).trim();
+    const isAnnual = /annual/i.test(heading);
+    const isSingle = /single trip/i.test(heading);
+    if (!isAnnual && !isSingle) continue;
+
+    const policyType: "annual" | "single" = isAnnual ? "annual" : "single";
+
+    // Split into individual policies by ### Policy headings
+    const policyBlocks = section.split(/^### Policy /m).slice(1);
+
+    for (const block of policyBlocks) {
+      const refEnd = block.indexOf("\n");
+      const bookingRef = block.slice(0, refEnd).trim();
+
+      const status = block.match(/\*\*Status:\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+      if (/cancelled/i.test(status)) continue;
+
+      const destination =
+        block.match(/\*\*(?:Cover|Destination):\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+
+      // Extract dates — formatted like "1st Jan 2026" from the markdown
+      const startDateStr =
+        block.match(/\*\*(?:Start date|Cover from):\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+      const endDateStr =
+        block.match(/\*\*(?:End date|Cover to):\*\*\s*(.+)/i)?.[1]?.trim() ?? "";
+
+      // Extract links
+      const viewLink = block.match(/\[View policy\]\(([^)]+)\)/i)?.[1] ?? "";
+      const amendLink = block.match(/\[Amend policy\]\(([^)]+)\)/i)?.[1] ?? "";
+      const cancelLink = block.match(/\[Cancel policy\]\(([^)]+)\)/i)?.[1] ?? "";
+
+      policies.push({
+        id: bookingRef,
+        policyType,
+        bookingRef,
+        cancelled: false,
+        destination,
+        startDate: startDateStr,
+        endDate: endDateStr,
+        links: { view: viewLink, cancel: cancelLink, amend: amendLink },
+      });
+    }
+  }
+
+  return { policies, purchaseOption: null };
+}
