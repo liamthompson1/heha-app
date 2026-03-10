@@ -13,6 +13,7 @@ import WeatherWidget from "@/components/trip-detail/WeatherWidget";
 import TravelersWidget from "@/components/trip-detail/TravelersWidget";
 import StoriesWidget from "@/components/trip-detail/StoriesWidget";
 import BookingsWidget from "@/components/trip-detail/BookingsWidget";
+import TripSpecificPerils from "@/components/insurance/TripSpecificPerils";
 import Link from "next/link";
 import { formatDateRange } from "@/lib/format-date";
 
@@ -218,6 +219,13 @@ export default function TripDetailPage() {
         {trip.traveller_trip_id && (
           <ScrollReveal delay={175}>
             <BookingsWidget tripId={trip.id} />
+          </ScrollReveal>
+        )}
+
+        {/* Trip-specific protection (e.g. car hire excess) */}
+        {trip.traveller_trip_id && (
+          <ScrollReveal delay={185}>
+            <TripSpecificPerils tripId={trip.id} />
           </ScrollReveal>
         )}
 
