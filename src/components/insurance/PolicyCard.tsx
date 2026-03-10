@@ -9,13 +9,6 @@ function formatDate(date: string): string {
   return date;
 }
 
-const STATUS_COLORS: Record<InsurancePolicy["status"], string> = {
-  active: "var(--teal)",
-  pending: "var(--gold)",
-  expired: "var(--text-tertiary)",
-  claimed: "var(--coral)",
-};
-
 const TYPE_LABELS: Record<InsurancePolicy["type"], string> = {
   annual: "Annual",
   comprehensive: "Single Trip",
@@ -23,32 +16,60 @@ const TYPE_LABELS: Record<InsurancePolicy["type"], string> = {
   cancellation: "Cancellation",
 };
 
+const TIER_CONFIG = {
+  gold: {
+    label: "Gold Cover",
+    icon: "👑",
+    className: "policy-card-gold",
+  },
+  silver: {
+    label: "Silver Cover",
+    icon: "🥈",
+    className: "policy-card-silver",
+  },
+  bronze: {
+    label: "Bronze Cover",
+    icon: "🥉",
+    className: "policy-card-bronze",
+  },
+} as const;
+
 interface PolicyCardProps {
   policy: InsurancePolicy;
 }
 
 export default function PolicyCard({ policy }: PolicyCardProps) {
-  const statusColor = STATUS_COLORS[policy.status];
+  const tierConfig = policy.tier ? TIER_CONFIG[policy.tier] : null;
 
   return (
-    <div className="insurance-policy-card">
-      <div className="insurance-policy-header">
-        <span style={{ fontSize: "1.5rem", flexShrink: 0 }}>🛡️</span>
+    <div className={`insurance-policy-card ${tierConfig?.className ?? ""}`}>
+      {/* Tier badge */}
+      {tierConfig && (
+        <div className="policy-tier-badge">
+          <span>{tierConfig.icon}</span>
+          <span>{tierConfig.label}</span>
+        </div>
+      )}
 
+      <div className="insurance-policy-header">
         <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <span
               style={{
                 fontSize: "1.1rem",
                 fontWeight: 700,
-                color: "var(--text-primary)",
+                color: tierConfig ? "var(--text-primary)" : "var(--text-primary)",
               }}
             >
               {policy.name}
             </span>
             <span
               className="insurance-status-badge"
-              style={{ background: `${statusColor}20`, color: statusColor }}
+              style={
+                policy.status === "active" && tierConfig
+                  ? { background: "rgba(46, 205, 193, 0.15)", color: "var(--teal)" }
+                  : { background: "rgba(46, 205, 193, 0.12)", color: "var(--teal)" }
+              }
             >
               {policy.status}
             </span>
@@ -90,7 +111,7 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
               href={policy.links.view}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-button glass-button-teal glass-button-sm"
+              className={`glass-button glass-button-sm ${tierConfig ? "policy-action-gold" : "glass-button-teal"}`}
             >
               View Policy
             </a>

@@ -3407,10 +3407,101 @@ body {
   border-radius: var(--glass-radius);
   padding: 20px 24px;
   transition: border-color 0.3s var(--ease-standard);
+  position: relative;
+  overflow: hidden;
 }
 
 .insurance-policy-card:hover {
   border-color: var(--glass-border-hover);
+}
+
+/* Gold tier premium card */
+.policy-card-gold {
+  background: linear-gradient(
+    135deg,
+    rgba(240, 180, 41, 0.08) 0%,
+    rgba(212, 160, 23, 0.04) 40%,
+    rgba(255, 215, 0, 0.06) 70%,
+    rgba(240, 180, 41, 0.10) 100%
+  );
+  border: 1px solid rgba(240, 180, 41, 0.25);
+  box-shadow:
+    0 0 30px rgba(240, 180, 41, 0.06),
+    inset 0 1px 0 rgba(255, 215, 0, 0.10);
+}
+.policy-card-gold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 215, 0, 0.05) 45%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+.policy-card-gold:hover {
+  border-color: rgba(240, 180, 41, 0.4);
+  box-shadow:
+    0 0 40px rgba(240, 180, 41, 0.10),
+    inset 0 1px 0 rgba(255, 215, 0, 0.15);
+}
+
+/* Silver tier */
+.policy-card-silver {
+  background: linear-gradient(135deg, rgba(192, 192, 192, 0.08), rgba(220, 220, 220, 0.04));
+  border: 1px solid rgba(192, 192, 192, 0.20);
+}
+.policy-card-silver:hover {
+  border-color: rgba(192, 192, 192, 0.35);
+}
+
+/* Bronze tier */
+.policy-card-bronze {
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.08), rgba(205, 127, 50, 0.04));
+  border: 1px solid rgba(205, 127, 50, 0.20);
+}
+.policy-card-bronze:hover {
+  border-color: rgba(205, 127, 50, 0.35);
+}
+
+/* Tier badge */
+.policy-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.policy-card-gold .policy-tier-badge {
+  background: linear-gradient(135deg, rgba(240, 180, 41, 0.18), rgba(255, 215, 0, 0.12));
+  color: var(--gold);
+  border: 1px solid rgba(240, 180, 41, 0.20);
+}
+.policy-card-silver .policy-tier-badge {
+  background: rgba(192, 192, 192, 0.12);
+  color: rgba(220, 220, 220, 0.8);
+}
+.policy-card-bronze .policy-tier-badge {
+  background: rgba(205, 127, 50, 0.12);
+  color: rgba(205, 160, 100, 0.9);
+}
+
+/* Gold action button */
+.policy-action-gold {
+  background: rgba(240, 180, 41, 0.10) !important;
+  color: var(--gold) !important;
+  border: 1px solid rgba(240, 180, 41, 0.20) !important;
+}
+.policy-action-gold:hover {
+  background: rgba(240, 180, 41, 0.18) !important;
 }
 
 .insurance-policy-header {

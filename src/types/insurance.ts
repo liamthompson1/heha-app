@@ -30,5 +30,6 @@ export interface InsurancePolicy {
   documents: InsuranceDocument[];
   links?: { view: string; cancel: string; amend: string };
   destination?: string;
+  tier?: "gold" | "silver" | "bronze";
 }
 

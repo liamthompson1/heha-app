@@ -18,7 +18,7 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
   const policies: InsurancePolicy[] = (insuranceData?.policies ?? []).map((p) => ({
     id: p.bookingRef,
     type: p.policyType === "annual" ? "annual" : "comprehensive",
-    name: p.policyType === "annual" ? "Annual Travel Insurance" : "Single Trip Insurance",
+    name: p.headingName || (p.policyType === "annual" ? "Annual Travel Insurance" : "Single Trip Insurance"),
     status: "active",
     provider: "Holiday Extras",
     policy_number: p.bookingRef,
@@ -30,6 +30,7 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
     documents: [],
     links: p.links,
     destination: p.destination,
+    tier: p.tier,
   }));
 
   const purchaseOption = insuranceData?.purchaseOption ?? null;
