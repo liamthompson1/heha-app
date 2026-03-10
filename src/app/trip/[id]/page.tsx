@@ -192,7 +192,8 @@ export default function TripDetailPage() {
                 <span style={{ fontSize: "1.25rem" }}>🛡️</span>
                 <h2 className="widget-title">Trip Protection</h2>
               </div>
-              <Link href={`/trip/${trip.id}/insurance`} className="missing-info-card">
+              <Link href={`/trip/${trip.id}/insurance`} className={coverType ? "insurance-covered-card" : "missing-info-card"}>
+                {coverType && <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>✅</span>}
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, color: "var(--text-primary)", fontSize: "1rem", marginBottom: 4 }}>
                     {coverType === "annual"
@@ -201,13 +202,13 @@ export default function TripDetailPage() {
                         ? "Single Trip Insurance"
                         : `Get covered for your trip to ${trip.trip.destination || "your destination"}`}
                   </div>
-                  <div style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>
+                  <div style={{ color: coverType ? "rgba(46, 205, 193, 0.7)" : "var(--text-secondary)", fontSize: "0.85rem" }}>
                     {coverType
                       ? `You have ${coverType === "annual" ? "annual" : "single trip"} cover — view & manage your policy`
                       : "View policies, upload documents & manage your cover"}
                   </div>
                 </div>
-                <span className="missing-info-arrow" style={{ color: "var(--text-tertiary)" }}>→</span>
+                <span className="missing-info-arrow" style={{ color: coverType ? "var(--teal)" : "var(--text-tertiary)" }}>→</span>
               </Link>
             </div>
           </ScrollReveal>

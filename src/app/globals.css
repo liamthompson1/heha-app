@@ -2351,6 +2351,28 @@ body {
   transform: translateX(4px);
 }
 
+.insurance-covered-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 1px solid rgba(46, 205, 193, 0.25);
+  border-radius: var(--glass-radius);
+  background: rgba(46, 205, 193, 0.06);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  cursor: pointer;
+  transition: all 0.3s var(--ease-standard);
+  text-decoration: none;
+}
+.insurance-covered-card:hover {
+  background: rgba(46, 205, 193, 0.10);
+  border-color: rgba(46, 205, 193, 0.4);
+}
+.insurance-covered-card:hover .missing-info-arrow {
+  transform: translateX(4px);
+}
+
 /* ——————————————————————————————————————
    Flight Detail Card (boarding pass)
    —————————————————————————————————————— */
