@@ -14,24 +14,28 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
 
   useEffect(() => {
     let cancelled = false;
-    let objectUrl: string | null = null;
 
     (async () => {
       try {
-        // Fetch PDF — try direct URL first, fall back to proxying if CORS blocks it
-        let arrayBuffer: ArrayBuffer;
-        try {
-          const response = await fetch(url);
+        // Always proxy through our API to avoid CORS issues on desktop
+        const proxyUrl = `/api/proxy-file?url=${encodeURIComponent(url)}`;
+        let response = await fetch(proxyUrl);
+
+        // If proxy fails, try direct as fallback (works on mobile)
+        if (!response.ok) {
+          response = await fetch(url);
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          arrayBuffer = await response.arrayBuffer();
-        } catch {
-          // Proxy through our API to avoid CORS
-          const proxyUrl = `/api/proxy-file?url=${encodeURIComponent(url)}`;
-          const response = await fetch(proxyUrl);
-          if (!response.ok) throw new Error("Proxy fetch failed");
-          arrayBuffer = await response.arrayBuffer();
         }
+
+        const arrayBuffer = await response.arrayBuffer();
         if (cancelled) return;
+
+        // Validate it's actually a PDF (starts with %PDF)
+        const header = new Uint8Array(arrayBuffer.slice(0, 5));
+        const headerStr = String.fromCharCode(...header);
+        if (!headerStr.startsWith("%PDF")) {
+          throw new Error("Not a valid PDF");
+        }
 
         const pdfjsLib = await import("pdfjs-dist");
         pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -45,9 +49,10 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Render at 2x for sharpness
-        const containerWidth = canvas.parentElement?.clientWidth ?? 340;
-        const scale = (containerWidth * 2) / page.getViewport({ scale: 1 }).width;
+        // Render at 2x for sharpness, capped for small thumbnails
+        const containerWidth = canvas.parentElement?.clientWidth ?? 200;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const scale = (containerWidth * dpr) / page.getViewport({ scale: 1 }).width;
         const viewport = page.getViewport({ scale });
 
         canvas.width = viewport.width;
@@ -56,7 +61,11 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        await page.render({ canvasContext: ctx, viewport, canvas } as Parameters<typeof page.render>[0]).promise;
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+        } as Parameters<typeof page.render>[0]).promise;
+
         if (!cancelled) setLoading(false);
       } catch (err) {
         console.error("[PdfThumbnail]", err);
@@ -67,17 +76,13 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
       }
     })();
 
-    return () => {
-      cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
+    return () => { cancelled = true; };
   }, [url]);
 
   if (error) {
     return (
       <div className="doc-stack-placeholder">
-        <span style={{ fontSize: "3rem" }}>📑</span>
-        <span style={{ fontSize: "0.85rem", marginTop: 8 }}>PDF Preview unavailable</span>
+        <span style={{ fontSize: "1.5rem" }}>📄</span>
       </div>
     );
   }
@@ -86,7 +91,7 @@ export default function PdfThumbnail({ url, alt }: PdfThumbnailProps) {
     <>
       {loading && (
         <div className="doc-stack-placeholder animate-pulse">
-          <div className="glass-panel" style={{ width: 60, height: 80, borderRadius: 8 }} />
+          <div style={{ width: 20, height: 26, borderRadius: 4, background: "rgba(255,255,255,0.06)" }} />
         </div>
       )}
       <canvas
