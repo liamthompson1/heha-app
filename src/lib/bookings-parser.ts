@@ -6,8 +6,8 @@ export interface ParsedBooking {
   links: { label: string; url: string }[];
 }
 
-/** Keys that are metadata, not displayable fields */
-const SKIP_FIELDS = new Set(["Booking Ref", "Status", "Manage Booking"]);
+/** Keys that are metadata, not displayable fields (lowercase for case-insensitive match) */
+const SKIP_FIELDS = new Set(["booking ref", "status", "manage booking", "manage"]);
 
 /** Extract useful params from a booking URL (e.g. pickup/dropoff dates for car hire) */
 function extractParamsAsFields(url: string): Record<string, string> {
@@ -75,11 +75,18 @@ export function parseBookingsMarkdown(md: string): ParsedBooking[] {
     while ((m = fieldRe.exec(block))) {
       const key = m[1].trim();
       const value = m[2].trim();
-      // Skip metadata and values that are just markdown links
-      if (SKIP_FIELDS.has(key)) continue;
-      if (/^\[.*\]\(.*\)$/.test(value)) continue;
+      // Skip metadata keys (case-insensitive)
+      if (SKIP_FIELDS.has(key.toLowerCase())) continue;
+      // Skip values that contain markdown links or raw URLs
+      if (/\[.*\]\(.*\)/.test(value)) continue;
+      if (/https?:\/\//.test(value)) continue;
+      // Skip empty values
+      if (!value) continue;
       fields[key] = value;
     }
+
+    // Also handle #### sub-headings followed by bullet links (e.g. "#### Manage Booking")
+    // These are already captured by the link regex below, so we just skip them
 
     // Extract links: [Label](url) patterns — deduplicate by label
     const links: { label: string; url: string }[] = [];
