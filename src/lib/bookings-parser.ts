@@ -110,5 +110,5 @@ export function parseBookingsMarkdown(md: string): ParsedBooking[] {
     }
 
     return { productType, bookingRef, status, fields, links };
-  });
+  }).filter((b) => b.bookingRef !== "");
 }
