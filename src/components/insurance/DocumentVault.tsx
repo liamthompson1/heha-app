@@ -279,21 +279,40 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
             transition = delta.x !== 0 ? "none" : `all ${spring}`;
           }
 
+          // Behind cards: just an empty shell for the stacked edge effect
+          if (!isTop) {
+            return (
+              <div
+                key={doc.id}
+                className="doc-stack-card glass-panel"
+                style={{
+                  position: "absolute",
+                  inset: "0",
+                  zIndex: visibleOrder.length - pilePos,
+                  transform,
+                  opacity,
+                  transition,
+                  transformOrigin: "center center",
+                  pointerEvents: "none",
+                }}
+              />
+            );
+          }
+
           return (
             <div
               key={doc.id}
               className="doc-stack-card glass-panel"
               style={{
-                position: isTop ? "relative" : "absolute",
-                inset: isTop ? undefined : "0",
-                zIndex: visibleOrder.length - pilePos,
+                position: "relative",
+                zIndex: visibleOrder.length,
                 transform,
                 opacity,
                 transition,
                 transformOrigin: "center center",
               }}
               onClick={() => {
-                if (!didDrag.current && isTop) setViewingDoc(doc);
+                if (!didDrag.current) setViewingDoc(doc);
               }}
             >
               <div className="doc-stack-preview">
@@ -304,31 +323,25 @@ export default function DocumentVault({ tripId }: DocumentVaultProps) {
                   <PdfThumbnail url={doc.url} alt={doc.name} />
                 )}
 
-                {isTop && (
-                  <>
-                    <span className="doc-stack-badge">✓ {doc.status}</span>
-                    <button
-                      className="doc-vault-delete"
-                      onClick={(e) => handleDelete(e, doc.id)}
-                      aria-label={`Delete ${doc.name}`}
-                    >
-                      ✕
-                    </button>
-                  </>
-                )}
+                <span className="doc-stack-badge">✓ {doc.status}</span>
+                <button
+                  className="doc-vault-delete"
+                  onClick={(e) => handleDelete(e, doc.id)}
+                  aria-label={`Delete ${doc.name}`}
+                >
+                  ✕
+                </button>
               </div>
 
               <div className="doc-stack-info">
                 <div className="doc-stack-name">{doc.name}</div>
                 <div className="doc-stack-meta">{formatSize(doc.size_bytes)}</div>
-                {isTop && (
-                  <button
-                    className="doc-stack-arrow"
-                    onClick={(e) => { e.stopPropagation(); setViewingDoc(doc); }}
-                  >
-                    →
-                  </button>
-                )}
+                <button
+                  className="doc-stack-arrow"
+                  onClick={(e) => { e.stopPropagation(); setViewingDoc(doc); }}
+                >
+                  →
+                </button>
               </div>
             </div>
           );
