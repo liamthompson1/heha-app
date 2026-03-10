@@ -3837,3 +3837,96 @@ body {
     font-size: 0.85rem;
   }
 }
+
+/* ── Bookings Widget ────────────────────────────────────── */
+.booking-card {
+  padding: 18px 20px;
+  border-radius: var(--glass-radius-xs);
+}
+.booking-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.booking-card-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+.booking-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.booking-card-ref {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.booking-status-badge {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+.booking-status-active {
+  background: rgba(46, 205, 193, 0.12);
+  color: var(--teal);
+}
+.booking-status-cancelled {
+  background: rgba(255, 99, 89, 0.12);
+  color: var(--coral);
+}
+.booking-card-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px 16px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--glass-border);
+}
+.booking-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.booking-field-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+.booking-field-value {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.booking-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+}
+.booking-action-link {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgba(46, 205, 193, 0.08);
+  transition: all 0.2s var(--ease-standard);
+}
+.booking-action-link:hover {
+  background: rgba(46, 205, 193, 0.16);
+}

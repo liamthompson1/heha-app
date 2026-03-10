@@ -12,6 +12,7 @@ import FlightWidget from "@/components/trip-detail/FlightWidget";
 import WeatherWidget from "@/components/trip-detail/WeatherWidget";
 import TravelersWidget from "@/components/trip-detail/TravelersWidget";
 import StoriesWidget from "@/components/trip-detail/StoriesWidget";
+import BookingsWidget from "@/components/trip-detail/BookingsWidget";
 import Link from "next/link";
 import { formatDateRange } from "@/lib/format-date";
 
@@ -209,6 +210,13 @@ export default function TripDetailPage() {
                 <span className="missing-info-arrow" style={{ color: "var(--text-tertiary)" }}>→</span>
               </Link>
             </div>
+          </ScrollReveal>
+        )}
+
+        {/* Bookings */}
+        {trip.traveller_trip_id && (
+          <ScrollReveal delay={175}>
+            <BookingsWidget tripId={trip.id} />
           </ScrollReveal>
         )}
 
