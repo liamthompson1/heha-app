@@ -36,7 +36,7 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
   const purchaseOption = insuranceData?.purchaseOption ?? null;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-8 pb-16" style={{ width: "100%", overflowX: "hidden" }}>
+    <div className="mx-auto px-6 pt-8 pb-16" style={{ width: "100%", maxWidth: 480, overflowX: "hidden" }}>
       {/* Active Policies */}
       <ScrollReveal delay={100}>
         <div className="widget-section">
