@@ -106,11 +106,14 @@ export function parseInsuranceMarkdown(md: string): ParsedInsuranceData {
 
     const policyType: "annual" | "single" = isAnnual ? "annual" : "single";
 
-    // Detect tier from heading (e.g. "Annual Travel Insurance - Gold")
-    let tier: "gold" | "silver" | "bronze" | undefined;
-    if (/gold/i.test(heading)) tier = "gold";
-    else if (/silver/i.test(heading)) tier = "silver";
-    else if (/bronze/i.test(heading)) tier = "bronze";
+    // Detect tier from heading or section body
+    function detectTier(text: string): "gold" | "silver" | "bronze" | undefined {
+      if (/gold/i.test(text)) return "gold";
+      if (/silver/i.test(text)) return "silver";
+      if (/bronze/i.test(text)) return "bronze";
+      return undefined;
+    }
+    const sectionTier = detectTier(heading);
 
     // Split into individual policies by ### Policy headings
     const policyBlocks = section.split(/^### Policy /m).slice(1);
@@ -145,7 +148,7 @@ export function parseInsuranceMarkdown(md: string): ParsedInsuranceData {
         startDate: startDateStr,
         endDate: endDateStr,
         links: { view: viewLink, cancel: cancelLink, amend: amendLink },
-        tier,
+        tier: sectionTier ?? detectTier(block) ?? (isAnnual ? "gold" : undefined),
         headingName: heading,
       });
     }
