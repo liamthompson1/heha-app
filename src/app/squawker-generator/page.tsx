@@ -20,7 +20,7 @@ export default function SquawkerGeneratorPage() {
       const res = await fetch("/api/images/squawker", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: prompt.trim() }),
+        body: JSON.stringify({ prompt: prompt.trim().replace(/squawk\w*/gi, "the parrot character") }),
       });
 
       if (!res.ok) {
