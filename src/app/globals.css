@@ -4243,8 +4243,8 @@ body {
   margin-bottom: 32px;
 }
 .squawker-gen-logo {
-  width: 72px;
-  height: 72px;
+  width: 160px;
+  height: 160px;
   object-fit: contain;
   margin-bottom: 16px;
   filter: drop-shadow(0 4px 20px rgba(46, 205, 193, 0.3));
