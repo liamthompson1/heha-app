@@ -7,7 +7,6 @@ import ScrollReveal from "@/components/ScrollReveal";
 import GlassButton from "@/components/GlassButton";
 import PolicyCard from "./PolicyCard";
 import DocumentVault from "./DocumentVault";
-import SinglePerilGrid from "./SinglePerilGrid";
 
 interface InsuranceHubProps {
   trip: TripRow;
@@ -91,17 +90,6 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
               </p>
             </div>
           )}
-        </div>
-      </ScrollReveal>
-
-      {/* Extra Protection — General single peril products */}
-      <ScrollReveal delay={150}>
-        <div className="widget-section">
-          <div className="widget-header">
-            <span style={{ fontSize: "1.25rem" }}>{"\u{1F6E1}\uFE0F"}</span>
-            <h2 className="widget-title">Extra Protection</h2>
-          </div>
-          <SinglePerilGrid filter="general" tripId={trip.id} />
         </div>
       </ScrollReveal>
 
