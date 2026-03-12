@@ -45,7 +45,7 @@ export default function SquawkerGeneratorPage() {
   }
 
   return (
-    <PageShell backHref="/">
+    <PageShell>
       <div className="squawker-gen-container">
         <div className="squawker-gen-header">
           <img src="/heha-bird.png" alt="Squawker" className="squawker-gen-logo" />
