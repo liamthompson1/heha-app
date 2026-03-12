@@ -101,7 +101,7 @@ export default function InsuranceHub({ trip, insuranceData }: InsuranceHubProps)
             <span style={{ fontSize: "1.25rem" }}>{"\u{1F6E1}\uFE0F"}</span>
             <h2 className="widget-title">Extra Protection</h2>
           </div>
-          <SinglePerilGrid filter="general" />
+          <SinglePerilGrid filter="general" tripId={trip.id} />
         </div>
       </ScrollReveal>
 

@@ -35,7 +35,7 @@ export default function TripSpecificPerils({ tripId }: TripSpecificPerilsProps) 
         <span style={{ fontSize: "1.25rem" }}>🛡️</span>
         <h2 className="widget-title">Recommended Protection</h2>
       </div>
-      <SinglePerilGrid filter="trip-specific" bookingTypes={bookingTypes} />
+      <SinglePerilGrid filter="trip-specific" tripId={tripId} bookingTypes={bookingTypes} />
     </div>
   );
 }

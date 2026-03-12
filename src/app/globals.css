@@ -3934,6 +3934,22 @@ body {
 .sp-add-btn:hover {
   background: rgba(46, 205, 193, 0.15);
 }
+.sp-remove-btn {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-standard);
+}
+.sp-remove-btn:hover {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.2);
+}
 
 /* Insurance Banner */
 .insurance-banner {
