@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import AdminShell from "@/components/admin/AdminShell";
+import GlassCard from "@/components/GlassCard";
+import GlassButton from "@/components/GlassButton";
 import {
   fetchDestination,
   fetchContentHistory,
@@ -22,10 +24,28 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`;
 }
 
-const STATUS_BADGE: Record<string, string> = {
-  published: "hx-badge-green",
-  draft: "hx-badge-orange",
-  pending_review: "hx-badge-red",
+function Badge({ variant, children }: { variant: "green" | "blue" | "orange" | "red"; children: React.ReactNode }) {
+  const colors = {
+    green: { bg: "rgba(46, 205, 193, 0.12)", border: "rgba(46, 205, 193, 0.25)", text: "var(--teal)" },
+    blue: { bg: "rgba(90, 200, 250, 0.12)", border: "rgba(90, 200, 250, 0.25)", text: "var(--blue)" },
+    orange: { bg: "rgba(240, 180, 41, 0.12)", border: "rgba(240, 180, 41, 0.25)", text: "var(--gold)" },
+    red: { bg: "rgba(255, 99, 89, 0.12)", border: "rgba(255, 99, 89, 0.25)", text: "var(--coral)" },
+  };
+  const c = colors[variant];
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium"
+      style={{ background: c.bg, border: `1px solid ${c.border}`, color: c.text }}
+    >
+      {children}
+    </span>
+  );
+}
+
+const STATUS_BADGE: Record<string, "green" | "orange" | "red"> = {
+  published: "green",
+  draft: "orange",
+  pending_review: "red",
 };
 
 export default function AdminDestinationDetailPage() {
@@ -43,7 +63,7 @@ export default function AdminDestinationDetailPage() {
   if (!destination) {
     return (
       <AdminShell>
-        <div className="hx-text-tertiary" style={{ padding: "60px 0", textAlign: "center" }}>
+        <div className="py-16 text-center text-sm" style={{ color: "var(--text-tertiary)" }}>
           Loading...
         </div>
       </AdminShell>
@@ -53,95 +73,80 @@ export default function AdminDestinationDetailPage() {
   return (
     <AdminShell>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          marginBottom: 32,
-        }}
-      >
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="hx-eyebrow" style={{ marginBottom: 8 }}>
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
             {destination.country} · {destination.continent}
           </p>
-          <h1 className="hx-heading" style={{ fontSize: 48 }}>
+          <h1 className="gradient-text-subtle mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
             {destination.name}
           </h1>
-          <p
-            className="hx-text-secondary"
-            style={{ fontSize: 16, marginTop: 8, maxWidth: 600 }}
-          >
+          <p className="mt-2 max-w-xl text-base" style={{ color: "var(--text-secondary)" }}>
             {destination.summary}
           </p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-          <span className={`hx-badge ${STATUS_BADGE[destination.status]}`}>
+        <div className="flex flex-shrink-0 items-center gap-3">
+          <Badge variant={STATUS_BADGE[destination.status]}>
             {destination.status.replace("_", " ")}
-          </span>
-          <Link href={`/destinations/${slug}`} className="hx-btn-secondary hx-btn-sm">
+          </Badge>
+          <GlassButton href={`/destinations/${slug}`} size="sm">
             View Live ↗
-          </Link>
+          </GlassButton>
         </div>
       </div>
 
       {/* Metadata cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 12,
-          marginBottom: 32,
-        }}
-      >
-        <div className="hx-glass-subtle" style={{ padding: "16px 20px" }}>
-          <div className="hx-text-tertiary" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+      <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="glass-panel px-5 py-4">
+          <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>
             Last Updated
           </div>
-          <div className="hx-text-primary" style={{ fontSize: 14, marginTop: 4 }}>
+          <div className="mt-1 text-sm" style={{ color: "var(--foreground)" }}>
             {new Date(destination.updated_at).toLocaleString("en-GB")}
           </div>
         </div>
-        <div className="hx-glass-subtle" style={{ padding: "16px 20px" }}>
-          <div className="hx-text-tertiary" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <div className="glass-panel px-5 py-4">
+          <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>
             Updated By
           </div>
-          <div className="hx-text-primary" style={{ fontSize: 14, marginTop: 4 }}>
+          <div className="mt-1 text-sm" style={{ color: "var(--foreground)" }}>
             {destination.updated_by_name || "—"}
           </div>
         </div>
-        <div className="hx-glass-subtle" style={{ padding: "16px 20px" }}>
-          <div className="hx-text-tertiary" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <div className="glass-panel px-5 py-4">
+          <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>
             Tags
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
             {destination.tags.map((tag) => (
-              <span key={tag} className="hx-badge hx-badge-blue">
-                {tag}
-              </span>
+              <Badge key={tag} variant="blue">{tag}</Badge>
             ))}
           </div>
         </div>
       </div>
 
       {/* View Toggle */}
-      <div className="hx-tabs" style={{ display: "inline-flex", marginBottom: 24 }}>
+      <div className="mb-6 inline-flex gap-1 rounded-full border border-white/8 bg-white/[0.03] p-1">
         <button
           onClick={() => setView("preview")}
-          className={`hx-tab ${view === "preview" ? "hx-tab-active" : ""}`}
+          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+            view === "preview" ? "bg-white/10 text-white/90" : "text-white/40 hover:text-white/60"
+          }`}
         >
           Preview
         </button>
         <button
           onClick={() => setView("markdown")}
-          className={`hx-tab ${view === "markdown" ? "hx-tab-active" : ""}`}
+          className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+            view === "markdown" ? "bg-white/10 text-white/90" : "text-white/40 hover:text-white/60"
+          }`}
         >
           Markdown
         </button>
       </div>
 
       {/* Content */}
-      <div className="hx-glass" style={{ padding: 32, marginBottom: 40 }}>
+      <GlassCard className="mb-10">
         {view === "preview" ? (
           <div className="glass-prose destination-prose">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -149,58 +154,47 @@ export default function AdminDestinationDetailPage() {
             </ReactMarkdown>
           </div>
         ) : (
-          <pre className="hx-code-block" style={{ margin: 0, border: "none", borderRadius: 0, background: "transparent" }}>
+          <pre className="overflow-auto whitespace-pre-wrap font-mono text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             {destination.content_markdown}
           </pre>
         )}
-      </div>
+      </GlassCard>
 
       {/* History */}
-      <h2
-        className="hx-text-primary"
-        style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 16 }}
-      >
+      <h2 className="mb-4 text-2xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
         Content History
       </h2>
-      <div className="hx-glass hx-table-wrap" style={{ padding: 0 }}>
-        <table className="hx-table">
+      <GlassCard flush>
+        <table className="w-full">
           <thead>
-            <tr>
-              <th>Actor</th>
-              <th>Action</th>
-              <th style={{ textAlign: "right" }}>Time</th>
+            <tr className="border-b border-white/6">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Actor</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Action</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Time</th>
             </tr>
           </thead>
           <tbody>
             {history.length === 0 ? (
               <tr>
-                <td
-                  colSpan={3}
-                  className="hx-text-tertiary"
-                  style={{ textAlign: "center", padding: "24px 16px" }}
-                >
+                <td colSpan={3} className="px-5 py-6 text-center text-sm" style={{ color: "var(--text-tertiary)" }}>
                   No history entries.
                 </td>
               </tr>
             ) : (
               history.map((entry) => (
-                <tr key={entry.id}>
-                  <td>
-                    <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 16 }}>
-                        {entry.actor_type === "bot" ? "🤖" : "👤"}
-                      </span>
-                      <span className="hx-text-primary" style={{ fontWeight: 500, fontSize: 13 }}>
-                        {entry.actor_name}
-                      </span>
+                <tr key={entry.id} className="border-b border-white/4 transition-colors hover:bg-white/[0.02]">
+                  <td className="px-5 py-3.5">
+                    <span className="flex items-center gap-2">
+                      <span className="text-base">{entry.actor_type === "bot" ? "🤖" : "👤"}</span>
+                      <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{entry.actor_name}</span>
                     </span>
                   </td>
-                  <td>
-                    <span className={`hx-badge ${entry.action === "create" ? "hx-badge-green" : "hx-badge-blue"}`}>
+                  <td className="px-5 py-3.5">
+                    <Badge variant={entry.action === "create" ? "green" : "blue"}>
                       {entry.action}
-                    </span>
+                    </Badge>
                   </td>
-                  <td className="hx-text-tertiary" style={{ textAlign: "right", fontSize: 12 }}>
+                  <td className="px-5 py-3.5 text-right text-xs" style={{ color: "var(--text-tertiary)" }}>
                     {timeAgo(entry.created_at)}
                   </td>
                 </tr>
@@ -208,7 +202,7 @@ export default function AdminDestinationDetailPage() {
             )}
           </tbody>
         </table>
-      </div>
+      </GlassCard>
     </AdminShell>
   );
 }

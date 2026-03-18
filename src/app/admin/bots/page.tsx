@@ -2,8 +2,29 @@
 
 import { useState, useEffect } from "react";
 import AdminShell from "@/components/admin/AdminShell";
+import GlassCard from "@/components/GlassCard";
+import GlassButton from "@/components/GlassButton";
+import GlassInput from "@/components/GlassInput";
 import { fetchApiKeys } from "@/lib/api/destinations";
 import type { ApiKey } from "@/types/destination";
+
+function Badge({ variant, children }: { variant: "green" | "blue" | "orange" | "red"; children: React.ReactNode }) {
+  const colors = {
+    green: { bg: "rgba(46, 205, 193, 0.12)", border: "rgba(46, 205, 193, 0.25)", text: "var(--teal)" },
+    blue: { bg: "rgba(90, 200, 250, 0.12)", border: "rgba(90, 200, 250, 0.25)", text: "var(--blue)" },
+    orange: { bg: "rgba(240, 180, 41, 0.12)", border: "rgba(240, 180, 41, 0.25)", text: "var(--gold)" },
+    red: { bg: "rgba(255, 99, 89, 0.12)", border: "rgba(255, 99, 89, 0.25)", text: "var(--coral)" },
+  };
+  const c = colors[variant];
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium"
+      style={{ background: c.bg, border: `1px solid ${c.border}`, color: c.text }}
+    >
+      {children}
+    </span>
+  );
+}
 
 function getAgentInstructions(key: string): string {
   return `# Heha.ai — Bot Content Instructions
@@ -81,24 +102,17 @@ export default function BotsPage() {
 
   return (
     <AdminShell>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 40,
-        }}
-      >
+      <div className="mb-10 flex items-center justify-between">
         <div>
-          <p className="hx-eyebrow" style={{ marginBottom: 8 }}>
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
             Management
           </p>
-          <h1 className="hx-heading" style={{ fontSize: 48 }}>
+          <h1 className="gradient-text-subtle mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
             Bots & API Keys
           </h1>
         </div>
-        <button
-          className="hx-btn-primary hx-btn-green"
+        <GlassButton
+          variant="teal"
           onClick={() => {
             setShowWizard(true);
             setCreatedKey(null);
@@ -106,246 +120,151 @@ export default function BotsPage() {
           }}
         >
           + Create Key
-        </button>
+        </GlassButton>
       </div>
 
       {/* Key Creation Wizard */}
       {showWizard && (
-        <div className="hx-glass" style={{ padding: 32, marginBottom: 32 }}>
+        <GlassCard elevated className="mb-8">
           {!createdKey ? (
             <div>
-              <h2
-                className="hx-text-primary"
-                style={{ fontSize: 20, fontWeight: 600, marginBottom: 20, letterSpacing: "-0.02em" }}
-              >
+              <h2 className="mb-5 text-xl font-semibold tracking-tight" style={{ color: "var(--foreground)" }}>
                 Create a new API key
               </h2>
-              <div style={{ marginBottom: 16 }}>
-                <label
-                  className="hx-text-tertiary"
-                  style={{ display: "block", fontSize: 13, marginBottom: 8 }}
-                >
-                  Bot name
-                </label>
-                <input
-                  type="text"
+              <div className="mb-4 max-w-sm">
+                <GlassInput
+                  label="Bot name"
                   placeholder="e.g. DestinationBot"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  className="hx-input"
-                  style={{ maxWidth: 360 }}
                 />
               </div>
-              <div style={{ marginBottom: 24 }}>
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    cursor: "pointer",
-                  }}
-                >
+              <div className="mb-6">
+                <label className="flex cursor-pointer items-center gap-2.5">
                   <input
                     type="checkbox"
                     checked={autoPublish}
                     onChange={(e) => setAutoPublish(e.target.checked)}
-                    style={{ accentColor: "#30d158" }}
+                    className="accent-[var(--teal)]"
                   />
-                  <span className="hx-text-secondary" style={{ fontSize: 14 }}>
+                  <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
                     Auto-publish content (skip review queue)
                   </span>
                 </label>
               </div>
-              <div style={{ display: "flex", gap: 12 }}>
-                <button
-                  className="hx-btn-primary hx-btn-green"
-                  onClick={handleCreateKey}
-                  disabled={!newKeyName.trim()}
-                >
+              <div className="flex gap-3">
+                <GlassButton variant="teal" onClick={handleCreateKey} disabled={!newKeyName.trim()}>
                   Generate Key
-                </button>
-                <button
-                  className="hx-btn-secondary"
-                  onClick={() => setShowWizard(false)}
-                >
+                </GlassButton>
+                <GlassButton onClick={() => setShowWizard(false)}>
                   Cancel
-                </button>
+                </GlassButton>
               </div>
             </div>
           ) : (
             <div>
-              <h2
-                className="hx-text-primary"
-                style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, letterSpacing: "-0.02em" }}
-              >
+              <h2 className="mb-2 text-xl font-semibold tracking-tight" style={{ color: "var(--foreground)" }}>
                 Key created for {newKeyName}
               </h2>
-              <p className="hx-text-tertiary" style={{ fontSize: 14, marginBottom: 20 }}>
+              <p className="mb-5 text-sm" style={{ color: "var(--text-tertiary)" }}>
                 Copy this key now — it won&apos;t be shown again.
               </p>
 
               {/* Key display */}
               <div
-                className="hx-glass-subtle"
-                style={{
-                  padding: 16,
-                  marginBottom: 24,
-                  borderLeft: "3px solid #30d158",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                }}
+                className="glass-panel mb-6 flex items-center gap-3 px-4 py-3"
+                style={{ borderLeft: "3px solid var(--teal)" }}
               >
-                <code
-                  style={{
-                    flex: 1,
-                    fontFamily: "SF Mono, SFMono-Regular, ui-monospace, Menlo, monospace",
-                    fontSize: 13,
-                    color: "#30d158",
-                    wordBreak: "break-all",
-                  }}
-                >
+                <code className="flex-1 break-all font-mono text-sm" style={{ color: "var(--teal)" }}>
                   {createdKey}
                 </code>
-                <button
-                  className="hx-btn-secondary hx-btn-sm"
-                  onClick={() => copyToClipboard(createdKey, "key")}
-                >
+                <GlassButton size="sm" onClick={() => copyToClipboard(createdKey, "key")}>
                   {copied === "key" ? "Copied!" : "Copy"}
-                </button>
+                </GlassButton>
               </div>
 
               {/* Agent Instructions */}
-              <div className="hx-glass" style={{ padding: 0, borderRadius: 16, overflow: "hidden" }}>
-                <div
-                  style={{
-                    padding: "12px 20px",
-                    borderBottom: "0.5px solid rgba(255,255,255,0.06)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "#bf5af2",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
+              <div className="glass-panel overflow-hidden p-0" style={{ borderRadius: "var(--glass-radius-xs)" }}>
+                <div className="flex items-center justify-between border-b border-white/6 px-5 py-3">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: "var(--purple)" }}>
                     ✦ Agent Instructions
                   </span>
-                  <button
-                    className="hx-btn-secondary hx-btn-sm"
+                  <GlassButton
+                    size="sm"
                     onClick={() =>
-                      copyToClipboard(
-                        getAgentInstructions(createdKey),
-                        "instructions"
-                      )
+                      copyToClipboard(getAgentInstructions(createdKey), "instructions")
                     }
                   >
                     {copied === "instructions" ? "Copied!" : "Copy All"}
-                  </button>
+                  </GlassButton>
                 </div>
-                <pre
-                  className="hx-code-block"
-                  style={{
-                    margin: 0,
-                    borderRadius: 0,
-                    border: "none",
-                    maxHeight: 500,
-                    overflow: "auto",
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
+                <pre className="max-h-[500px] overflow-auto whitespace-pre-wrap p-5 font-mono text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                   {getAgentInstructions(createdKey)}
                 </pre>
               </div>
 
-              <div style={{ marginTop: 24 }}>
-                <button
-                  className="hx-btn-secondary"
-                  onClick={() => setShowWizard(false)}
-                >
+              <div className="mt-6">
+                <GlassButton onClick={() => setShowWizard(false)}>
                   Done
-                </button>
+                </GlassButton>
               </div>
             </div>
           )}
-        </div>
+        </GlassCard>
       )}
 
       {/* Existing Keys Table */}
-      <div className="hx-glass hx-table-wrap" style={{ padding: 0 }}>
-        <table className="hx-table">
+      <GlassCard flush>
+        <table className="w-full">
           <thead>
-            <tr>
-              <th>Bot Name</th>
-              <th>Key</th>
-              <th>Publishing</th>
-              <th>Last Used</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+            <tr className="border-b border-white/6">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Bot Name</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Key</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Publishing</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Last Used</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {keys.length === 0 ? (
               <tr>
-                <td
-                  colSpan={5}
-                  className="hx-text-tertiary"
-                  style={{ textAlign: "center", padding: "32px 16px" }}
-                >
+                <td colSpan={5} className="px-5 py-8 text-center text-sm" style={{ color: "var(--text-tertiary)" }}>
                   No API keys yet. Create one to get started.
                 </td>
               </tr>
             ) : (
               keys.map((k) => (
-                <tr key={k.id}>
-                  <td>
-                    <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 16 }}>🤖</span>
-                      <span className="hx-text-primary" style={{ fontWeight: 500, fontSize: 13 }}>
-                        {k.name}
-                      </span>
+                <tr key={k.id} className="border-b border-white/4 transition-colors hover:bg-white/[0.02]">
+                  <td className="px-5 py-3.5">
+                    <span className="flex items-center gap-2">
+                      <span className="text-base">🤖</span>
+                      <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{k.name}</span>
                     </span>
                   </td>
-                  <td>
-                    <code
-                      style={{
-                        fontFamily: "SF Mono, SFMono-Regular, ui-monospace, Menlo, monospace",
-                        fontSize: 12,
-                        color: "rgba(255,255,255,0.32)",
-                      }}
-                    >
+                  <td className="px-5 py-3.5">
+                    <code className="font-mono text-xs" style={{ color: "var(--text-tertiary)" }}>
                       {k.prefix}
                     </code>
                   </td>
-                  <td>
-                    <span
-                      className={`hx-badge ${k.auto_publish ? "hx-badge-green" : "hx-badge-orange"}`}
-                    >
+                  <td className="px-5 py-3.5">
+                    <Badge variant={k.auto_publish ? "green" : "orange"}>
                       {k.auto_publish ? "Auto-publish" : "Review queue"}
-                    </span>
+                    </Badge>
                   </td>
-                  <td className="hx-text-tertiary" style={{ fontSize: 12 }}>
+                  <td className="px-5 py-3.5 text-xs" style={{ color: "var(--text-tertiary)" }}>
                     {k.last_used_at
                       ? new Date(k.last_used_at).toLocaleDateString("en-GB")
                       : "Never"}
                   </td>
-                  <td style={{ textAlign: "right" }}>
-                    <button className="hx-btn-secondary hx-btn-sm">
-                      Revoke
-                    </button>
+                  <td className="px-5 py-3.5 text-right">
+                    <GlassButton size="sm">Revoke</GlassButton>
                   </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
-      </div>
+      </GlassCard>
     </AdminShell>
   );
 }

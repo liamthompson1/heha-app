@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { fetchDestination, fetchDestinations } from "@/lib/api/destinations";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import HxNavbar from "@/components/admin/HxNavbar";
+import PageShell from "@/components/PageShell";
 
 export const revalidate = 300;
 
@@ -67,93 +67,43 @@ export default async function DestinationPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
       />
 
-      <div className="hx-page">
-        <HxNavbar />
-
+      <PageShell backHref="/destinations" maxWidth="5xl" variant="full">
         {/* Hero */}
-        <div
-          style={{
-            position: "relative",
-            height: "50vh",
-            minHeight: 360,
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
+        <div className="relative w-full overflow-hidden" style={{ height: "50vh", minHeight: 360 }}>
           {destination.hero_image_url && (
             <img
               src={destination.hero_image_url}
               alt={destination.name}
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
+              className="absolute inset-0 h-full w-full object-cover"
             />
           )}
           <div
+            className="absolute inset-0"
             style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to top, #050510 0%, rgba(5,5,16,0.6) 50%, transparent 100%)",
+              background: "linear-gradient(to top, var(--background) 0%, rgba(0,0,0,0.6) 50%, transparent 100%)",
             }}
           />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: "0 24px 48px",
-            }}
-          >
-            <div style={{ maxWidth: 740, margin: "0 auto" }}>
-              <p
-                className="hx-eyebrow"
-                style={{ marginBottom: 8 }}
-              >
+          <div className="absolute bottom-0 left-0 right-0 px-6 pb-12">
+            <div className="mx-auto max-w-[740px]">
+              <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
                 {destination.country} · {destination.continent}
               </p>
-              <h1
-                className="hx-heading"
-                style={{ fontSize: "clamp(40px, 8vw, 64px)" }}
-              >
+              <h1 className="gradient-text-subtle mt-2 text-5xl font-bold tracking-tight sm:text-6xl">
                 {destination.name}
               </h1>
               <p
-                className="hx-text-secondary"
-                style={{
-                  fontSize: "clamp(16px, 2.5vw, 19px)",
-                  lineHeight: 1.5,
-                  marginTop: 12,
-                  maxWidth: 560,
-                }}
+                className="mt-3 max-w-xl text-lg leading-relaxed"
+                style={{ color: "var(--text-secondary)" }}
               >
                 {destination.summary}
               </p>
               {destination.tags.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 6,
-                    marginTop: 16,
-                  }}
-                >
+                <div className="mt-4 flex flex-wrap gap-1.5">
                   {destination.tags.map((tag) => (
                     <span
                       key={tag}
-                      style={{
-                        padding: "4px 12px",
-                        borderRadius: 980,
-                        border: "0.5px solid rgba(255,255,255,0.1)",
-                        background: "rgba(255,255,255,0.04)",
-                        fontSize: 12,
-                        color: "rgba(255,255,255,0.56)",
-                      }}
+                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs"
+                      style={{ color: "var(--text-secondary)" }}
                     >
                       {tag}
                     </span>
@@ -165,13 +115,7 @@ export default async function DestinationPage({
         </div>
 
         {/* Content */}
-        <article
-          style={{
-            maxWidth: 740,
-            margin: "0 auto",
-            padding: "48px 24px 100px",
-          }}
-        >
+        <article className="mx-auto max-w-[740px] px-6 pb-24 pt-12">
           <div className="glass-prose destination-prose">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {destination.content_markdown}
@@ -181,16 +125,11 @@ export default async function DestinationPage({
           {/* Attribution */}
           {destination.updated_by_name && (
             <div
-              style={{
-                marginTop: 48,
-                paddingTop: 24,
-                borderTop: "0.5px solid rgba(255,255,255,0.06)",
-                fontSize: 13,
-              }}
-              className="hx-text-tertiary"
+              className="mt-12 border-t border-white/6 pt-6 text-sm"
+              style={{ color: "var(--text-tertiary)" }}
             >
               Last updated by{" "}
-              <span className="hx-text-secondary">
+              <span style={{ color: "var(--text-secondary)" }}>
                 {destination.updated_by_name}
               </span>{" "}
               on{" "}
@@ -202,7 +141,7 @@ export default async function DestinationPage({
             </div>
           )}
         </article>
-      </div>
+      </PageShell>
     </>
   );
 }
