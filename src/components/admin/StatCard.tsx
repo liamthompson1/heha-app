@@ -2,7 +2,7 @@ export default function StatCard({
   label,
   value,
   icon,
-  color = "#0a84ff",
+  color = "#5AC8FA",
 }: {
   label: string;
   value: string | number;
@@ -10,18 +10,25 @@ export default function StatCard({
   color?: string;
 }) {
   return (
-    <div className="hx-glass hx-stat">
+    <div className="glass-panel flex flex-col gap-3 px-5 py-5">
       <div
-        className="hx-stat-icon"
+        className="flex h-10 w-10 items-center justify-center rounded-xl text-lg"
         style={{
           background: `linear-gradient(135deg, ${color}26, ${color}0d)`,
-          border: `0.5px solid ${color}33`,
+          border: `1px solid ${color}33`,
         }}
       >
         {icon}
       </div>
-      <div className="hx-stat-value">{value}</div>
-      <div className="hx-stat-label">{label}</div>
+      <div
+        className="text-3xl font-bold tracking-tight"
+        style={{ color: "var(--foreground)" }}
+      >
+        {value}
+      </div>
+      <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+        {label}
+      </div>
     </div>
   );
 }

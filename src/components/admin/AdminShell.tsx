@@ -1,6 +1,7 @@
 "use client";
 
-import HxNavbar from "./HxNavbar";
+import PageShell from "../PageShell";
+import AdminNav from "./AdminNav";
 
 export default function AdminShell({
   children,
@@ -8,9 +9,9 @@ export default function AdminShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="hx-page">
-      <HxNavbar />
-      <div className="hx-container-wide">{children}</div>
-    </div>
+    <PageShell backHref="/" maxWidth="7xl">
+      <AdminNav />
+      <div className="mt-4">{children}</div>
+    </PageShell>
   );
 }

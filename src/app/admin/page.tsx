@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import StatCard from "@/components/admin/StatCard";
+import GlassCard from "@/components/GlassCard";
 import { fetchAdminStats, fetchContentHistory } from "@/lib/api/destinations";
 import type { AdminStats, ContentHistoryEntry } from "@/types/destination";
 
@@ -16,6 +17,24 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`;
 }
 
+function Badge({ variant, children }: { variant: "green" | "blue" | "orange" | "red"; children: React.ReactNode }) {
+  const colors = {
+    green: { bg: "rgba(46, 205, 193, 0.12)", border: "rgba(46, 205, 193, 0.25)", text: "var(--teal)" },
+    blue: { bg: "rgba(90, 200, 250, 0.12)", border: "rgba(90, 200, 250, 0.25)", text: "var(--blue)" },
+    orange: { bg: "rgba(240, 180, 41, 0.12)", border: "rgba(240, 180, 41, 0.25)", text: "var(--gold)" },
+    red: { bg: "rgba(255, 99, 89, 0.12)", border: "rgba(255, 99, 89, 0.25)", text: "var(--coral)" },
+  };
+  const c = colors[variant];
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium"
+      style={{ background: c.bg, border: `1px solid ${c.border}`, color: c.text }}
+    >
+      {children}
+    </span>
+  );
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [history, setHistory] = useState<ContentHistoryEntry[]>([]);
@@ -27,129 +46,71 @@ export default function AdminDashboard() {
 
   return (
     <AdminShell>
-      <div style={{ marginBottom: 40 }}>
-        <p className="hx-eyebrow" style={{ marginBottom: 8 }}>
+      <div className="mb-10">
+        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
           Admin
         </p>
-        <h1 className="hx-heading" style={{ fontSize: 48 }}>
+        <h1 className="gradient-text-subtle mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
           Dashboard
         </h1>
       </div>
 
       {/* Stats */}
       {stats ? (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: 12,
-            marginBottom: 48,
-          }}
-        >
-          <StatCard
-            label="Total Destinations"
-            value={stats.total_destinations}
-            icon="🌍"
-            color="#0a84ff"
-          />
-          <StatCard
-            label="Published"
-            value={stats.published_destinations}
-            icon="✓"
-            color="#30d158"
-          />
-          <StatCard
-            label="Active Bots"
-            value={stats.active_bots}
-            icon="🤖"
-            color="#bf5af2"
-          />
-          <StatCard
-            label="Pending Reviews"
-            value={stats.pending_reviews}
-            icon="📝"
-            color={stats.pending_reviews > 0 ? "#ff453a" : "#ff9f0a"}
-          />
+        <div className="mb-12 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatCard label="Total Destinations" value={stats.total_destinations} icon="🌍" color="#5AC8FA" />
+          <StatCard label="Published" value={stats.published_destinations} icon="✓" color="#2ECDC1" />
+          <StatCard label="Active Bots" value={stats.active_bots} icon="🤖" color="#8944E5" />
+          <StatCard label="Pending Reviews" value={stats.pending_reviews} icon="📝" color={stats.pending_reviews > 0 ? "#FF6359" : "#F0B429"} />
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 12,
-            marginBottom: 48,
-          }}
-        >
+        <div className="mb-12 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="hx-glass"
-              style={{ height: 140, opacity: 0.5 }}
-            />
+            <div key={i} className="glass-panel h-36 animate-pulse opacity-50" />
           ))}
         </div>
       )}
 
       {/* Recent Activity */}
-      <h2
-        className="hx-text-primary"
-        style={{
-          fontSize: 24,
-          fontWeight: 700,
-          letterSpacing: "-0.02em",
-          marginBottom: 16,
-        }}
-      >
+      <h2 className="mb-4 text-2xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
         Recent Activity
       </h2>
 
-      <div className="hx-glass hx-table-wrap" style={{ padding: 0 }}>
-        <table className="hx-table">
+      <GlassCard flush>
+        <table className="w-full">
           <thead>
-            <tr>
-              <th>Actor</th>
-              <th>Action</th>
-              <th>Destination</th>
-              <th style={{ textAlign: "right" }}>Time</th>
+            <tr className="border-b border-white/6">
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Actor</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Action</th>
+              <th className="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Destination</th>
+              <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>Time</th>
             </tr>
           </thead>
           <tbody>
             {history.length === 0 ? (
               <tr>
-                <td
-                  colSpan={4}
-                  style={{ textAlign: "center", padding: "32px 16px" }}
-                >
+                <td colSpan={4} className="px-5 py-8 text-center text-sm" style={{ color: "var(--text-tertiary)" }}>
                   No activity yet.
                 </td>
               </tr>
             ) : (
               history.map((entry) => (
-                <tr key={entry.id}>
-                  <td>
-                    <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 16 }}>
-                        {entry.actor_type === "bot" ? "🤖" : "👤"}
-                      </span>
-                      <span className="hx-text-primary" style={{ fontWeight: 500, fontSize: 13 }}>
-                        {entry.actor_name}
-                      </span>
+                <tr key={entry.id} className="border-b border-white/4 transition-colors hover:bg-white/[0.02]">
+                  <td className="px-5 py-3.5">
+                    <span className="flex items-center gap-2">
+                      <span className="text-base">{entry.actor_type === "bot" ? "🤖" : "👤"}</span>
+                      <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{entry.actor_name}</span>
                     </span>
                   </td>
-                  <td>
-                    <span
-                      className={`hx-badge ${entry.action === "create" ? "hx-badge-green" : "hx-badge-blue"}`}
-                    >
+                  <td className="px-5 py-3.5">
+                    <Badge variant={entry.action === "create" ? "green" : "blue"}>
                       {entry.action}
-                    </span>
+                    </Badge>
                   </td>
-                  <td style={{ color: "#0a84ff", fontWeight: 500, fontSize: 13 }}>
+                  <td className="px-5 py-3.5 text-sm font-medium" style={{ color: "var(--blue)" }}>
                     {entry.destination_slug}
                   </td>
-                  <td
-                    className="hx-text-tertiary"
-                    style={{ textAlign: "right", fontSize: 12 }}
-                  >
+                  <td className="px-5 py-3.5 text-right text-xs" style={{ color: "var(--text-tertiary)" }}>
                     {timeAgo(entry.created_at)}
                   </td>
                 </tr>
@@ -157,7 +118,7 @@ export default function AdminDashboard() {
             )}
           </tbody>
         </table>
-      </div>
+      </GlassCard>
     </AdminShell>
   );
 }

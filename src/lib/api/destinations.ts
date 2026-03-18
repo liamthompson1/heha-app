@@ -6,6 +6,17 @@ import type {
 } from "@/types/destination";
 
 // ---------------------------------------------------------------------------
+// Base URL — needed so server-side fetches use an absolute URL
+// ---------------------------------------------------------------------------
+
+function getBaseUrl(): string {
+  if (typeof window !== "undefined") return ""; // browser — relative is fine
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "http://localhost:3000";
+}
+
+// ---------------------------------------------------------------------------
 // Internal page shapes returned by /api/pages
 // ---------------------------------------------------------------------------
 
@@ -67,7 +78,7 @@ export interface DestinationFilters {
 export async function fetchDestinations(
   filters?: DestinationFilters
 ): Promise<Destination[]> {
-  const res = await fetch("/api/pages");
+  const res = await fetch(`${getBaseUrl()}/api/pages`);
   if (!res.ok) return [];
   const { pages } = (await res.json()) as { pages: PageListItem[] };
   let results = pages.map(pageToDestination);
@@ -89,7 +100,7 @@ export async function fetchDestinations(
 export async function fetchDestination(
   slug: string
 ): Promise<Destination | null> {
-  const res = await fetch(`/api/pages/${slug}`);
+  const res = await fetch(`${getBaseUrl()}/api/pages/${slug}`);
   if (!res.ok) return null;
   const page = (await res.json()) as PageFull;
   return pageToDestination(page);
@@ -102,7 +113,7 @@ export async function fetchDestination(
 export async function createDestination(
   data: Partial<Destination>
 ): Promise<Destination> {
-  const res = await fetch("/api/pages", {
+  const res = await fetch(`${getBaseUrl()}/api/pages`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
@@ -135,7 +146,7 @@ export async function updateDestination(
   slug: string,
   data: Partial<Destination>
 ): Promise<Destination> {
-  const res = await fetch(`/api/pages/${slug}`, {
+  const res = await fetch(`${getBaseUrl()}/api/pages/${slug}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: data.content_markdown, categories: data.tags }),
@@ -181,7 +192,7 @@ export async function fetchContentHistory(
   slug?: string
 ): Promise<ContentHistoryEntry[]> {
   if (slug) {
-    const res = await fetch(`/api/pages/${slug}`);
+    const res = await fetch(`${getBaseUrl()}/api/pages/${slug}`);
     if (!res.ok) return [];
     const page = (await res.json()) as PageFull;
     return [
@@ -195,7 +206,7 @@ export async function fetchContentHistory(
       },
     ];
   }
-  const res = await fetch("/api/pages");
+  const res = await fetch(`${getBaseUrl()}/api/pages`);
   if (!res.ok) return [];
   const { pages } = (await res.json()) as { pages: PageListItem[] };
   return pages.map((page) => ({
@@ -213,7 +224,7 @@ export async function fetchContentHistory(
 // ---------------------------------------------------------------------------
 
 export async function fetchAdminStats(): Promise<AdminStats> {
-  const res = await fetch("/api/pages");
+  const res = await fetch(`${getBaseUrl()}/api/pages`);
   if (!res.ok) {
     return {
       total_destinations: 0,
