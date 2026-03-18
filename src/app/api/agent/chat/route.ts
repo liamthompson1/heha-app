@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import type { AgentChatRequest, AgentChatResponse, SavedMemory } from "@/types/agent";
+import type { AgentChatRequest, AgentChatResponse, SavedMemory, FlightCardData } from "@/types/agent";
 import type { TripData } from "@/types/trip";
 import { agentTools } from "@/lib/agent/tools";
 import { buildSystemPrompt } from "@/lib/agent/system-prompt";
@@ -32,17 +32,40 @@ export async function POST(req: NextRequest) {
     // Build system prompt with current trip state + memories
     const systemPrompt = buildSystemPrompt(tripData, userMemories);
 
-    // Convert chat messages to Claude format
-    const claudeMessages: Anthropic.MessageParam[] = messages.map((m) => ({
-      role: m.role === "user" ? "user" : "assistant",
-      content: m.content,
-    }));
+    // Convert chat messages to Claude format (with vision support)
+    const claudeMessages: Anthropic.MessageParam[] = messages.map((m) => {
+      if (m.role === "user" && m.image) {
+        return {
+          role: "user" as const,
+          content: [
+            {
+              type: "image" as const,
+              source: {
+                type: "base64" as const,
+                media_type: m.image.mediaType,
+                data: m.image.base64,
+              },
+            },
+            {
+              type: "text" as const,
+              text: m.content || "Please extract any travel information from this image and update my trip details.",
+            },
+          ],
+        };
+      }
+      return {
+        role: m.role === "user" ? ("user" as const) : ("assistant" as const),
+        content: m.content,
+      };
+    });
 
     // Tool-use loop
     let currentTripData: TripData = { ...tripData };
     const allMemories: SavedMemory[] = [];
     let formComplete = false;
     let finalText = "";
+    let allFlightCards: FlightCardData[] | undefined;
+    let allFlightSearchParams: AgentChatResponse["flightSearchParams"];
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
       const response = await anthropic.messages.create({
@@ -72,6 +95,7 @@ export async function POST(req: NextRequest) {
       // Execute tool calls
       const toolResult = await handleToolCalls(
         toolUseBlocks.map((b) => ({
+          id: b.id,
           name: b.name,
           input: b.input as Record<string, unknown>,
         })),
@@ -82,6 +106,8 @@ export async function POST(req: NextRequest) {
       currentTripData = toolResult.updatedTripData;
       allMemories.push(...toolResult.memories);
       if (toolResult.formComplete) formComplete = true;
+      if (toolResult.flightCards?.length) allFlightCards = toolResult.flightCards;
+      if (toolResult.flightSearchParams) allFlightSearchParams = toolResult.flightSearchParams;
 
       // Feed tool results back into conversation for next round
       claudeMessages.push({
@@ -94,7 +120,7 @@ export async function POST(req: NextRequest) {
         content: toolUseBlocks.map((b) => ({
           type: "tool_result" as const,
           tool_use_id: b.id,
-          content: JSON.stringify({ success: true }),
+          content: toolResult.toolResults[b.id] ?? JSON.stringify({ success: true }),
         })),
       });
 
@@ -107,6 +133,8 @@ export async function POST(req: NextRequest) {
       updatedTripData: currentTripData,
       memories: allMemories,
       formComplete,
+      flightCards: allFlightCards,
+      flightSearchParams: allFlightSearchParams,
     };
 
     return NextResponse.json(result);

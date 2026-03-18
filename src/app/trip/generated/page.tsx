@@ -6,13 +6,18 @@ import GlassCard from "@/components/GlassCard";
 import GlassButton from "@/components/GlassButton";
 import type { TripData } from "@/types/trip";
 import { dummyTripData } from "@/types/trip";
+import { formatDateRange } from "@/lib/format-date";
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoItem({ label, value }: { label: string; value: string }) {
   if (!value) return null;
   return (
-    <div className="text-sm">
-      <span className="text-white/40">{label}: </span>
-      <span className="text-white/75">{value}</span>
+    <div>
+      <p className="text-xs font-medium uppercase tracking-wide mb-1" style={{ color: 'var(--text-tertiary)' }}>
+        {label}
+      </p>
+      <p className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>
+        {value}
+      </p>
     </div>
   );
 }
@@ -39,127 +44,147 @@ export default function TripGeneratedPage() {
   ].filter(Boolean) as string[];
 
   return (
-    <PageShell backHref="/trip/new">
-      {/* Header */}
-      <div className="page-enter stagger-1 mb-2">
-        <h1 className="gradient-text text-4xl font-bold sm:text-5xl">
+    <PageShell backHref="/trip/new" variant="full" maxWidth="5xl">
+      {/* ── Hero Section ── */}
+      <section className="page-enter stagger-1 pt-4 pb-16 sm:pt-8 sm:pb-24 text-center">
+        <p className="text-sm font-medium uppercase tracking-widest mb-4" style={{ color: 'var(--text-tertiary)' }}>
+          {trip.reason || "Trip"}
+        </p>
+        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight leading-none gradient-text">
           {trip.name || "Your Trip"}
         </h1>
-        <p className="mt-2 text-sm text-white/50">
-          {[trip.dates.start_date, trip.dates.end_date].filter(Boolean).join(" – ")}
-          {trip.reason && ` · ${trip.reason}`}
+        <p className="mt-6 text-lg sm:text-xl" style={{ color: 'var(--text-secondary)' }}>
+          {formatDateRange(trip.dates.start_date, trip.dates.end_date)}
         </p>
-      </div>
+      </section>
 
-      <div className="page-enter stagger-2 prismatic-line w-full mb-8" />
+      <div className="prismatic-line w-full max-w-5xl mx-auto" />
 
-      {/* Overview */}
-      <GlassCard className="page-enter stagger-2 mb-5">
-        <h2 className="text-lg font-semibold text-white/90 mb-3">Overview</h2>
-        <div className="space-y-1">
-          <InfoRow label="Trip name" value={trip.name} />
-          <InfoRow label="Type" value={trip.reason} />
-          <InfoRow label="Travel mode" value={trip.how_we_are_travelling} />
-          {trip.dates.flexible_dates_notes && (
-            <InfoRow label="Date notes" value={trip.dates.flexible_dates_notes} />
-          )}
-        </div>
-      </GlassCard>
-
-      {/* Travelers */}
-      {trip.people_travelling.length > 0 && (
-        <GlassCard className="page-enter stagger-3 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Travelers</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {trip.people_travelling.map((t, i) => (
-              <div key={i} className="glass-panel rounded-xl p-4">
-                <p className="font-medium text-white/90">
-                  {t.first_name} {t.last_name}
-                </p>
-                {t.email && <p className="text-xs text-white/40 mt-1">{t.email}</p>}
-                {t.phone && <p className="text-xs text-white/40">{t.phone}</p>}
-                {t.dob && <p className="text-xs text-white/30 mt-1">DOB: {t.dob}</p>}
-              </div>
-            ))}
+      {/* ── Info Grid ── */}
+      <section className="page-enter stagger-2 w-full max-w-5xl mx-auto py-16 sm:py-24 grid gap-6 sm:gap-8 sm:grid-cols-2">
+        {/* Overview */}
+        <GlassCard size="lg">
+          <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--foreground)' }}>
+            Overview
+          </h2>
+          <div className="space-y-5">
+            <InfoItem label="Trip name" value={trip.name} />
+            <InfoItem label="Type" value={trip.reason} />
+            <InfoItem label="Travel mode" value={trip.how_we_are_travelling} />
+            {trip.dates.flexible_dates_notes && (
+              <InfoItem label="Date notes" value={trip.dates.flexible_dates_notes} />
+            )}
           </div>
         </GlassCard>
-      )}
 
-      {/* Journey */}
-      <GlassCard className="page-enter stagger-3 mb-5">
-        <h2 className="text-lg font-semibold text-white/90 mb-3">Journey</h2>
-        <div className="space-y-1">
-          <InfoRow
-            label="From"
-            value={[trip.journey_locations.travelling_from, trip.journey_locations.postcode_from].filter(Boolean).join(", ")}
-          />
-          <InfoRow
-            label="To"
-            value={[trip.journey_locations.travelling_to, trip.journey_locations.postcode_to].filter(Boolean).join(", ")}
-          />
-          <InfoRow label="Nearest airport" value={trip.journey_locations.nearest_airport} />
-        </div>
-      </GlassCard>
+        {/* Journey */}
+        <GlassCard size="lg">
+          <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--foreground)' }}>
+            Journey
+          </h2>
+          <div className="space-y-5">
+            <InfoItem
+              label="From"
+              value={[trip.journey_locations.travelling_from, trip.journey_locations.postcode_from].filter(Boolean).join(", ")}
+            />
+            <InfoItem
+              label="To"
+              value={[trip.journey_locations.travelling_to, trip.journey_locations.postcode_to].filter(Boolean).join(", ")}
+            />
+            <InfoItem label="Nearest airport" value={trip.journey_locations.nearest_airport} />
+          </div>
+        </GlassCard>
 
-      {/* Flights */}
-      {trip.flights_if_known.length > 0 && (
-        <GlassCard className="page-enter stagger-4 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Flights</h2>
-          <div className="space-y-3">
-            {trip.flights_if_known.map((f, i) => (
-              <div key={i} className="glass-panel rounded-xl p-4">
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="font-medium text-white/90">{f.airline} {f.flight_number}</span>
-                  <span className="text-xs text-white/30 capitalize">{f.direction}</span>
+        {/* Travelers */}
+        {trip.people_travelling.length > 0 && (
+          <GlassCard size="lg" className={trip.people_travelling.length > 2 ? "sm:col-span-2" : ""}>
+            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--foreground)' }}>
+              Travelers
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {trip.people_travelling.map((t, i) => (
+                <div key={i} className="glass-panel rounded-2xl p-5">
+                  <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    {t.first_name} {t.last_name}
+                  </p>
+                  {t.email && <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>{t.email}</p>}
+                  {t.phone && <p className="text-sm mt-1" style={{ color: 'var(--text-tertiary)' }}>{t.phone}</p>}
+                  {t.dob && <p className="text-sm mt-1" style={{ color: 'var(--text-tertiary)' }}>DOB: {t.dob}</p>}
                 </div>
-                <p className="text-sm text-white/60">
-                  {f.from_airport} → {f.to_airport}
-                </p>
-                <p className="text-xs text-white/40 mt-1">
-                  Departs {f.departure_date} {f.departure_time} · Arrives {f.arrival_date} {f.arrival_time}
-                </p>
-              </div>
-            ))}
-          </div>
-        </GlassCard>
-      )}
-
-      {/* Preferences */}
-      {(prefLabels.length > 0 || trip.preferences.notes) && (
-        <GlassCard className="page-enter stagger-4 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Preferences</h2>
-          {prefLabels.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-3">
-              {prefLabels.map((label) => (
-                <span key={label} className="rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1 text-xs text-blue-300">
-                  {label}
-                </span>
               ))}
             </div>
-          )}
-          {trip.preferences.notes && (
-            <p className="text-sm text-white/60">{trip.preferences.notes}</p>
-          )}
-        </GlassCard>
-      )}
+          </GlassCard>
+        )}
 
-      {/* Anything else */}
-      {trip.anything_else_we_should_know && (
-        <GlassCard className="page-enter stagger-5 mb-5">
-          <h2 className="text-lg font-semibold text-white/90 mb-3">Anything Else</h2>
-          <p className="text-sm text-white/60">{trip.anything_else_we_should_know}</p>
-        </GlassCard>
-      )}
+        {/* Flights */}
+        {trip.flights_if_known.length > 0 && (
+          <GlassCard size="lg" className="sm:col-span-2">
+            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--foreground)' }}>
+              Flights
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {trip.flights_if_known.map((f, i) => (
+                <div key={i} className="glass-panel rounded-2xl p-5">
+                  <p className="text-base font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    {f.airline} {f.flight_number}
+                  </p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                    {f.from_airport} → {f.to_airport}
+                  </p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--text-tertiary)' }}>
+                    Departs {f.departure_date} {f.departure_time} · Arrives {f.arrival_date} {f.arrival_time}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+        )}
 
-      {/* Actions */}
-      <div className="page-enter stagger-5 mt-8 flex flex-col gap-3 sm:flex-row">
-        <GlassButton variant="teal" className="flex-1">
+        {/* Preferences */}
+        {(prefLabels.length > 0 || trip.preferences.notes) && (
+          <GlassCard size="lg" className="sm:col-span-2">
+            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--foreground)' }}>
+              Preferences
+            </h2>
+            {prefLabels.length > 0 && (
+              <div className="flex flex-wrap gap-3 mb-4">
+                {prefLabels.map((label) => (
+                  <span key={label} className="rounded-full border border-blue-400/20 bg-blue-400/8 px-4 py-2 text-sm font-medium text-blue-300">
+                    {label}
+                  </span>
+                ))}
+              </div>
+            )}
+            {trip.preferences.notes && (
+              <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                {trip.preferences.notes}
+              </p>
+            )}
+          </GlassCard>
+        )}
+
+        {/* Anything else */}
+        {trip.anything_else_we_should_know && (
+          <GlassCard size="lg" className="sm:col-span-2">
+            <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>
+              Notes
+            </h2>
+            <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              {trip.anything_else_we_should_know}
+            </p>
+          </GlassCard>
+        )}
+      </section>
+
+      {/* ── Actions ── */}
+      <section className="page-enter stagger-5 w-full max-w-5xl mx-auto pb-12 flex flex-col gap-4 sm:flex-row sm:justify-center">
+        <GlassButton variant="teal" size="lg">
           Share Trip
         </GlassButton>
-        <GlassButton href="/trip/new" variant="purple" className="flex-1">
+        <GlassButton href="/trip/new" variant="purple" size="lg">
           Plan Another
         </GlassButton>
-      </div>
+      </section>
     </PageShell>
   );
 }

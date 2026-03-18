@@ -15,7 +15,7 @@ interface AgentChatProps {
 }
 
 const GREETING =
-  "Hey! I'm your Heeha travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? The more you share, the faster we'll get you sorted!";
+  "Hey! I'm your HEHA travel assistant. Tell me about the trip you're planning — where are you going, when, who's coming? The more you share, the faster we'll get you sorted!";
 
 export default function AgentChat({
   tripData,
@@ -100,7 +100,7 @@ export default function AgentChat({
 
   return (
     <div className="flex flex-col" style={{ minHeight: "60vh" }}>
-      <div className="flex-1 space-y-3 mb-6 overflow-y-auto">
+      <div className="glass-panel flex-1 space-y-3 mb-6 overflow-y-auto rounded-2xl p-4" style={{ maxHeight: '50vh' }}>
         {history.map((msg, i) => (
           <AgentMessage
             key={i}
@@ -123,7 +123,7 @@ export default function AgentChat({
           Plan My Trip
         </GlassButton>
       ) : (
-        <div className="flex gap-3">
+        <div className="flex gap-3 rounded-2xl p-3" style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', background: 'rgba(255,255,255,0.04)' }}>
           <input
             type="text"
             className="glass-input flex-1"

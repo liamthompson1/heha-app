@@ -25,6 +25,7 @@ export interface Flight {
   from_airport: string;
   to_airport: string;
   direction: "outbound" | "return";
+  flight_reference?: string;
 }
 
 export interface TripDates {
@@ -114,6 +115,7 @@ export interface ApiFlight {
   arrival_airport: string;
   departure_time?: string;
   arrival_time?: string;
+  flight_reference?: string;
 }
 
 export interface ApiJourneyLocations {
@@ -136,6 +138,8 @@ export interface TripRow extends CreateTripRequest {
   created_at: string;
   traveller_api_synced: boolean;
   traveller_trip_id: string | null;
+  trip_content?: import("./trip-content").TripContent | null;
+  image_url?: string | null;
 }
 
 export interface CreateTripResponse {

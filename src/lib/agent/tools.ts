@@ -69,6 +69,7 @@ export const agentTools: Anthropic.Tool[] = [
               from_airport: { type: "string" },
               to_airport: { type: "string" },
               direction: { type: "string", enum: ["outbound", "return"] },
+              flight_reference: { type: "string", description: "Base64 flight reference from search results" },
             },
           },
         },
@@ -119,6 +120,38 @@ export const agentTools: Anthropic.Tool[] = [
         },
       },
       required: ["category", "content"],
+    },
+  },
+  {
+    name: "search_flights",
+    description:
+      "Search for real available flights between two airports on a given date. Use this when the user is flying and you have departure airport IATA code, arrival airport IATA code, and a departure date. Returns a list of available flights. Present the top options to the user so they can choose. After they choose, use update_trip_data to save the selected flight(s).",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        origin: {
+          type: "string",
+          description: "Departure airport IATA code (e.g. LGW, MAN, STN)",
+        },
+        destination: {
+          type: "string",
+          description: "Arrival airport IATA code (e.g. BCN, FAO, PMI)",
+        },
+        departure_date: {
+          type: "string",
+          description: "Departure date in YYYY-MM-DD format",
+        },
+        return_date: {
+          type: "string",
+          description: "Return date in YYYY-MM-DD format (optional — for return flights)",
+        },
+        direction: {
+          type: "string",
+          enum: ["outbound", "return"],
+          description: "Whether this is an outbound or return flight search",
+        },
+      },
+      required: ["origin", "destination", "departure_date"],
     },
   },
   {

@@ -5,9 +5,10 @@ import { useRef, useState, useCallback } from "react";
 interface OtpInputProps {
   length?: number;
   onChange?: (value: string) => void;
+  onSubmit?: () => void;
 }
 
-export default function OtpInput({ length = 6, onChange }: OtpInputProps) {
+export default function OtpInput({ length = 6, onChange, onSubmit }: OtpInputProps) {
   const [values, setValues] = useState<string[]>(Array(length).fill(""));
   const refs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -26,8 +27,26 @@ export default function OtpInput({ length = 6, onChange }: OtpInputProps) {
     [onChange]
   );
 
+  const distributeCode = useCallback(
+    (code: string) => {
+      const digits = code.replace(/\D/g, "").slice(0, length);
+      if (!digits) return;
+      const next = Array(length).fill("");
+      for (let i = 0; i < digits.length; i++) next[i] = digits[i];
+      update(next);
+      focusIndex(Math.min(digits.length, length - 1));
+    },
+    [length, update, focusIndex]
+  );
+
   const handleChange = (i: number, v: string) => {
-    const digit = v.replace(/\D/g, "").slice(-1);
+    // iOS autofill may dump the full code into the first input
+    const digits = v.replace(/\D/g, "");
+    if (digits.length > 1) {
+      distributeCode(digits);
+      return;
+    }
+    const digit = digits.slice(-1);
     const next = [...values];
     next[i] = digit;
     update(next);
@@ -38,16 +57,14 @@ export default function OtpInput({ length = 6, onChange }: OtpInputProps) {
     if (e.key === "Backspace" && !values[i] && i > 0) {
       focusIndex(i - 1);
     }
+    if (e.key === "Enter") {
+      onSubmit?.();
+    }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
-    if (!pasted) return;
-    const next = [...values];
-    for (let i = 0; i < pasted.length; i++) next[i] = pasted[i];
-    update(next);
-    focusIndex(Math.min(pasted.length, length - 1));
+    distributeCode(e.clipboardData.getData("text"));
   };
 
   return (
@@ -58,11 +75,12 @@ export default function OtpInput({ length = 6, onChange }: OtpInputProps) {
           ref={(el) => { refs.current[i] = el; }}
           type="text"
           inputMode="numeric"
-          maxLength={1}
+          autoComplete={i === 0 ? "one-time-code" : "off"}
+          maxLength={i === 0 ? 6 : 1}
           value={v}
           onChange={(e) => handleChange(i, e.target.value)}
           onKeyDown={(e) => handleKeyDown(i, e)}
-          onPaste={i === 0 ? handlePaste : undefined}
+          onPaste={handlePaste}
           className="glass-otp-cell"
           aria-label={`Digit ${i + 1}`}
         />

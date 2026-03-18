@@ -3,6 +3,7 @@
 import { useSession } from "@/lib/auth/use-session";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import * as cache from "@/lib/cache";
 
 export default function AuthStatus() {
   const { authenticated, email } = useSession();
@@ -15,8 +16,8 @@ export default function AuthStatus() {
     setLoggingOut(true);
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      router.push("/");
-      router.refresh();
+      cache.clear();
+      window.location.href = "/";
     } catch {
       setLoggingOut(false);
     }

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import { createTripSchema } from "@/lib/validation/trip-schema";
 import { getSupabaseClient } from "@/lib/supabase/client";
-import { syncTripToTravellerApi } from "@/lib/traveller/client";
+import { fetchTravellerTrips, mapTravellerTripToLocal, getTravellerAuthToken } from "@/lib/traveller/client";
+import { createHxTripViaDockYard } from "@/lib/traveller/dock-yard";
 import { getSession, getSessionCookieName, hashEmail } from "@/lib/auth/session";
 import { enrichTripEntities } from "@/lib/agent/enrichment-service";
 
@@ -35,7 +36,78 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ trips: data });
+    let trips = data ?? [];
+
+    // If HX-authenticated, merge trips from the Traveller API
+    const authToken = getTravellerAuthToken(
+      (name) => request.cookies.get(name)?.value
+    );
+
+    // Safety: only use HX token if it belongs to the current user.
+    // Prevents cross-account trip leakage when a different user logs in
+    // but stale HX cookies from a previous login remain.
+    const hxUserId = request.cookies.get("hx_user_id")?.value;
+    const hxTokenMatchesUser = !hxUserId || hxUserId === userId;
+
+    // Track HX sync status for the client
+    let hxSync: { attempted: boolean; imported: number; error: string | null } = {
+      attempted: false,
+      imported: 0,
+      error: null,
+    };
+
+    console.log("[Trips] HX auth token present:", !!authToken, "hx_user_id matches:", hxTokenMatchesUser);
+    if (authToken && hxTokenMatchesUser) {
+      hxSync.attempted = true;
+      try {
+        console.log("[Trips] Fetching traveller trips...");
+        const { trips: travellerTrips, error: travellerError } =
+          await fetchTravellerTrips(authToken);
+
+        console.log("[Trips] Traveller API returned:", travellerTrips.length, "trips, error:", travellerError);
+
+        if (travellerError) {
+          console.warn("[Traveller API] Failed to fetch trips:", travellerError);
+          hxSync.error = travellerError;
+        } else if (travellerTrips.length > 0) {
+          // Build a set of traveller_trip_ids already known locally
+          const knownTravellerIds = new Set(
+            trips
+              .map((t) => t.traveller_trip_id)
+              .filter(Boolean)
+          );
+
+          // Import new Traveller API trips that don't exist locally
+          const newTrips = travellerTrips.filter(
+            (tt) => !knownTravellerIds.has(tt.id)
+          );
+
+          if (newTrips.length > 0) {
+            const inserts = newTrips.map((tt) => mapTravellerTripToLocal(tt, userId));
+            const { data: inserted, error: insertError } = await supabase
+              .from("trips")
+              .insert(inserts)
+              .select();
+
+            if (insertError) {
+              console.error("[Traveller API] Failed to import trips:", insertError);
+              hxSync.error = `DB insert failed: ${insertError.message}`;
+            } else if (inserted) {
+              trips = [...inserted, ...trips];
+              hxSync.imported = inserted.length;
+            }
+          }
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        console.warn("[Traveller API] Unexpected error during trip merge:", message);
+        hxSync.error = message;
+      }
+    }
+
+    return NextResponse.json({ trips, hxSync }, {
+      headers: { "Cache-Control": "private, max-age=60, stale-while-revalidate=600" },
+    });
   } catch (err) {
     console.error("GET /api/trips crashed:", err);
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -75,12 +147,14 @@ export async function POST(request: NextRequest) {
   const sessionUserId = session?.userId || (session?.email ? await hashEmail(session.email) : null);
   const userId = sessionUserId || validated.user_id;
 
-  // 3. Check for auth_session cookie → sync to Traveller API
-  const authSession = request.cookies.get("auth_session")?.value;
+  // 3. Check for auth_token cookie → sync to Traveller API
+  const authTokenForPost = getTravellerAuthToken(
+    (name) => request.cookies.get(name)?.value
+  );
   let travellerResult = { synced: false, trip_id: null as string | null, error: null as string | null };
 
-  if (authSession) {
-    travellerResult = await syncTripToTravellerApi(validated, authSession);
+  if (authTokenForPost) {
+    travellerResult = await createHxTripViaDockYard(validated, authTokenForPost);
   }
 
   // 4. Save to Supabase

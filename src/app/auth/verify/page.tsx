@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useSession } from "@/lib/auth/use-session";
+import * as cache from "@/lib/cache";
 import PageShell from "@/components/PageShell";
 import GlassCard from "@/components/GlassCard";
 import GlassButton from "@/components/GlassButton";
@@ -17,7 +18,7 @@ function VerifyForm() {
 
   useEffect(() => {
     if (session.authenticated) {
-      router.replace("/trips");
+      router.replace("/");
     }
   }, [session.authenticated, router]);
 
@@ -45,7 +46,9 @@ function VerifyForm() {
         return;
       }
 
-      router.push("/trips");
+      cache.del("/api/auth/session");
+      cache.del("/api/trips");
+      router.push("/");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -78,48 +81,64 @@ function VerifyForm() {
   }
 
   if (session.loading || session.authenticated) {
-    return <div className="text-white/40 text-sm text-center">Loading…</div>;
+    return (
+      <div className="max-w-md mx-auto w-full animate-pulse">
+        <GlassCard>
+          <div className="glass-panel rounded-xl h-8 w-44 mx-auto mb-2" />
+          <div className="glass-panel rounded-xl h-4 w-64 mx-auto mb-8" />
+          <div className="flex justify-center gap-2 mb-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="glass-panel rounded-xl w-11 h-14" />
+            ))}
+          </div>
+          <div className="glass-panel rounded-2xl h-12 w-full" />
+        </GlassCard>
+      </div>
+    );
   }
 
   return (
-    <GlassCard shimmer className="max-w-md mx-auto text-center">
-      <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold mb-2">
-        Check your phone
-      </h1>
-      <p className="page-enter stagger-2 text-sm text-white/50 mb-8">
-        We sent a 6-digit code to your phone{email ? ` for ${email}` : ""}.
-      </p>
+    <div className="relative max-w-md mx-auto">
+      <GlassCard shimmer elevated className="text-center">
+        <h1 className="page-enter stagger-1 gradient-text text-3xl font-bold mb-2">
+          Check your phone
+        </h1>
+        <p className="page-enter stagger-2 text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+          We sent a 6-digit code to your phone{email ? ` for ${email}` : ""}.
+        </p>
 
-      <div className="page-enter stagger-3 mb-8">
-        <OtpInput length={6} onChange={setOtp} />
-      </div>
+        <div className="page-enter stagger-3 mb-8">
+          <OtpInput length={6} onChange={setOtp} onSubmit={handleVerify} />
+        </div>
 
-      {error && (
-        <p className="text-red-400 text-sm mb-4">{error}</p>
-      )}
+        {error && (
+          <p className="text-red-400 text-sm mb-4">{error}</p>
+        )}
 
-      <div className="page-enter stagger-4 mb-4">
-        <GlassButton
-          variant="blue"
-          className="w-full"
-          disabled={otp.length !== 6 || loading}
-          onClick={handleVerify}
-        >
-          {loading ? "Verifying\u2026" : "Verify"}
-        </GlassButton>
-      </div>
+        <div className="page-enter stagger-4 mb-4">
+          <GlassButton
+            variant="blue"
+            className="w-full"
+            disabled={otp.length !== 6 || loading}
+            onClick={handleVerify}
+          >
+            {loading ? "Verifying\u2026" : "Verify"}
+          </GlassButton>
+        </div>
 
-      <p className="page-enter stagger-5 text-xs text-white/40">
-        Didn&rsquo;t get the code?{" "}
-        <button
-          onClick={handleResend}
-          disabled={resending}
-          className="text-white/60 underline underline-offset-2 hover:text-white/80 transition-colors disabled:opacity-50"
-        >
-          {resending ? "Resending\u2026" : "Resend"}
-        </button>
-      </p>
-    </GlassCard>
+        <p className="page-enter stagger-5 text-xs" style={{ color: 'var(--text-tertiary)' }}>
+          Didn&rsquo;t get the code?{" "}
+          <button
+            onClick={handleResend}
+            disabled={resending}
+            className="underline underline-offset-2 transition-colors disabled:opacity-50"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {resending ? "Resending\u2026" : "Resend"}
+          </button>
+        </p>
+      </GlassCard>
+    </div>
   );
 }
 

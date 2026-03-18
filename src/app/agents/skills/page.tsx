@@ -9,7 +9,7 @@ export default function AgentSkillsPage() {
         <MarkdownProse>
           <h1 className="gradient-text">Agent Skills</h1>
           <p>
-            Heeha agents are equipped with a powerful set of capabilities
+            HEHA agents are equipped with a powerful set of capabilities
             designed to make travel planning seamless and intelligent.
           </p>
 

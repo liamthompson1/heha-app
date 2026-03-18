@@ -11,7 +11,7 @@ const AGENT_STEPS: AgentStep[] = [
   {
     id: "greeting",
     agentMessage:
-      "Hey! I'm your Heeha travel assistant. Let's plan something amazing. What kind of trip are you thinking — holiday, business, honeymoon, family, adventure?",
+      "Hey! I'm your HEHA travel assistant. Let's plan something amazing. What kind of trip are you thinking — holiday, business, honeymoon, family, adventure?",
     extractField: (input, data) => ({
       ...data,
       reason: input.trim(),

@@ -1,6 +1,33 @@
+export interface FlightCardData {
+  airline: string;
+  airline_code: string;
+  flight_number: string;
+  from: string;
+  from_city: string;
+  to: string;
+  to_city: string;
+  departure_date: string;
+  departure_time: string;
+  arrival_date: string;
+  arrival_time: string;
+  duration: string;
+  flight_reference: string;
+  direction: "outbound" | "return";
+}
+
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+  image?: {
+    base64: string;
+    mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
+  };
+  _preview?: string;
+  type?: "text" | "flight-selector" | "flight-confirmation" | "flight-loading";
+  flightPhase?: "outbound" | "return";
+  flightCards?: FlightCardData[];
+  confirmedFlight?: FlightCardData;
+  routeLabel?: string;
 }
 
 export interface SavedMemory {
@@ -22,4 +49,6 @@ export interface AgentChatResponse {
   updatedTripData: import("./trip").TripData;
   memories: SavedMemory[];
   formComplete: boolean;
+  flightCards?: FlightCardData[];
+  flightSearchParams?: { origin: string; destination: string; departureDate: string; returnDate?: string };
 }

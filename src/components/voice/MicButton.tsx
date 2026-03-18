@@ -1,9 +1,10 @@
 "use client";
 
-import type { VoiceState } from "@/hooks/useVoiceConversation";
+import type { VoiceState } from "@/hooks/useRealtimeVoice";
 
 interface MicButtonProps {
   voiceState: VoiceState;
+  conversationActive?: boolean;
   onClick: () => void;
 }
 
@@ -31,18 +32,36 @@ function WaveIcon() {
   );
 }
 
-export default function MicButton({ voiceState, onClick }: MicButtonProps) {
+function StopIcon() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+    </svg>
+  );
+}
+
+export default function MicButton({ voiceState, conversationActive, onClick }: MicButtonProps) {
+  const showStop = conversationActive && voiceState !== "idle";
+
   return (
     <button
       type="button"
       className="mic-button"
       data-state={voiceState}
+      data-conversation={conversationActive || undefined}
       onClick={onClick}
       aria-label={
-        voiceState === "idle" ? "Start listening" :
-        voiceState === "listening" ? "Listening..." :
-        voiceState === "processing" ? "Processing..." :
-        "Tap to interrupt"
+        conversationActive
+          ? voiceState === "idle"
+            ? "Start conversation"
+            : "Stop conversation"
+          : voiceState === "idle"
+            ? "Start listening"
+            : voiceState === "listening"
+              ? "Stop listening"
+              : voiceState === "processing"
+                ? "Processing..."
+                : "Tap to interrupt"
       }
     >
       {/* Listening: coral pulse rings */}
@@ -67,7 +86,13 @@ export default function MicButton({ voiceState, onClick }: MicButtonProps) {
         </>
       )}
 
-      {voiceState === "speaking" ? <WaveIcon /> : <MicIcon />}
+      {showStop ? (
+        voiceState === "speaking" ? <WaveIcon /> : <StopIcon />
+      ) : voiceState === "speaking" ? (
+        <WaveIcon />
+      ) : (
+        <MicIcon />
+      )}
     </button>
   );
 }
