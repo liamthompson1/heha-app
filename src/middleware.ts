@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
+import { validateApiKey } from '@/lib/supabase/api-keys'
 
 const COOKIE_NAME = 'heha_session'
 
 const PROTECTED_PATHS = ['/trips', '/account', '/admin']
+const API_KEY_PATHS = ['/api/pages']
 
 function getSecretKey(): Uint8Array {
   return new TextEncoder().encode(process.env.SESSION_SECRET!)
@@ -11,6 +13,24 @@ function getSecretKey(): Uint8Array {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // Validate API key for /api/pages routes
+  const requiresApiKey = API_KEY_PATHS.some((p) => pathname.startsWith(p))
+  if (requiresApiKey) {
+    const authHeader = request.headers.get('authorization') ?? ''
+    const rawKey = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
+    if (!rawKey) {
+      return NextResponse.json({ error: 'Missing Authorization header' }, { status: 401 })
+    }
+    const result = await validateApiKey(rawKey)
+    if (!result) {
+      return NextResponse.json({ error: 'Invalid API key' }, { status: 403 })
+    }
+    const response = NextResponse.next()
+    response.headers.set('x-api-key-id', result.keyId)
+    response.headers.set('x-api-auto-publish', String(result.autoPublish))
+    return response
+  }
 
   // Check if the path requires authentication
   const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p))
@@ -53,5 +73,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/trips/:path*', '/account/:path*', '/admin/:path*'],
+  matcher: ['/trips/:path*', '/account/:path*', '/admin/:path*', '/api/pages/:path*', '/api/pages'],
 }
