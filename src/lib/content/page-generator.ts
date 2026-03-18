@@ -696,6 +696,29 @@ Call submit_page_content now with all sections filled in.`,
 
 // ─── Prompt-driven generator ──────────────────────────────────────────────────
 
+const SUBMIT_PAGE_TOOL: Anthropic.Tool = {
+  name: "submit_page",
+  description:
+    "Submit the completed page with its markdown content and categories.",
+  input_schema: {
+    type: "object" as const,
+    required: ["content_markdown", "categories"],
+    properties: {
+      content_markdown: {
+        type: "string",
+        description: "The full page content in markdown",
+      },
+      categories: {
+        type: "array",
+        description:
+          "One or more category tags that describe this page type. Use values like: destination, airport, airport_parking, airport_hotel, airport_lounge, airport_transfer, car_hire, travel_insurance, editorial",
+        items: { type: "string" },
+        minItems: 1,
+      },
+    },
+  },
+};
+
 export async function generatePageFromPrompt(
   prompt: string,
   slug: string
@@ -713,10 +736,10 @@ Use the following guide to understand editorial standards, page templates, and c
 
 ${skillsContent}
 
-Generate complete, production-ready markdown content for the requested page.
-- Write in British English
-- Choose the appropriate template structure based on the page type described in the prompt
-- Return ONLY the markdown content — no preamble, no explanation, no code fences`,
+Write in British English. Choose the appropriate template structure based on the page type described in the prompt.
+Call submit_page with the completed markdown content and the categories that best describe the page.`,
+    tools: [SUBMIT_PAGE_TOOL],
+    tool_choice: { type: "tool", name: "submit_page" },
     messages: [
       {
         role: "user",
@@ -725,14 +748,22 @@ Generate complete, production-ready markdown content for the requested page.
     ],
   });
 
-  const textBlock = response.content.find((b) => b.type === "text");
-  if (!textBlock || textBlock.type !== "text") {
-    throw new Error("Claude did not return text content");
+  const toolBlock = response.content.find(
+    (b): b is Anthropic.ToolUseBlock =>
+      b.type === "tool_use" && b.name === "submit_page"
+  );
+
+  if (!toolBlock) {
+    throw new Error("Claude did not call submit_page tool");
   }
 
-  const markdown = textBlock.text;
-  await upsertPage(slug, markdown, []);
-  return markdown;
+  const { content_markdown, categories } = toolBlock.input as {
+    content_markdown: string;
+    categories: string[];
+  };
+
+  await upsertPage(slug, content_markdown, categories);
+  return content_markdown;
 }
 
 // ─── Public entry point ───────────────────────────────────────────────────────
