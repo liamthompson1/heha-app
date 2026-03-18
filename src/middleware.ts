@@ -3,7 +3,7 @@ import { jwtVerify } from 'jose'
 
 const COOKIE_NAME = 'heha_session'
 
-const PROTECTED_PATHS = ['/trips', '/account']
+const PROTECTED_PATHS = ['/trips', '/account', '/admin']
 
 function getSecretKey(): Uint8Array {
   return new TextEncoder().encode(process.env.SESSION_SECRET!)
@@ -53,5 +53,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/trips/:path*', '/account/:path*'],
+  matcher: ['/trips/:path*', '/account/:path*', '/admin/:path*'],
 }

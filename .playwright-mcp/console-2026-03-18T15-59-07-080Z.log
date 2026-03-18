@@ -1,0 +1,2643 @@
+[   62479ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   62989ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63046ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63095ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63142ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63188ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63235ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63280ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63327ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63376ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63423ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63471ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63518ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63565ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63612ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63659ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63707ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63759ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63804ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63841ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63889ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63940ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   63990ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64044ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64096ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64147ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64199ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64248ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64295ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64341ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64386ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64438ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64491ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64543ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64591ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64642ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64691ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64741ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64792ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64846ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64901ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   64953ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65006ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65057ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65108ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65154ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65201ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65247ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65297ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65350ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65403ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65449ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65497ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65548ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65597ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65643ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65690ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65738ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65785ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65829ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65883ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65930ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   65977ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   66056ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   66106ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   66145ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[   66192ms] [ERROR] ./src/components/admin/AdminShell.tsx:4:1
+Module not found: Can't resolve './AdminNav'
+  2 |
+  3 | import PageShell from "../PageShell";
+> 4 | import AdminNav from "./AdminNav";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | export default function AdminShell({
+  7 |   children,
+
+Import traces:
+  Client Component Browser:
+    ./src/components/admin/AdminShell.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/admin/AdminShell.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  231901ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  231901ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  239842ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  239842ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  240001ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  240001ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  240583ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  240583ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  240666ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  240666ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  241338ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  241339ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  241418ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  241419ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  242827ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  242827ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  243066ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  243066ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  245002ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  245002ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  245058ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  245058ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  245151ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  245152ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  250708ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  250708ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  250792ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  250792ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  250985ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  250985ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251098ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251098ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251183ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251183ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251294ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251294ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251414ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251414ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251539ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  251539ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  252771ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  252771ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  253042ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  253042ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  253091ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  253092ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  254494ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  254494ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  254701ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  254701ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  276563ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  276563ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  276720ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  276720ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  276762ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  276762ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  278995ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  278996ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  279204ms] [ERROR] ./src/app/destinations/page.tsx:9:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+   7 | } from "@/lib/api/destinations";
+   8 | import type { Destination } from "@/types/destination";
+>  9 | import HxNavbar from "@/components/admin/HxNavbar";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 | import DestinationCard from "@/components/destination/DestinationCard";
+  11 |
+  12 | const CONTINENTS = [
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+Import traces:
+  Client Component Browser:
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  279204ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  285010ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  287964ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  288299ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  288353ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  288427ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  289127ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  289274ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  290086ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  290300ms] [ERROR] ./src/app/destinations/[slug]/page.tsx:5:1
+Module not found: Can't resolve '@/components/admin/HxNavbar'
+  3 | import ReactMarkdown from "react-markdown";
+  4 | import remarkGfm from "remark-gfm";
+> 5 | import HxNavbar from "@/components/admin/HxNavbar";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 |
+  7 | export const revalidate = 300;
+  8 |
+
+Import map: aliased to relative './src/components/admin/HxNavbar' inside of [project]/
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  301774ms] [WARNING] Image with src "/heha-logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  302234ms] [WARNING] Image with src "/heha-logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297

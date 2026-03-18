@@ -1,0 +1,1606 @@
+[     367ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[     466ms] TypeError: Failed to parse URL from /api/pages
+    at new Request (node:internal/deps/undici/undici:9588:19)
+    at dedupeFetch (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:19578:87)
+    at doOriginalFetch (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:20899:24)
+    at <unknown> (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:21179:24)
+    at <unknown> (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:11086:36)
+    at NoopContextManager.with (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at <unknown> (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:11055:103)
+[   52870ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1206
+[   53734ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   53825ms] TypeError: Failed to parse URL from /api/pages
+    at new Request (node:internal/deps/undici/undici:9588:19)
+    at dedupeFetch (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:19578:87)
+    at doOriginalFetch (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:20899:24)
+    at <unknown> (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:21179:24)
+    at <unknown> (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:11086:36)
+    at NoopContextManager.with (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at <unknown> (file:///Users/freddie.wild/Documents/GitHub/heha-app/.next/dev/server/chunks/ssr/node_modules_e2d1c5df._.js:11055:103)
+[   59477ms] [ERROR] ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   69783ms] [ERROR] ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   69785ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   69837ms] Error: ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:106:40)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   69841ms] [ERROR] ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   69841ms] [ERROR] ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   69841ms] [ERROR] ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   69874ms] [ERROR] ./src/lib/api/destinations.ts:106:40
+Parsing ecmascript source code failed
+  104 |   slug: string
+  105 | ): Promise<Destination | null> {
+> 106 |   const res = await fetch(`/api/pages/${slug}`);
+      |                                        ^
+  107 |   if (!res.ok) return null;
+  108 |   const page = (await res.json()) as PageFull;
+  109 |   return pageToDestination(page);
+
+Expected ',', got '{'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   88195ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   91816ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   91818ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   91867ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   91871ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   91871ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   91871ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   91902ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92571ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   92613ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   92617ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92617ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92617ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92649ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92823ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   92863ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   92867ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92867ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92867ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   92899ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93037ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   93086ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   93097ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93097ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93097ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93121ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93241ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   93282ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   93288ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93288ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93288ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93317ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93465ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   93509ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   93511ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93511ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93511ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93546ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93707ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   93759ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   93763ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93763ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93763ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93793ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93905ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   93949ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   93952ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93952ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93952ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   93984ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94104ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   94141ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   94145ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94145ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94145ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94175ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94354ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   94393ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   94397ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94398ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94398ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94438ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94570ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   94606ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   94609ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94609ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94609ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94642ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94805ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/destinations/amsterdam:0
+[   94841ms] Error: ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/lib/api/destinations.ts:124:33)
+    at Object.getCompilationErrors (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1008:59)
+    at DevBundlerService.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:706:42)
+    at DevServer.findPageComponents (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/dev/next-dev-server.js:676:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/freddie.wild/Documents/GitHub/heha-app/node_modules/next/dist/server/base-server.js:1733:26)
+[   94846ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94846ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/destinations/page.tsx [Client Component Browser]
+    ./src/app/destinations/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/destinations/page.tsx [Client Component SSR]
+    ./src/app/destinations/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94846ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import trace:
+  Server Component:
+    ./src/lib/api/destinations.ts
+    ./src/app/destinations/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[   94877ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[  109774ms] [ERROR] ./src/lib/api/destinations.ts:124:33
+Parsing ecmascript source code failed
+  122 |     body: JSON.stringify({ slug: data.slug, prompt: data.summary ?? data.name }),
+  123 |   });
+> 124 |   if (!res.ok) throw new Error(`Failed to create: ${res.status}`);
+      |                                 ^^^^^^
+  125 |   const { slug: createdSlug, content } = (await res.json()) as {
+  126 |     slug: string;
+  127 |     content: string;
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/api/destinations.ts [Client Component Browser]
+    ./src/app/admin/page.tsx [Client Component Browser]
+    ./src/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/api/destinations.ts [Client Component SSR]
+    ./src/app/admin/page.tsx [Client Component SSR]
+    ./src/app/admin/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1920
+[  117708ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_b3fb3b5f._.js:1206
+[  143639ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=i-sNbzy1L2IxB88TmvduH' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
