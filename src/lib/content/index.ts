@@ -1,6 +1,4 @@
 export type {
-  Page,
-  UpsertPageInput,
   HXProductType,
   QuickFacts,
   MonthlyWeather,
@@ -11,5 +9,5 @@ export {
   slugSchema,
   upsertPageSchema,
   hxProductTypeSchema,
-  type UpsertPageInput as UpsertPageSchemaInput,
+  type UpsertPageInput,
 } from "./destination-page-schema";
