@@ -692,12 +692,13 @@ Call submit_page_content now with all sections filled in.`,
   const markdown = renderToMarkdown(slug, toolBlock.input);
   await upsertPage(slug, markdown, ["destination"]);
 
-  // Generate hero image in background — don't block content return
-  generateDestinationImage({ slug, name: cityName })
-    .then(async (heroUrl) => {
-      await upsertPage(slug, markdown, ["destination"], { hero_image_url: heroUrl });
-    })
-    .catch((err) => console.error(`[generatePage] Image generation failed for ${slug}:`, err));
+  // Generate hero image and store URL in page meta
+  try {
+    const heroUrl = await generateDestinationImage({ slug, name: cityName });
+    await upsertPage(slug, markdown, ["destination"], { hero_image_url: heroUrl });
+  } catch (err) {
+    console.error(`[generatePage] Image generation failed for ${slug}:`, err);
+  }
 
   return markdown;
 }
@@ -783,15 +784,16 @@ Call submit_page with the completed markdown content and the categories that bes
 
   await upsertPage(slug, content_markdown, categories, meta);
 
-  // Generate hero image in background — don't block content return
+  // Generate hero image and store URL in page meta
   const pageName = (meta as Record<string, string>)?.name ?? slug.replace(/-/g, " ");
   const pageCountry = (meta as Record<string, string>)?.country;
-  generateDestinationImage({ slug, name: pageName, country: pageCountry })
-    .then(async (heroUrl) => {
-      const updatedMeta = { ...(meta ?? {}), hero_image_url: heroUrl };
-      await upsertPage(slug, content_markdown, categories, updatedMeta);
-    })
-    .catch((err) => console.error(`[generatePageFromPrompt] Image generation failed for ${slug}:`, err));
+  try {
+    const heroUrl = await generateDestinationImage({ slug, name: pageName, country: pageCountry });
+    const updatedMeta = { ...(meta ?? {}), hero_image_url: heroUrl };
+    await upsertPage(slug, content_markdown, categories, updatedMeta);
+  } catch (err) {
+    console.error(`[generatePageFromPrompt] Image generation failed for ${slug}:`, err);
+  }
 
   return content_markdown;
 }
