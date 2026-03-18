@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { generateDestinationImage } from "@/lib/generate-destination-image";
+import { getPage, upsertPage } from "@/lib/supabase/pages";
 
 export async function GET(request: NextRequest) {
   const place = request.nextUrl.searchParams.get("place");
@@ -73,5 +75,44 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("Gemini image generation failed:", err);
     return new NextResponse(null, { status: 404 });
+  }
+}
+
+export const maxDuration = 60;
+
+/**
+ * POST /api/images/destination?slug=barcelona
+ * Generate a hero image for a destination page, store in Supabase,
+ * and update the page's meta.hero_image_url.
+ */
+export async function POST(request: NextRequest) {
+  const slug = request.nextUrl.searchParams.get("slug");
+  if (!slug) {
+    return NextResponse.json({ error: "slug is required" }, { status: 400 });
+  }
+
+  const page = await getPage(slug);
+  if (!page) {
+    return NextResponse.json({ error: "Page not found" }, { status: 404 });
+  }
+
+  const meta = (page.meta ?? {}) as Record<string, string>;
+  const name = meta.name ?? slug.replace(/-/g, " ");
+  const country = meta.country;
+
+  try {
+    const heroUrl = await generateDestinationImage({ slug, name, country });
+
+    // Update page meta with new hero_image_url
+    const updatedMeta = { ...page.meta, hero_image_url: heroUrl };
+    await upsertPage(slug, page.content, page.categories, updatedMeta);
+
+    return NextResponse.json({ hero_image_url: heroUrl });
+  } catch (err) {
+    console.error("Destination image generation failed:", err);
+    return NextResponse.json(
+      { error: "Image generation failed" },
+      { status: 500 }
+    );
   }
 }
