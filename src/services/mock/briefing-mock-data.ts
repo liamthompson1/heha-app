@@ -15,6 +15,9 @@ import type {
 export const MOCK_FLIGHT: BriefingFlight = {
   flightNumber: "FR8576",
   airline: "Ryanair",
+  airlineLogo: null,
+  alliance: null,
+  checkInUrl: null,
   aircraftType: "Boeing 737-800",
   departure: {
     iata: "MAN",
@@ -30,6 +33,7 @@ export const MOCK_FLIGHT: BriefingFlight = {
   },
   scheduledDepartureTime: "2026-04-12T06:30:00+01:00",
   scheduledArrivalTime: "2026-04-12T10:00:00+02:00",
+  isHub: { departure: false, arrival: false },
 };
 
 export const MOCK_ON_TIME: OnTimeStats = {
@@ -133,6 +137,7 @@ export const MOCK_SECURITY_QUEUE: SecurityQueue = {
     return { hour, estimatedWaitMinutes: waitTimes[hour] };
   }),
   arrivalBufferMinutes: 120,
+  tips: null,
 };
 
 export const MOCK_RESTAURANTS: TerminalRestaurants = {
