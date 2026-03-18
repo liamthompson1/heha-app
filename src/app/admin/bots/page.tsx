@@ -20,30 +20,27 @@ Authorization: Bearer ${key}
 
 ## API Reference
 
-### List destinations
-\`GET https://heha.ai/api/v1/destinations\`
+\`GET  https://heha.ai/api/pages\` — list all pages
+\`POST https://heha.ai/api/pages\` — generate \`{ slug, prompt }\`
+\`GET  https://heha.ai/api/pages/:slug\` — get a page
+\`PUT  https://heha.ai/api/pages/:slug\` — update \`{ content, categories? }\`
+\`DELETE https://heha.ai/api/pages/:slug\` — delete a page
 
-### Get a destination
-\`GET https://heha.ai/api/v1/destinations/:slug\`
-
-### Create a new destination
-\`POST https://heha.ai/api/v1/destinations\`
+### Generate a new page
+\`POST https://heha.ai/api/pages\`
 \`\`\`json
 {
-  "name": "Barcelona",
-  "country": "Spain",
-  "continent": "Europe",
-  "summary": "A vibrant Mediterranean city...",
-  "content_markdown": "## Overview\\n\\n...",
-  "tags": ["beach", "culture", "food"]
+  "slug": "barcelona",
+  "prompt": "Create a destination travel guide for Barcelona, Spain"
 }
 \`\`\`
 
-### Update a destination
-\`PUT https://heha.ai/api/v1/destinations/:slug\`
+### Update a page
+\`PUT https://heha.ai/api/pages/:slug\`
 \`\`\`json
 {
-  "content_markdown": "## Overview\\n\\nUpdated content..."
+  "content": "## Overview\\n\\nUpdated content...",
+  "categories": ["destination"]
 }
 \`\`\`
 

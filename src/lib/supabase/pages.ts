@@ -4,6 +4,7 @@ export interface Page {
   key: string;
   content: string;
   categories: string[];
+  meta: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -28,12 +29,15 @@ export async function getPage(key: string): Promise<Page | null> {
 export async function upsertPage(
   key: string,
   content: string,
-  categories: string[] = []
+  categories: string[] = [],
+  meta?: Record<string, unknown>
 ): Promise<Page | null> {
   const supabase = getSupabaseClient();
+  const payload: Record<string, unknown> = { key, content, categories, updated_at: new Date().toISOString() };
+  if (meta !== undefined) payload.meta = meta;
   const { data, error } = await supabase
     .from("pages")
-    .upsert({ key, content, categories, updated_at: new Date().toISOString() })
+    .upsert(payload)
     .select("*")
     .single();
 
@@ -82,11 +86,11 @@ export async function deletePage(key: string): Promise<boolean> {
   return true;
 }
 
-export async function listPages(): Promise<Pick<Page, "key" | "categories">[]> {
+export async function listPages(): Promise<Pick<Page, "key" | "categories" | "meta" | "updated_at">[]> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
     .from("pages")
-    .select("key, categories")
+    .select("key, categories, meta, updated_at")
     .order("key");
 
   if (error) {

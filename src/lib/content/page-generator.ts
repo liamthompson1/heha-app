@@ -702,7 +702,7 @@ const SUBMIT_PAGE_TOOL: Anthropic.Tool = {
     "Submit the completed page with its markdown content and categories.",
   input_schema: {
     type: "object" as const,
-    required: ["content_markdown", "categories"],
+    required: ["content_markdown", "categories", "meta"],
     properties: {
       content_markdown: {
         type: "string",
@@ -714,6 +714,16 @@ const SUBMIT_PAGE_TOOL: Anthropic.Tool = {
           "One or more category tags that describe this page type. Use values like: destination, airport, airport_parking, airport_hotel, airport_lounge, airport_transfer, car_hire, travel_insurance, editorial",
         items: { type: "string" },
         minItems: 1,
+      },
+      meta: {
+        type: "object",
+        required: ["name", "summary"],
+        properties: {
+          name: { type: "string", description: "Display name, e.g. 'Barcelona'" },
+          country: { type: "string", description: "Country name, e.g. 'Spain'" },
+          continent: { type: "string", description: "Continent, e.g. 'Europe'" },
+          summary: { type: "string", description: "1–2 sentence page description for cards" },
+        },
       },
     },
   },
@@ -757,12 +767,13 @@ Call submit_page with the completed markdown content and the categories that bes
     throw new Error("Claude did not call submit_page tool");
   }
 
-  const { content_markdown, categories } = toolBlock.input as {
+  const { content_markdown, categories, meta } = toolBlock.input as {
     content_markdown: string;
     categories: string[];
+    meta?: Record<string, unknown>;
   };
 
-  await upsertPage(slug, content_markdown, categories);
+  await upsertPage(slug, content_markdown, categories, meta);
   return content_markdown;
 }
 
