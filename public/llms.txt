@@ -1,0 +1,77 @@
+# Heha — Multilingual Travel CMS
+
+> Heha is a bot-editable multilingual CMS for travel content, powered by Holiday Extras. Bots create and manage destination guides via API; the public site renders them as SEO-ready, mobile-friendly pages.
+
+## Site Architecture
+
+Multilingual from day one. Every page belongs to a language.
+
+- Root `/` — redirects (302) to `/<lang>/index.html` based on browser `Accept-Language` header
+- `/<lang>/index.html` — language homepage listing published pages, with language switcher and sitemap link
+- `/<lang>/<slug>` — individual page (destination guide, editorial, etc.)
+- `/sitemap.xml` — global sitemap of all published pages across all languages
+- `/<lang>/sitemap.xml` — per-language sitemap (optional)
+- `/skills.md` — bot operating guide (editorial style, API usage, guardrails)
+
+### Supported Languages
+`en`, `fr`, `de` (extensible)
+
+### URL Rules
+- Slugs: lowercase, hyphens only — `[a-z0-9-]`
+- Unique within a language (same slug can exist in different languages)
+- No `/p/` prefix, no language mixing on a single URL
+
+## Content Model
+
+Pages are stored as markdown in a `pages` table:
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `id` | UUID | Primary key |
+| `lang` | string | e.g. `en`, `fr` |
+| `slug` | string | Unique per lang |
+| `title` | string | Display title |
+| `page_title` | string? | SEO `<title>` override |
+| `description` | string? | Meta description |
+| `content_markdown` | text | Rendered server-side to HTML |
+| `template_key` | string | `editorial` (default), `destination` |
+| `status` | enum | `published` or `archived` |
+| `created_at` | datetime | Auto-set |
+| `updated_at` | datetime | Auto-updated |
+| `created_by_type` | enum | `bot` or `human` |
+| `created_by_id` | string | Bot/user identifier |
+| `updated_by_type` | enum | `bot` or `human` |
+| `updated_by_id` | string | Bot/user identifier |
+
+## Bot API
+
+Base: `/api/v1`
+Auth: `Authorization: Bearer <API_KEY>`
+
+| Method | Endpoint | Permission | Description |
+|--------|----------|------------|-------------|
+| `GET` | `/api/v1/pages` | `pages:read` | List/search pages (filter by lang, status, q) |
+| `GET` | `/api/v1/pages/<lang>/<slug>` | `pages:read` | Get single page with content_markdown |
+| `POST` | `/api/v1/pages` | `pages:write` | Create page (lang required, slug auto-generated if omitted) |
+| `PUT` | `/api/v1/pages/<lang>/<slug>` | `pages:write` | Update page (partial update allowed) |
+| `POST` | `/api/v1/pages/<lang>/<slug>/archive` | `pages:write` | Set status=archived |
+| `POST` | `/api/v1/pages/<lang>/<slug>/unarchive` | `pages:write` | Set status=published |
+
+## Holiday Extras Product Types
+1. Airport Parking
+2. Airport Hotels
+3. Airport Lounges
+4. Car Hire
+5. Travel Insurance
+6. Airport Transfers
+7. Holiday Extras Bundles
+
+## Content Generation Spec
+See `/docs/content-generation-skills.md` for the destination page blueprint — page templates, product integration patterns, Schema.org markup, and a worked Barcelona example.
+
+## Bot Operating Guide
+See `/skills.md` for editorial style, API onboarding, usage examples, and guardrails.
+
+## Contact
+- Site: heha.ai
+- Built by Holiday Extras innovation team

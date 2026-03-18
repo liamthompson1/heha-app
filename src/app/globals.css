@@ -920,3 +920,65 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── Destination page prose ─────────────────────────────── */
+.prose-destination {
+  line-height: 1.7;
+  font-size: 1rem;
+  color: var(--foreground);
+}
+
+.prose-destination h1 { font-size: 2rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--foreground); }
+.prose-destination h2 { font-size: 1.5rem; font-weight: 600; margin: 2rem 0 0.75rem; color: var(--foreground); }
+.prose-destination h3 { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: var(--foreground); }
+.prose-destination h4 { font-size: 1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: var(--foreground); }
+.prose-destination p { margin: 0 0 1rem; }
+.prose-destination a { color: var(--teal); text-decoration: underline; }
+.prose-destination strong { font-weight: 600; }
+.prose-destination em { font-style: italic; }
+
+.prose-destination ul, .prose-destination ol { margin: 0 0 1rem 1.5rem; padding: 0; }
+.prose-destination li { margin-bottom: 0.35rem; }
+
+.prose-destination blockquote {
+  margin: 1.25rem 0;
+  padding: 0.875rem 1.25rem;
+  border-left: 3px solid var(--teal);
+  background: rgba(35, 166, 169, 0.08);
+  border-radius: 0 8px 8px 0;
+  color: var(--foreground);
+}
+.prose-destination blockquote p { margin: 0; }
+
+.prose-destination table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+}
+.prose-destination th {
+  background: rgba(255,255,255,0.08);
+  padding: 0.6rem 0.875rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+.prose-destination td {
+  padding: 0.55rem 0.875rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.prose-destination tr:last-child td { border-bottom: none; }
+
+.prose-destination hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin: 2rem 0;
+}
+
+.prose-destination code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875em;
+  background: rgba(255,255,255,0.08);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
