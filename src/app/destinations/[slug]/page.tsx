@@ -1,19 +1,44 @@
 import { notFound } from "next/navigation";
-import { fetchDestination, fetchDestinations } from "@/lib/api/destinations";
+import { getPage, listPages } from "@/lib/supabase/pages";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import PageShell from "@/components/PageShell";
+import type { Destination } from "@/types/destination";
 
 export const revalidate = 300;
 
+function titleCase(slug: string): string {
+  return slug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function pageToDestination(page: { key: string; content?: string; categories: string[]; meta: Record<string, unknown>; created_at?: string; updated_at: string }): Destination {
+  const meta = (page.meta ?? {}) as Record<string, string>;
+  return {
+    id: page.key,
+    slug: page.key,
+    name: meta.name ?? titleCase(page.key),
+    country: meta.country ?? "",
+    continent: meta.continent ?? "",
+    summary: meta.summary ?? "",
+    hero_image_url: meta.hero_image_url ?? undefined,
+    content_markdown: page.content ?? "",
+    tags: page.categories ?? [],
+    published: true,
+    status: "published",
+    created_at: page.created_at ?? page.updated_at,
+    updated_at: page.updated_at,
+    updated_by_name: "Claude",
+  };
+}
+
 export async function generateStaticParams() {
   try {
-    const destinations = await fetchDestinations();
-    return destinations
-      .filter((d) => d.published)
-      .map((d) => ({ slug: d.slug }));
+    const pages = await listPages();
+    return pages.map((p) => ({ slug: p.key }));
   } catch {
-    // API not available at build time — skip pre-rendering
     return [];
   }
 }
@@ -24,8 +49,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const destination = await fetchDestination(slug);
-  if (!destination) return { title: "Destination not found" };
+  const page = await getPage(slug);
+  if (!page) return { title: "Destination not found" };
+  const destination = pageToDestination(page);
 
   return {
     title: `${destination.name}, ${destination.country} — Heha`,
@@ -48,8 +74,9 @@ export default async function DestinationPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const destination = await fetchDestination(slug);
-  if (!destination) notFound();
+  const page = await getPage(slug);
+  if (!page) notFound();
+  const destination = pageToDestination(page);
 
   const schemaOrg = {
     "@context": "https://schema.org",
