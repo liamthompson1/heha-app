@@ -137,6 +137,7 @@ export const MOCK_SECURITY_QUEUE: SecurityQueue = {
     return { hour, estimatedWaitMinutes: waitTimes[hour] };
   }),
   arrivalBufferMinutes: 120,
+  tips: null,
 };
 
 export const MOCK_RESTAURANTS: TerminalRestaurants = {
