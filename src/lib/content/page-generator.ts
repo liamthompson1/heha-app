@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { getPage, upsertPage } from "@/lib/supabase/pages";
@@ -689,6 +691,47 @@ Call submit_page_content now with all sections filled in.`,
   const markdown = renderToMarkdown(slug, toolBlock.input);
   await upsertPage(slug, markdown, ["destination"]);
 
+  return markdown;
+}
+
+// ─── Prompt-driven generator ──────────────────────────────────────────────────
+
+export async function generatePageFromPrompt(
+  prompt: string,
+  slug: string
+): Promise<string> {
+  const skillsPath = path.join(process.cwd(), "public", "skills.md");
+  const skillsContent = fs.readFileSync(skillsPath, "utf-8");
+
+  const anthropic = new Anthropic();
+  const response = await anthropic.messages.create({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 8192,
+    system: `You are a travel content writer for Heha (heha.ai), a UK travel platform.
+
+Use the following guide to understand editorial standards, page templates, and content structure:
+
+${skillsContent}
+
+Generate complete, production-ready markdown content for the requested page.
+- Write in British English
+- Choose the appropriate template structure based on the page type described in the prompt
+- Return ONLY the markdown content — no preamble, no explanation, no code fences`,
+    messages: [
+      {
+        role: "user",
+        content: `${prompt}\n\nPage slug: ${slug}`,
+      },
+    ],
+  });
+
+  const textBlock = response.content.find((b) => b.type === "text");
+  if (!textBlock || textBlock.type !== "text") {
+    throw new Error("Claude did not return text content");
+  }
+
+  const markdown = textBlock.text;
+  await upsertPage(slug, markdown, []);
   return markdown;
 }
 

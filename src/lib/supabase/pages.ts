@@ -72,6 +72,16 @@ export async function appendCategory(
   return true;
 }
 
+export async function deletePage(key: string): Promise<boolean> {
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.from("pages").delete().eq("key", key);
+  if (error) {
+    console.error("Failed to delete page:", error.message);
+    return false;
+  }
+  return true;
+}
+
 export async function listPages(): Promise<Pick<Page, "key" | "categories">[]> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
