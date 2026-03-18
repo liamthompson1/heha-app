@@ -7,10 +7,15 @@ import PageShell from "@/components/PageShell";
 export const revalidate = 300;
 
 export async function generateStaticParams() {
-  const destinations = await fetchDestinations();
-  return destinations
-    .filter((d) => d.published)
-    .map((d) => ({ slug: d.slug }));
+  try {
+    const destinations = await fetchDestinations();
+    return destinations
+      .filter((d) => d.published)
+      .map((d) => ({ slug: d.slug }));
+  } catch {
+    // API not available at build time — skip pre-rendering
+    return [];
+  }
 }
 
 export async function generateMetadata({
