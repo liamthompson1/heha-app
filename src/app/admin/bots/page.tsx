@@ -5,7 +5,6 @@ import AdminShell from "@/components/admin/AdminShell";
 import GlassCard from "@/components/GlassCard";
 import GlassButton from "@/components/GlassButton";
 import GlassInput from "@/components/GlassInput";
-import { fetchApiKeys } from "@/lib/api/destinations";
 import type { ApiKey } from "@/types/destination";
 
 function Badge({ variant, children }: { variant: "green" | "blue" | "orange" | "red"; children: React.ReactNode }) {
@@ -82,16 +81,42 @@ export default function BotsPage() {
   const [autoPublish, setAutoPublish] = useState(true);
   const [createdKey, setCreatedKey] = useState<string | null>(null);
   const [copied, setCopied] = useState<"key" | "instructions" | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchApiKeys().then(setKeys);
+    fetch("/api/keys")
+      .then((r) => r.json())
+      .then(({ keys: k }) => setKeys(k ?? []));
   }, []);
 
-  function handleCreateKey() {
-    const fakeKey = `sk_heha_${Array.from({ length: 32 }, () =>
-      Math.floor(Math.random() * 16).toString(16)
-    ).join("")}`;
-    setCreatedKey(fakeKey);
+  async function handleCreateKey() {
+    setCreating(true);
+    setCreateError(null);
+    try {
+      const res = await fetch("/api/keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newKeyName.trim(), auto_publish: autoPublish }),
+      });
+      if (!res.ok) throw new Error(`Failed to create key (${res.status})`);
+      const { key, meta } = await res.json();
+      setCreatedKey(key);
+      setKeys((prev) => [meta, ...prev]);
+    } catch (err) {
+      setCreateError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function handleRevokeKey(id: string) {
+    await fetch("/api/keys", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    setKeys((prev) => prev.filter((k) => k.id !== id));
   }
 
   function copyToClipboard(text: string, type: "key" | "instructions") {
@@ -152,9 +177,12 @@ export default function BotsPage() {
                   </span>
                 </label>
               </div>
+              {createError && (
+                <p className="mb-3 text-sm" style={{ color: "#ff453a" }}>{createError}</p>
+              )}
               <div className="flex gap-3">
-                <GlassButton variant="teal" onClick={handleCreateKey} disabled={!newKeyName.trim()}>
-                  Generate Key
+                <GlassButton variant="teal" onClick={handleCreateKey} disabled={!newKeyName.trim() || creating}>
+                  {creating ? "Generating…" : "Generate Key"}
                 </GlassButton>
                 <GlassButton onClick={() => setShowWizard(false)}>
                   Cancel
@@ -257,7 +285,7 @@ export default function BotsPage() {
                       : "Never"}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <GlassButton size="sm">Revoke</GlassButton>
+                    <GlassButton size="sm" onClick={() => handleRevokeKey(k.id)}>Revoke</GlassButton>
                   </td>
                 </tr>
               ))
