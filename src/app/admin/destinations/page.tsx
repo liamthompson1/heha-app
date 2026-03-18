@@ -1,106 +1,154 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import GlassInput from "@/components/GlassInput";
-import GlassButton from "@/components/GlassButton";
-import DataTable, { type Column } from "@/components/admin/DataTable";
-import EnrichButton from "@/components/admin/EnrichButton";
-import type { Destination } from "@/types/reference-data";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import AdminShell from "@/components/admin/AdminShell";
+import { fetchDestinations } from "@/lib/api/destinations";
+import type { Destination } from "@/types/destination";
 
-const columns: Column<Destination>[] = [
-  {
-    key: "city",
-    label: "City",
-    render: (row) => (
-      <span className="flex items-center gap-1.5">
-        {row.flag_url && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={row.flag_url} alt="" className="h-3 w-4 rounded-sm object-cover" />
-        )}
-        {row.city}
-      </span>
-    ),
-  },
-  { key: "country", label: "Country" },
-  { key: "currency_code", label: "Currency" },
-  { key: "primary_language", label: "Language" },
-  { key: "timezone", label: "Timezone" },
-  { key: "calling_code", label: "Dial" },
-  {
-    key: "source",
-    label: "Source",
-    render: (row) => (
-      <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-white/50">
-        {row.source}
-      </span>
-    ),
-  },
-];
+const STATUS_BADGE: Record<string, string> = {
+  published: "hx-badge-green",
+  draft: "hx-badge-orange",
+  pending_review: "hx-badge-red",
+};
 
-export default function DestinationsListPage() {
+const STATUS_LABEL: Record<string, string> = {
+  published: "Published",
+  draft: "Draft",
+  pending_review: "Pending",
+};
+
+export default function AdminDestinationsPage() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const loadDestinations = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = search ? `?search=${encodeURIComponent(search)}` : "";
-      const res = await fetch(`/api/destinations${params}`);
-      const data = await res.json();
-      if (Array.isArray(data)) setDestinations(data);
-    } catch (err) {
-      console.error("Failed to load destinations:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [search]);
-
   useEffect(() => {
-    loadDestinations();
-  }, [loadDestinations]);
-
-  async function handleDelete(dest: Destination) {
-    if (!confirm(`Delete ${dest.city}, ${dest.country}?`)) return;
-    await fetch(`/api/destinations/${dest.id}`, { method: "DELETE" });
-    loadDestinations();
-  }
+    fetchDestinations().then((d) => {
+      setDestinations(d);
+      setLoading(false);
+    });
+  }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="gradient-text-subtle text-2xl font-semibold">
+    <AdminShell>
+      <div style={{ marginBottom: 40 }}>
+        <p className="hx-eyebrow" style={{ marginBottom: 8 }}>
+          Content
+        </p>
+        <h1 className="hx-heading" style={{ fontSize: 48 }}>
           Destinations
         </h1>
-        <div className="flex gap-2">
-          <EnrichButton
-            entityType="destination"
-            placeholder="City, Country (e.g. Paris, France)"
-          />
-          <GlassButton href="/admin/destinations/new" variant="coral">
-            + New Destination
-          </GlassButton>
-        </div>
+        <p className="hx-text-secondary" style={{ fontSize: 16, marginTop: 8 }}>
+          {destinations.length} destination{destinations.length !== 1 && "s"} managed by your bots.
+        </p>
       </div>
 
-      <GlassInput
-        label="Search"
-        placeholder="Search by city or country..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {loading ? (
-        <p className="text-center text-white/40">Loading...</p>
-      ) : (
-        <DataTable
-          columns={columns}
-          rows={destinations}
-          editPath={(row) => `/admin/destinations/${row.id}`}
-          onDelete={handleDelete}
-          emptyMessage="No destinations found. Add one or fetch from API."
-        />
-      )}
-    </div>
+      <div className="hx-glass hx-table-wrap" style={{ padding: 0 }}>
+        <table className="hx-table">
+          <thead>
+            <tr>
+              <th>Destination</th>
+              <th>Continent</th>
+              <th>Status</th>
+              <th>Updated By</th>
+              <th style={{ textAlign: "right" }}>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="hx-text-tertiary"
+                  style={{ textAlign: "center", padding: "32px 16px" }}
+                >
+                  Loading...
+                </td>
+              </tr>
+            ) : destinations.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="hx-text-tertiary"
+                  style={{ textAlign: "center", padding: "32px 16px" }}
+                >
+                  No destinations yet.
+                </td>
+              </tr>
+            ) : (
+              destinations.map((d) => (
+                <tr key={d.id}>
+                  <td>
+                    <Link
+                      href={`/admin/destinations/${d.slug}`}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        textDecoration: "none",
+                      }}
+                    >
+                      {d.hero_image_url ? (
+                        <img
+                          src={d.hero_image_url}
+                          alt={d.name}
+                          style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 10,
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 10,
+                            background: "rgba(255,255,255,0.04)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 18,
+                          }}
+                        >
+                          🌍
+                        </div>
+                      )}
+                      <div>
+                        <div
+                          className="hx-text-primary"
+                          style={{ fontSize: 14, fontWeight: 500 }}
+                        >
+                          {d.name}
+                        </div>
+                        <div className="hx-text-tertiary" style={{ fontSize: 12 }}>
+                          {d.country}
+                        </div>
+                      </div>
+                    </Link>
+                  </td>
+                  <td>{d.continent}</td>
+                  <td>
+                    <span className={`hx-badge ${STATUS_BADGE[d.status]}`}>
+                      {STATUS_LABEL[d.status]}
+                    </span>
+                  </td>
+                  <td className="hx-text-secondary" style={{ fontSize: 13 }}>
+                    {d.updated_by_name || "—"}
+                  </td>
+                  <td
+                    className="hx-text-tertiary"
+                    style={{ textAlign: "right", fontSize: 12 }}
+                  >
+                    {new Date(d.updated_at).toLocaleDateString("en-GB")}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </AdminShell>
   );
 }
