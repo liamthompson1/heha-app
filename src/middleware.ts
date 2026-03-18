@@ -14,22 +14,26 @@ function getSecretKey(): Uint8Array {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Validate API key for /api/pages routes
+  // Validate API key for /api/pages write requests (external callers)
   const requiresApiKey = API_KEY_PATHS.some((p) => pathname.startsWith(p))
   if (requiresApiKey) {
     const authHeader = request.headers.get('authorization') ?? ''
     const rawKey = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
-    if (!rawKey) {
+    // Allow GET requests without an API key (internal reads from the app)
+    if (!rawKey && request.method === 'GET') {
+      // Fall through to normal auth handling
+    } else if (!rawKey) {
       return NextResponse.json({ error: 'Missing Authorization header' }, { status: 401 })
+    } else {
+      const result = await validateApiKey(rawKey)
+      if (!result) {
+        return NextResponse.json({ error: 'Invalid API key' }, { status: 403 })
+      }
+      const response = NextResponse.next()
+      response.headers.set('x-api-key-id', result.keyId)
+      response.headers.set('x-api-auto-publish', String(result.autoPublish))
+      return response
     }
-    const result = await validateApiKey(rawKey)
-    if (!result) {
-      return NextResponse.json({ error: 'Invalid API key' }, { status: 403 })
-    }
-    const response = NextResponse.next()
-    response.headers.set('x-api-key-id', result.keyId)
-    response.headers.set('x-api-auto-publish', String(result.autoPublish))
-    return response
   }
 
   // Check if the path requires authentication
