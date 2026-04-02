@@ -165,7 +165,7 @@ export default function TripDetailPage() {
       />
 
       {/* Main content */}
-      <div className="max-w-5xl mx-auto pt-12 pb-16" style={{ width: "100%", overflowX: "hidden", paddingLeft: 'max(1.5rem, env(safe-area-inset-left))', paddingRight: 'max(1.5rem, env(safe-area-inset-right))' }}>
+      <div className="max-w-5xl mx-auto pt-4 sm:pt-12 pb-16" style={{ width: "100%", overflowX: "hidden", paddingLeft: 'max(1.5rem, env(safe-area-inset-left))', paddingRight: 'max(1.5rem, env(safe-area-inset-right))' }}>
         {/* Flights */}
         <ScrollReveal>
           <FlightWidget

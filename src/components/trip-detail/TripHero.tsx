@@ -26,7 +26,8 @@ export default function TripHero({
   const [imgState, setImgState] = useState<"loading" | "loaded" | "error">("loading");
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(destination);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const desktopInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
   // Regen state
   const [showRegenUI, setShowRegenUI] = useState(false);
@@ -36,7 +37,9 @@ export default function TripHero({
   const regenInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (editing) inputRef.current?.focus();
+    if (editing) {
+      (mobileInputRef.current || desktopInputRef.current)?.focus();
+    }
   }, [editing]);
 
   useEffect(() => {
@@ -88,119 +91,154 @@ export default function TripHero({
   const imgSrc = imgVersion > 0 ? `${baseSrc}${baseSrc.includes("?") ? "&" : "?"}v=${imgVersion}` : baseSrc;
 
   return (
-    <div className="trip-hero">
-      {(imgState === "loading" || regenerating) && <div className="trip-hero-skeleton" />}
-      {imgState === "error" && !regenerating && <div className="trip-hero-fallback" />}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={imgSrc}
-        alt={destination}
-        className="trip-hero-img"
-        fetchPriority="high"
-        onLoad={(e) => {
-          const img = e.target as HTMLImageElement;
-          if (img.naturalWidth === 0) {
-            setImgState("error");
-          } else {
-            setImgState("loaded");
-          }
-        }}
-        onError={() => setImgState("error")}
-        style={{ display: imgState === "error" || regenerating ? "none" : "block" }}
-      />
-      <div className="trip-hero-overlay" />
-
-      {/* Regen button */}
-      <button
-        className="trip-hero-regen-btn"
-        onClick={() => setShowRegenUI(true)}
-        title="Regenerate image"
-        aria-label="Regenerate image"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z" />
-        </svg>
-      </button>
-
-      {/* Regen panel */}
-      {showRegenUI && (
-        <div className="trip-hero-regen-panel">
-          <input
-            ref={regenInputRef}
-            type="text"
-            className="trip-hero-regen-input"
-            placeholder="e.g. sunset beach, snowy mountains…"
-            value={regenInstructions}
-            onChange={(e) => setRegenInstructions(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleRegenerate(regenInstructions);
-              if (e.key === "Escape") {
-                setShowRegenUI(false);
-                setRegenInstructions("");
-              }
-            }}
-          />
-          <div className="trip-hero-regen-actions">
-            <button
-              className="trip-hero-regen-go"
-              onClick={() => handleRegenerate(regenInstructions)}
-            >
-              Generate
-            </button>
-            <button
-              className="trip-hero-regen-surprise"
-              onClick={() => handleRegenerate()}
-            >
-              Surprise me
-            </button>
-            <button
-              className="trip-hero-regen-cancel"
-              onClick={() => {
-                setShowRegenUI(false);
-                setRegenInstructions("");
+    <>
+      {/* ── Mobile compact header ── shown on mobile, hidden on desktop */}
+      <div className="trip-compact-header">
+        <div className="trip-compact-info">
+          {editing ? (
+            <input
+              ref={mobileInputRef}
+              className="trip-compact-name-input"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") save();
+                if (e.key === "Escape") { setDraft(destination); setEditing(false); }
               }}
+              onBlur={save}
+            />
+          ) : (
+            <h1
+              className="trip-compact-name"
+              onClick={() => { setDraft(destination); setEditing(true); }}
             >
-              Cancel
-            </button>
-          </div>
+              {destination}
+            </h1>
+          )}
+          {dateRange && (
+            <span className="trip-compact-dates">{dateRange}</span>
+          )}
         </div>
-      )}
-
-      {isHxTrip && (
-        <img src="/hx-sandcastle.png" alt="Holiday Extras" className="hx-badge hx-badge-hero" />
-      )}
-      <div className="trip-hero-content">
         {tripType && (
-          <p className="text-xs font-medium uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.5)" }}>
-            {tripType}
-          </p>
-        )}
-        {editing ? (
-          <input
-            ref={inputRef}
-            className="trip-hero-name-input"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") save();
-              if (e.key === "Escape") { setDraft(destination); setEditing(false); }
-            }}
-            onBlur={save}
-          />
-        ) : (
-          <h1
-            className="trip-hero-name"
-            onClick={() => { setDraft(destination); setEditing(true); }}
-          >
-            {destination}
-          </h1>
-        )}
-        {dateRange && (
-          <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.7)" }}>
-            {dateRange}
-          </p>
+          <span className="trip-compact-type">{tripType}</span>
         )}
       </div>
-    </div>
+
+      {/* ── Desktop full hero ── hidden on mobile */}
+      <div className="trip-hero">
+        {(imgState === "loading" || regenerating) && <div className="trip-hero-skeleton" />}
+        {imgState === "error" && !regenerating && <div className="trip-hero-fallback" />}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imgSrc}
+          alt={destination}
+          className="trip-hero-img"
+          fetchPriority="high"
+          onLoad={(e) => {
+            const img = e.target as HTMLImageElement;
+            if (img.naturalWidth === 0) {
+              setImgState("error");
+            } else {
+              setImgState("loaded");
+            }
+          }}
+          onError={() => setImgState("error")}
+          style={{ display: imgState === "error" || regenerating ? "none" : "block" }}
+        />
+        <div className="trip-hero-overlay" />
+
+        {/* Regen button */}
+        <button
+          className="trip-hero-regen-btn"
+          onClick={() => setShowRegenUI(true)}
+          title="Regenerate image"
+          aria-label="Regenerate image"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z" />
+          </svg>
+        </button>
+
+        {/* Regen panel */}
+        {showRegenUI && (
+          <div className="trip-hero-regen-panel">
+            <input
+              ref={regenInputRef}
+              type="text"
+              className="trip-hero-regen-input"
+              placeholder="e.g. sunset beach, snowy mountains…"
+              value={regenInstructions}
+              onChange={(e) => setRegenInstructions(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleRegenerate(regenInstructions);
+                if (e.key === "Escape") {
+                  setShowRegenUI(false);
+                  setRegenInstructions("");
+                }
+              }}
+            />
+            <div className="trip-hero-regen-actions">
+              <button
+                className="trip-hero-regen-go"
+                onClick={() => handleRegenerate(regenInstructions)}
+              >
+                Generate
+              </button>
+              <button
+                className="trip-hero-regen-surprise"
+                onClick={() => handleRegenerate()}
+              >
+                Surprise me
+              </button>
+              <button
+                className="trip-hero-regen-cancel"
+                onClick={() => {
+                  setShowRegenUI(false);
+                  setRegenInstructions("");
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isHxTrip && (
+          <img src="/hx-sandcastle.png" alt="Holiday Extras" className="hx-badge hx-badge-hero" />
+        )}
+        <div className="trip-hero-content">
+          {tripType && (
+            <p className="text-xs font-medium uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.5)" }}>
+              {tripType}
+            </p>
+          )}
+          {editing ? (
+            <input
+              ref={desktopInputRef}
+              className="trip-hero-name-input"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") save();
+                if (e.key === "Escape") { setDraft(destination); setEditing(false); }
+              }}
+              onBlur={save}
+            />
+          ) : (
+            <h1
+              className="trip-hero-name"
+              onClick={() => { setDraft(destination); setEditing(true); }}
+            >
+              {destination}
+            </h1>
+          )}
+          {dateRange && (
+            <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {dateRange}
+            </p>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
