@@ -2895,6 +2895,8 @@ body {
   flex-direction: column;
   max-height: 50vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   gap: 8px;
   padding: 16px;
   padding-top: 36px;

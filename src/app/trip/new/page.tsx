@@ -5,7 +5,7 @@ import WizardShell from "@/components/trip/WizardShell";
 
 export default function TripNewPage() {
   return (
-    <PageShell backHref="/" variant="full">
+    <PageShell backHref="/" variant="full" fixed>
       <WizardShell />
     </PageShell>
   );

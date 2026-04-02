@@ -11,7 +11,7 @@ function EditTripContent() {
   const collect = searchParams.get("collect") || undefined;
 
   return (
-    <PageShell backHref={`/trip/${id}`} variant="full">
+    <PageShell backHref={`/trip/${id}`} variant="full" fixed>
       <EditTripShell tripId={id} collectField={collect} />
     </PageShell>
   );

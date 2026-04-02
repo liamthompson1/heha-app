@@ -11,6 +11,8 @@ interface PageShellProps {
   centered?: boolean;
   variant?: "default" | "full";
   maxWidth?: "md" | "lg" | "xl" | "5xl" | "7xl";
+  /** When true, main is not scrollable — inner elements handle their own scroll (e.g. chat interfaces) */
+  fixed?: boolean;
 }
 
 export default function PageShell({
@@ -20,6 +22,7 @@ export default function PageShell({
   centered,
   variant = "default",
   maxWidth = "5xl",
+  fixed = false,
 }: PageShellProps) {
   const maxWidthClass = {
     md: "max-w-md",
@@ -32,8 +35,8 @@ export default function PageShell({
   return (
     <div
       className={clsx(
-        "page-shell relative flex flex-col min-h-[100dvh] overflow-hidden bg-[var(--background)]",
-        centered ? "items-center justify-center" : "items-center pb-20"
+        "page-shell relative flex flex-col h-[100dvh] overflow-hidden bg-[var(--background)]",
+        centered ? "items-center justify-center" : "items-center"
       )}
     >
       <OrbField orbs={orbs} />
@@ -43,6 +46,7 @@ export default function PageShell({
         className={clsx(
           "page-enter relative z-10 w-full px-6 sm:px-10",
           !centered && "flex-1 flex flex-col",
+          !centered && !fixed && "overflow-y-auto",
           variant === "full" ? "" : `${maxWidthClass} self-center`
         )}
         style={{
