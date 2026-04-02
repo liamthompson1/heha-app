@@ -781,7 +781,8 @@ export default function UnifiedTrip({
       {/* ——— Chat thread (absolute so it sizes to parent's flex allocation, not content) ——— */}
       <div
         ref={chatRef}
-        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6 pb-20"
+        className="absolute inset-0 space-y-3 overflow-y-auto overscroll-contain px-1 pt-6"
+        style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}
       >
         {history.map((msg, i) => {
           if (msg.type === "flight-selector" && msg.flightCards) {

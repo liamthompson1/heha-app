@@ -88,7 +88,7 @@ function Dashboard({ trips, loading, error, isHxUser, onImportHx }: DashboardPro
   }, [trips, router]);
 
   return (
-    <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6 pt-20 pb-28">
+    <div className="page-shell relative flex min-h-[100dvh] flex-col overflow-hidden bg-[var(--background)] px-4 sm:px-6" style={{ paddingTop: 'calc(80px + env(safe-area-inset-top))', paddingBottom: 'calc(7rem + env(safe-area-inset-bottom))' }}>
       <OrbField orbs={SUBTLE_ORBS} />
       <LogoHeader />
       <AuthStatus />
