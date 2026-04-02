@@ -33,7 +33,7 @@ export default function PageShell({
     <div
       className={clsx(
         "page-shell relative flex flex-col min-h-[100dvh] overflow-hidden bg-[var(--background)]",
-        centered ? "items-center justify-center" : "items-center pt-24 pb-20"
+        centered ? "items-center justify-center" : "items-center pb-20"
       )}
     >
       <OrbField orbs={orbs} />
@@ -46,6 +46,7 @@ export default function PageShell({
           variant === "full" ? "" : `${maxWidthClass} self-center`
         )}
         style={{
+          paddingTop: 'calc(80px + env(safe-area-inset-top))',
           paddingLeft: `max(1.5rem, env(safe-area-inset-left))`,
           paddingRight: `max(1.5rem, env(safe-area-inset-right))`,
           paddingBottom: 'env(safe-area-inset-bottom)',

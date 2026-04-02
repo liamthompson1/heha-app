@@ -1943,10 +1943,11 @@ body {
   left: 0;
   right: 0;
   z-index: 50;
-  height: 80px;
+  height: calc(80px + env(safe-area-inset-top));
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  padding-bottom: 8px;
   pointer-events: none;
   background: linear-gradient(
     to bottom,
@@ -1958,7 +1959,6 @@ body {
   mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
   backdrop-filter: blur(20px) saturate(150%);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
-  padding-top: env(safe-area-inset-top);
 }
 
 .logo-header-link {
@@ -1985,6 +1985,7 @@ body {
   scroll-snap-type: y proximity;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
 }
 
 .landing-snap-section {
@@ -2063,7 +2064,7 @@ body {
   /* Break out of PageShell padding to go full-bleed */
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  margin-top: -96px; /* Negate pt-24 (6rem) */
+  margin-top: calc(-80px - env(safe-area-inset-top)); /* Negate header height */
   padding-top: 0;
 }
 
