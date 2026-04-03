@@ -9,8 +9,9 @@ export default function LogoHeader() {
           src="/heha-logo.png"
           alt="HEHA"
           width={100}
-          height={32}
+          height={50}
           priority
+          style={{ height: 32, width: "auto" }}
         />
       </Link>
     </div>

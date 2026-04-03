@@ -2227,8 +2227,16 @@ body {
   left: 0;
   right: 0;
   padding: 40px;
-  max-width: 80rem;
+  max-width: 64rem;
   margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.trip-hero-info {
+  min-width: 0;
 }
 
 .trip-hero-name {
@@ -2269,9 +2277,8 @@ body {
 
 /* Trip Hero — Regenerate Image Button */
 .trip-hero-regen-btn {
-  position: absolute;
-  top: 16px;
-  left: 16px;
+  position: relative;
+  flex-shrink: 0;
   z-index: 4;
   width: 36px;
   height: 36px;
@@ -2299,10 +2306,10 @@ body {
 /* Trip Hero — Regenerate Panel */
 .trip-hero-regen-panel {
   position: absolute;
-  top: 60px;
-  left: 16px;
-  right: 16px;
-  max-width: 480px;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  max-width: calc(100vw - 80px);
   z-index: 5;
   background: rgba(10, 10, 12, 0.85);
   backdrop-filter: blur(20px);
@@ -2810,6 +2817,7 @@ body {
 .stories-section-card {
   padding: 20px;
   border-radius: var(--glass-radius);
+  contain: paint; /* Trap any position:fixed elements from HX stories HTML within the card */
 }
 
 .stories-back-btn {
