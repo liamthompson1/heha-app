@@ -74,32 +74,22 @@ const OTP_DEFAULTS = {
   operatingSystem: 'Unknown',
 }
 
-const GENERATE_OTP_MUTATION = `
-  mutation GenerateOTP($email: String!, $language: String!, $masterBrand: String!, $referrerUrl: String!, $browser: String!, $operatingSystem: String!) {
-    generateOTPCode(email: $email, language: $language, masterBrand: $masterBrand, referrerUrl: $referrerUrl, browser: $browser, operatingSystem: $operatingSystem) {
-      smsError
-      emailError
-      smsSentToContactNumberEnding
-    }
-  }
-`
-
-const VERIFY_OTP_MUTATION = `
-  mutation SignInWithOTP($email: String!, $otp: String!, $language: String, $masterBrand: String, $referrerUrl: String, $browser: String, $operatingSystem: String) {
-    signInCustomerWithOTP(email: $email, otp: $otp, language: $language, masterBrand: $masterBrand, referrerUrl: $referrerUrl, browser: $browser, operatingSystem: $operatingSystem) {
-      success
-      firebaseToken
-    }
-  }
-`
-
 export async function requestOtp(email: string): Promise<OtpRequestResult> {
-  const client = createClient()
-  const data = await client.request<{ generateOTPCode: OtpRequestResult }>(
-    GENERATE_OTP_MUTATION,
-    { email, ...OTP_DEFAULTS },
-  )
-  return data.generateOTPCode
+  const res = await fetch(HX_AUTH_GRAPHQL_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: `mutation GenerateOTP($email: String!, $language: String!, $masterBrand: String!, $referrerUrl: String!, $browser: String!, $operatingSystem: String!) {
+        generateOTPCode(email: $email, language: $language, masterBrand: $masterBrand, referrerUrl: $referrerUrl, browser: $browser, operatingSystem: $operatingSystem) {
+          smsError emailError smsSentToContactNumberEnding
+        }
+      }`,
+      variables: { email, ...OTP_DEFAULTS },
+    }),
+  })
+  const json = await res.json()
+  if (json.errors?.length) throw new Error(json.errors[0].message)
+  return json.data.generateOTPCode as OtpRequestResult
 }
 
 export async function createAccountAndSignIn(
@@ -168,26 +158,20 @@ export async function verifyOtp(
   email: string,
   otp: string,
 ): Promise<{ data: OtpVerifyResult; cookies: string[] }> {
-  // Use raw fetch instead of graphql-request to capture Set-Cookie headers
-  const response = await fetch(HX_AUTH_GRAPHQL_URL, {
+  const res = await fetch(HX_AUTH_GRAPHQL_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      query: VERIFY_OTP_MUTATION,
+      query: `mutation SignInWithOTP($email: String!, $otp: String!, $language: String, $masterBrand: String, $referrerUrl: String, $browser: String, $operatingSystem: String) {
+        signInCustomerWithOTP(email: $email, otp: $otp, language: $language, masterBrand: $masterBrand, referrerUrl: $referrerUrl, browser: $browser, operatingSystem: $operatingSystem) {
+          success firebaseToken
+        }
+      }`,
       variables: { email, otp, ...OTP_DEFAULTS },
     }),
   })
-
-  const json = await response.json()
-
-  if (json.errors?.length) {
-    throw new Error(json.errors[0].message || 'GraphQL error during OTP verification')
-  }
-
-  const cookies = response.headers.getSetCookie?.() ?? []
-
-  return {
-    data: json.data.signInCustomerWithOTP as OtpVerifyResult,
-    cookies,
-  }
+  const json = await res.json()
+  if (json.errors?.length) throw new Error(json.errors[0].message)
+  const cookies = res.headers.getSetCookie?.() ?? []
+  return { data: json.data.signInCustomerWithOTP as OtpVerifyResult, cookies }
 }

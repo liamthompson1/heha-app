@@ -12,25 +12,12 @@ const HX_COOKIE_OPTS = {
   maxAge: 60 * 60 * 24 * 7,
 }
 
-export async function POST(request: Request) {
-  let body: { email?: string }
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+export async function POST(req: Request) {
+  const { email } = await req.json().catch(() => ({}))
+
+  if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: 'Valid email required' }, { status: 400 })
   }
-
-  const { email } = body
-
-  if (!email || typeof email !== 'string') {
-    return NextResponse.json({ error: 'Missing required field: email' }, { status: 400 })
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
-  }
-
-  const userHash = await hashEmail(email)
 
   try {
     // ── Try creating a new account first ──────────────────────────────────────
@@ -40,6 +27,7 @@ export async function POST(request: Request) {
       const password = randomBytes(16).toString('base64url')
       const { firebaseToken, cookies } = await createAccountAndSignIn(email, password)
 
+      const userHash = await hashEmail(email)
       const sessionData: SessionData = {
         email: email.toLowerCase().trim(),
         userId: userHash,
@@ -78,23 +66,17 @@ export async function POST(request: Request) {
       // Account already exists — fall through to OTP
     }
 
-    // ── Existing user: send OTP as normal ─────────────────────────────────────
+    // ── Existing user: send OTP ───────────────────────────────────────────────
     const result = await requestOtp(email)
-
     if (result.smsError && result.emailError) {
-      return NextResponse.json(
-        { success: false, error: 'Failed to send OTP', smsError: result.smsError, emailError: result.emailError },
-        { status: 502 },
-      )
+      return NextResponse.json({ success: false, error: 'Failed to send OTP' }, { status: 502 })
     }
-
     return NextResponse.json({
       success: true,
       isNewAccount: false,
       smsSentTo: result.smsSentToContactNumberEnding ?? null,
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'OTP request failed'
-    return NextResponse.json({ error: message }, { status: 502 })
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'OTP request failed' }, { status: 502 })
   }
 }
